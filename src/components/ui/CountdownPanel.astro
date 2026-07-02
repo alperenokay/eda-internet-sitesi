@@ -1,0 +1,22 @@
+---
+import SproutBox from "./botanic/SproutBox.astro";
+import { getDaysUntilMainDeadline } from "@/lib/deadline";
+
+const daysLeft = getDaysUntilMainDeadline();
+---
+
+<aside class="countdown-panel" aria-label="PPWR ana uygulama geri sayımı">
+  <div class="countdown-panel__info">
+    <p class="text-[0.72rem] font-medium uppercase tracking-[0.1em] text-white/55">
+      PPWR ana uygulamasına
+    </p>
+    <p class="mt-2 font-display text-[3.6rem] font-semibold leading-none">
+      {daysLeft}
+      <span class="ml-1 text-base font-medium text-leaf">gün</span>
+    </p>
+    <p class="mt-1 text-[0.9rem] text-white/80">12 Ağustos 2026</p>
+  </div>
+  <div class="countdown-panel__art">
+    <SproutBox />
+  </div>
+</aside>

@@ -1,0 +1,86 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import NotFoundContent from "@/components/NotFoundContent.astro";
+import "@/styles/prose.css";
+import {
+  buildBlogPostingSchema,
+  fetchPublishedPostBySlug,
+  formatDateTR,
+  getPostSeoDescription,
+  getPostSeoTitle,
+  renderMarkdown,
+} from "@/lib/blog";
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  Astro.response.status = 404;
+}
+
+let post = null;
+if (slug) {
+  try {
+    post = await fetchPublishedPostBySlug(slug);
+  } catch (err) {
+    console.warn("[blog/slug] DB erişilemedi:", err);
+  }
+}
+
+if (!post) {
+  Astro.response.status = 404;
+}
+
+const seoTitle = post ? getPostSeoTitle(post) : "Sayfa bulunamadı";
+const seoDescription = post ? getPostSeoDescription(post) : "Aradığınız blog yazısı bulunamadı.";
+const htmlBody = post ? renderMarkdown(post.body_md) : "";
+const dateLabel = post ? formatDateTR(post.published_at) : "";
+const jsonLd = post ? [buildBlogPostingSchema(post)] : [];
+---
+
+{post ? (
+  <BaseLayout
+    title={seoTitle}
+    description={seoDescription}
+    path={`/blog/${post.slug}`}
+    keywords={post.keywords ?? undefined}
+    ogImage={post.cover_image ?? undefined}
+    jsonLd={jsonLd}
+  >
+    <article class="border-b border-line bg-white">
+      <div class="mx-auto max-w-[1360px] px-6 py-14 sm:px-10">
+        <p class="mb-4">
+          <a href="/blog" class="text-sm font-medium text-green-deep no-underline hover:text-green">
+            Tüm yazılar
+          </a>
+        </p>
+        <header class="max-w-2xl">
+          <h1 class="text-3xl font-semibold tracking-tight text-heading sm:text-4xl">
+            {post.title}
+          </h1>
+          {dateLabel && (
+            <time datetime={post.published_at?.toISOString()} class="mt-3 block text-sm text-muted">
+              {dateLabel}
+            </time>
+          )}
+        </header>
+        <div class="prose mt-10" set:html={htmlBody} />
+      </div>
+    </article>
+
+    <section class="bg-bg-2">
+      <div class="mx-auto max-w-[1360px] px-6 py-10 sm:px-10">
+        <p class="max-w-2xl text-sm text-muted">
+          Ambalaj portföyünüzü birlikte değerlendirmek isterseniz
+          <a href="/danismanlik#basvuru" class="font-medium text-green-deep no-underline hover:text-green">
+            ücretsiz ön değerlendirme
+          </a>
+          ile başlayabilirsiniz.
+        </p>
+      </div>
+    </section>
+  </BaseLayout>
+) : (
+  <BaseLayout title={seoTitle} description={seoDescription} path="/404" noindex>
+    <NotFoundContent />
+  </BaseLayout>
+)}

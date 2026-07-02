@@ -1,0 +1,91 @@
+---
+import "@/styles/global.css";
+---
+
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Yönetim girişi · mepackage</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+    />
+  </head>
+  <body class="flex min-h-screen items-center justify-center bg-surface px-4">
+    <div class="w-full max-w-sm rounded-[var(--radius)] border border-line bg-paper p-6">
+      <h1 class="font-display text-xl font-semibold text-ink">Yönetim girişi</h1>
+      <form id="login-form" class="mt-6 space-y-4">
+        <div>
+          <label for="email" class="mb-1 block text-sm font-medium">E-posta</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            autocomplete="username"
+            class="block w-full rounded-[var(--radius-sm)] border border-line px-3 py-2 text-sm"
+          />
+        </div>
+        <div>
+          <label for="password" class="mb-1 block text-sm font-medium">Parola</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            autocomplete="current-password"
+            class="block w-full rounded-[var(--radius-sm)] border border-line px-3 py-2 text-sm"
+          />
+        </div>
+        <p id="login-error" class="hidden text-sm text-signal" role="alert" aria-live="polite"></p>
+        <button
+          type="submit"
+          id="login-btn"
+          class="w-full rounded-[var(--radius-btn)] bg-green py-2.5 text-sm font-semibold text-white hover:bg-green-deep disabled:opacity-60"
+        >
+          Giriş yap
+        </button>
+      </form>
+    </div>
+    <script>
+      const form = document.getElementById("login-form") as HTMLFormElement;
+      const errorEl = document.getElementById("login-error") as HTMLParagraphElement;
+      const btn = document.getElementById("login-btn") as HTMLButtonElement;
+
+      form?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errorEl.classList.add("hidden");
+        btn.disabled = true;
+        const fd = new FormData(form);
+        try {
+          const res = await fetch("/api/admin/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: String(fd.get("email") || "").trim(),
+              password: String(fd.get("password") || ""),
+            }),
+          });
+          const data = await res.json();
+          if (data.ok) {
+            window.location.href = "/admin";
+          } else {
+            errorEl.textContent = data.error || "E-posta veya parola hatalı.";
+            errorEl.classList.remove("hidden");
+          }
+        } catch {
+          errorEl.textContent = "Bağlantı sorunu oluştu. Lütfen tekrar deneyin.";
+          errorEl.classList.remove("hidden");
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

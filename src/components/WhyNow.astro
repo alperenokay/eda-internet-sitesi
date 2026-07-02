@@ -1,0 +1,29 @@
+---
+import Section from "@/components/ui/Section.astro";
+import Card from "@/components/ui/Card.astro";
+
+const points = [
+  {
+    title: "Pazar erişimi",
+    text: "Uygun olmayan ambalaj, ürünün AB pazarına girişini engelleyebilir.",
+  },
+  {
+    title: "Belgeleme",
+    text: "Ambalaj için uygunluk beyanı (DoC) hazırlanması ve saklanması gerekir.",
+  },
+  {
+    title: "Takvim",
+    text: "Tüzük 11 Şubat 2025'te yürürlüğe girdi, ana uygulama 12 Ağustos 2026.",
+  },
+];
+---
+
+<Section variant="default" eyebrow="Neden şimdi" title="PPWR sizi neden ilgilendiriyor?">
+  <div class="grid gap-6 md:grid-cols-3">
+    {points.map((point) => (
+      <Card title={point.title}>
+        {point.text}
+      </Card>
+    ))}
+  </div>
+</Section>

@@ -1,0 +1,74 @@
+---
+import Container from "./Container.astro";
+import Eyebrow from "./Eyebrow.astro";
+
+export interface Props {
+  variant?: "default" | "soft" | "panel";
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  lead?: string;
+  caption?: string;
+  tight?: boolean;
+}
+
+const {
+  variant = "default",
+  id,
+  eyebrow,
+  title,
+  lead,
+  caption,
+  tight = false,
+} = Astro.props;
+
+const variants = {
+  default: "bg-bg",
+  soft: "relative overflow-hidden border-y border-line bg-bg-2",
+  panel: "relative overflow-hidden bg-panel text-white",
+};
+---
+
+<section
+  class:list={[variants[variant], tight ? "py-14 sm:py-16" : "py-[4.125rem] sm:py-[4.125rem]"]}
+  id={id}
+>
+  <slot name="backdrop" />
+  <Container>
+    {(eyebrow || title || lead || caption) && (
+      <div class="relative z-[1] max-w-2xl">
+        {eyebrow && (
+          <Eyebrow tone={variant === "panel" ? "on-dark" : "default"}>{eyebrow}</Eyebrow>
+        )}
+        {title && (
+          <h2 class:list={[
+            "mt-2 font-display text-3xl font-semibold tracking-tight sm:text-[2.1rem]",
+            variant === "panel" ? "text-white" : "text-heading",
+          ]}>
+            {title}
+          </h2>
+        )}
+        {caption && (
+          <p class:list={[
+            "mt-1 text-[0.98rem]",
+            variant === "panel" ? "text-white/75" : "text-muted",
+          ]}>
+            {caption}
+          </p>
+        )}
+        {lead && (
+          <p class:list={[
+            "mt-3 text-base leading-relaxed",
+            variant === "panel" ? "text-white/75" : "text-muted",
+          ]}>
+            {lead}
+          </p>
+        )}
+      </div>
+    )}
+    <slot name="head" />
+    <div class:list={["relative z-[1]", (eyebrow || title || lead || caption) && "mt-6"]}>
+      <slot />
+    </div>
+  </Container>
+</section>

@@ -1,0 +1,125 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ConsultancyForm from "@/components/ConsultancyForm";
+import PageHero from "@/components/ui/PageHero.astro";
+import Section from "@/components/ui/Section.astro";
+import Card from "@/components/ui/Card.astro";
+import ProcessSteps from "@/components/ui/ProcessSteps.astro";
+import DarkDifferentiator from "@/components/ui/DarkDifferentiator.astro";
+import Chip from "@/components/ui/Chip.astro";
+import CtaBand from "@/components/ui/CtaBand.astro";
+import { CONSULTANCY_SERVICE_SCHEMA } from "@/lib/consultancy-schema";
+
+const title = "PPWR ve CSRD Uyum Danışmanlığı";
+const description =
+  "Avrupa'ya ihracat yapan üreticiler için PPWR, CSRD, Green Claims ve CBAM uyum danışmanlığı. Ücretsiz ön değerlendirmeyle başlayın.";
+const keywords =
+  "PPWR danışmanlık, CSRD danışmanlık, ambalaj uyum danışmanlığı, Green Claims, CBAM";
+
+const topics = [
+  {
+    title: "PPWR uyumu",
+    text: "Ambalajınızın tüzük ölçütlerine göre değerlendirilmesi, uygunluk beyanı (DoC) hazırlığı, minimizasyon ve geri dönüştürülebilirlik.",
+    chips: ["PFAS ≤25 ppb", "Ağır metal ≤100 mg/kg", "Minimizasyon %50"],
+  },
+  {
+    title: "CSRD raporlama",
+    text: "Ambalaj verinizin CSRD raporlamanızı besleyecek şekilde yapılandırılması. Aynı veriyle iki regülasyonu çalıştırırsınız.",
+    chips: [] as string[],
+  },
+  {
+    title: "Green Claims",
+    text: "Çevresel iddialarınızın kanıtlanabilirlik açısından değerlendirilmesi.",
+    chips: [] as string[],
+  },
+  {
+    title: "CBAM",
+    text: "Sınırda karbon düzenlemesi kapsamındaki yükümlülükler için hazırlık.",
+    chips: [] as string[],
+  },
+];
+
+const steps = [
+  {
+    title: "Ücretsiz ön değerlendirme",
+    text: "Portföyünüze hızlı bir boşluk değerlendirmesi yaparız.",
+  },
+  {
+    title: "Gap analizi",
+    text: "Eksikleri ve riskleri önceliklendirir, net bir tablo çıkarırız.",
+  },
+  {
+    title: "Yol haritası",
+    text: "Takvime bağlı, uygulanabilir adımlar veririz.",
+  },
+  {
+    title: "Uygulama desteği",
+    text: "Belgeleme ve doğrulamaya hazırlıkta yanınızda oluruz.",
+  },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path="/danismanlik"
+  keywords={keywords}
+  jsonLd={[CONSULTANCY_SERVICE_SCHEMA]}
+>
+  <PageHero
+    chip="EU 2025/40 · ana uygulama 12 Ağustos 2026"
+    title="Uyum danışmanlığı"
+    lead="Marine Emission, Avrupa'ya ihracat yapan üreticilere PPWR başta olmak üzere CSRD, Green Claims ve CBAM konularında uyum danışmanlığı verir. İşe ambalaj ve ürün portföyünüzün ücretsiz ön değerlendirmesiyle başlar, ardından öncelik sıralı bir yol haritası çıkarırız."
+    primaryHref="#basvuru"
+    primaryLabel="Ücretsiz ön değerlendirme"
+    secondaryHref="/analizler"
+    secondaryLabel="Analizleri gör"
+  />
+
+  <Section variant="soft" eyebrow="Kapsam" title="Hangi konularda çalışıyoruz">
+    <div class="grid gap-5 sm:grid-cols-2">
+      {topics.map((item) => (
+        <Card title={item.title}>
+          {item.text}
+          {item.chips.length > 0 && (
+            <div slot="footer" class="flex flex-wrap gap-2">
+              {item.chips.map((chip) => (
+                <Chip>{chip}</Chip>
+              ))}
+            </div>
+          )}
+        </Card>
+      ))}
+    </div>
+  </Section>
+
+  <Section variant="default" eyebrow="Süreç" title="Nasıl ilerliyoruz">
+    <ProcessSteps steps={steps} />
+  </Section>
+
+  <DarkDifferentiator showPositioning />
+
+  <CtaBand
+    title="Ambalajınızı birlikte değerlendirelim"
+    text="Ücretsiz ön değerlendirmeyle başlayın, uyum yol haritanızı çıkaralım."
+    buttonHref="#basvuru"
+    buttonLabel="Ücretsiz ön değerlendirme"
+  />
+
+  <Section variant="default" id="basvuru">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:items-start">
+      <div>
+        <h2 class="font-display text-2xl font-semibold text-heading sm:text-3xl">Danışmanlık başvurusu</h2>
+        <p class="mt-3 max-w-lg text-muted">
+          Formu doldurun, ihtiyacınıza göre sizinle iletişime geçelim.
+        </p>
+        <p class="mt-6 max-w-lg text-xs text-muted">
+          Bu içerik danışmanlık niteliğindedir, bağlayıcı hukuki görüş değildir.
+        </p>
+      </div>
+      <div class="rounded-[var(--radius-card)] border border-line bg-white p-6 sm:p-8">
+        <ConsultancyForm client:load />
+      </div>
+    </div>
+  </Section>
+</BaseLayout>

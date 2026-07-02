@@ -1,0 +1,86 @@
+---
+import { APPLICATION_STATUSES, applicationStatusLabel } from "@/lib/application-status";
+import { formatAdminDate } from "@/lib/admin";
+
+export interface Props {
+  type: "analysis" | "consultancy" | "contact";
+  id: number;
+  fullName: string;
+  email: string;
+  phone?: string | null;
+  status: string;
+  createdAt: Date;
+}
+
+const { type, id, fullName, email, phone, status, createdAt } = Astro.props;
+const isNew = status === "new";
+const isDone = status === "results_ready" || status === "closed";
+---
+
+<li
+  class:list={[
+    "rounded-[var(--radius)] border p-4 text-sm",
+    isNew ? "border-green bg-wash/40" : isDone ? "border-line bg-surface/50" : "border-line bg-white",
+  ]}
+  data-type={type}
+  data-id={id}
+>
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div class="min-w-0 flex-1">
+      <p class="font-semibold text-ink">{fullName}</p>
+      <p class="text-muted">{email}{phone ? ` · ${phone}` : ""}</p>
+      <p class="mt-1 text-xs text-muted">
+        {formatAdminDate(createdAt)} · <span class="font-medium text-ink">{applicationStatusLabel(status)}</span>
+      </p>
+    </div>
+    <div class="w-full sm:w-auto sm:min-w-[220px]">
+      <label class="mb-1 block text-xs font-medium text-muted">Durum</label>
+      <select
+        class="status-select block w-full rounded-[var(--radius-sm)] border border-line bg-paper px-2 py-1.5 text-xs font-medium"
+        data-current={status}
+      >
+        {APPLICATION_STATUSES.map((item) => (
+          <option value={item.value} selected={item.value === status}>
+            {item.label}
+          </option>
+        ))}
+      </select>
+      <button
+        type="button"
+        class="delete-app-btn mt-2 text-xs font-medium text-signal hover:underline"
+        data-type={type}
+        data-id={id}
+      >
+        Kişisel veriyi sil (anonimleştir)
+      </button>
+    </div>
+  </div>
+
+  <ol class="mt-4 flex flex-wrap gap-1" aria-label="Süreç adımları">
+    {APPLICATION_STATUSES.filter((s) => s.value !== "closed").map((item) => {
+      const currentIdx = APPLICATION_STATUSES.findIndex((s) => s.value === status);
+      const itemIdx = APPLICATION_STATUSES.findIndex((s) => s.value === item.value);
+      const active = item.value === status;
+      const passed = currentIdx > itemIdx && status !== "closed";
+      return (
+        <li
+          class:list={[
+            "rounded-full px-2 py-0.5 text-[10px] font-medium leading-tight",
+            active
+              ? "bg-green text-white"
+              : passed
+                ? "bg-wash text-green-deep"
+                : "bg-surface text-muted",
+          ]}
+          title={item.label}
+        >
+          {item.label}
+        </li>
+      );
+    })}
+  </ol>
+
+  <div class="mt-3">
+    <slot />
+  </div>
+</li>

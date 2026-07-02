@@ -1,0 +1,37 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Hero from "@/components/Hero.astro";
+import ThresholdStrip from "@/components/ThresholdStrip.astro";
+import WhyNow from "@/components/WhyNow.astro";
+import PathCards from "@/components/PathCards.astro";
+import AnalysisPreview from "@/components/AnalysisPreview.astro";
+import Differentiator from "@/components/Differentiator.astro";
+import Faq from "@/components/Faq.astro";
+import Cta from "@/components/Cta.astro";
+import { buildFaqPageSchema, FAQ_ITEMS, SERVICE_SCHEMA } from "@/lib/faq-data";
+
+const title = "PPWR Uyum Danışmanlığı ve Ambalaj Analizleri";
+const description =
+  "Avrupa'ya ihracat yapan üreticiler için PPWR (EU 2025/40) uyum danışmanlığı ve ambalaj analiz hizmetleri. Ücretsiz ön değerlendirme.";
+const keywords =
+  "PPWR, PPWR nedir, PPWR uyum, PPWR danışmanlık, ambalaj tüzüğü, EU 2025/40, PFAS analizi, ağır metal analizi";
+
+const jsonLd = [buildFaqPageSchema(FAQ_ITEMS), SERVICE_SCHEMA];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path="/"
+  keywords={keywords}
+  jsonLd={jsonLd}
+>
+  <Hero />
+  <ThresholdStrip />
+  <WhyNow />
+  <PathCards />
+  <AnalysisPreview />
+  <Differentiator />
+  <Faq />
+  <Cta />
+</BaseLayout>

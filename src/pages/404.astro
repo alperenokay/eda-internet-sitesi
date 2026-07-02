@@ -1,0 +1,15 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import NotFoundContent from "@/components/NotFoundContent.astro";
+
+Astro.response.status = 404;
+---
+
+<BaseLayout
+  title="Sayfa bulunamadı"
+  description="Aradığınız sayfa bulunamadı."
+  path="/404"
+  noindex
+>
+  <NotFoundContent />
+</BaseLayout>

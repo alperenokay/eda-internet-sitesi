@@ -1,0 +1,28 @@
+---
+export interface Props {
+  variant?: "header" | "footer";
+  class?: string;
+}
+
+const { variant = "header", class: className } = Astro.props;
+
+/** Tam logo (tagline dahil), yükseklik bazlı boyutlandırma */
+const SRC_WIDTH = 886;
+const SRC_HEIGHT = 241;
+
+const heightClass =
+  variant === "header"
+    ? "h-[67px] w-auto max-w-[18rem] sm:h-[77px] sm:max-w-[20.5rem] md:h-[91px] md:max-w-[23rem]"
+    : "h-[67px] w-auto max-w-[20.5rem] sm:h-[77px] sm:max-w-[23rem]";
+---
+
+<img
+  src="/logo.png"
+  alt="ME Package"
+  width={SRC_WIDTH}
+  height={SRC_HEIGHT}
+  class:list={["block shrink-0 object-contain object-left", heightClass, className]}
+  decoding="async"
+  fetchpriority={variant === "header" ? "high" : "auto"}
+  loading={variant === "header" ? "eager" : "lazy"}
+/>

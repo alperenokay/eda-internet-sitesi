@@ -1,0 +1,63 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PostCard from "@/components/blog/PostCard.astro";
+import PageHero from "@/components/ui/PageHero.astro";
+import Section from "@/components/ui/Section.astro";
+import { fetchPublishedPosts } from "@/lib/blog";
+
+const title = "PPWR Blog";
+const description =
+  "PPWR (EU 2025/40) uyumu, ambalaj analizleri ve düzenlemeler üzerine Türkçe yazılar. Marine Emission.";
+const keywords =
+  "PPWR blog, PPWR nedir, ambalaj tüzüğü, PFAS, geri dönüştürülebilirlik";
+
+let posts: Awaited<ReturnType<typeof fetchPublishedPosts>> = [];
+
+try {
+  posts = await fetchPublishedPosts();
+} catch (err) {
+  console.warn("[blog] DB erişilemedi, boş liste gösteriliyor:", err);
+}
+---
+
+<BaseLayout title={title} description={description} path="/blog" keywords={keywords}>
+  <PageHero
+    title="PPWR Blog"
+    lead="Ambalaj tüzüğü, analizler ve uyum süreçleri hakkında Türkçe yazılar."
+    primaryHref="/danismanlik#basvuru"
+    primaryLabel="Danışmanlık başvurusu"
+    secondaryHref="/analizler"
+    secondaryLabel="Analizleri gör"
+    showCountdown={false}
+  />
+
+  <Section variant="soft">
+    {posts.length > 0 ? (
+      <ul class="grid gap-4 sm:grid-cols-2" role="list">
+        {posts.map((post) => (
+          <li>
+            <PostCard
+              title={post.title}
+              excerpt={post.excerpt}
+              slug={post.slug}
+              publishedAt={post.published_at}
+            />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="max-w-2xl">
+        <p class="text-muted">
+          Yakında ilk yazılar burada olacak. O zamana kadar
+          <a href="/analizler" class="font-medium text-green-deep no-underline hover:text-green">
+            analizlerimize
+          </a>
+          göz atabilir veya
+          <a href="/danismanlik#basvuru" class="font-medium text-green-deep no-underline hover:text-green">
+            danışmanlık için başvurabilirsiniz
+          </a>.
+        </p>
+      </div>
+    )}
+  </Section>
+</BaseLayout>

@@ -1,0 +1,94 @@
+---
+import "@/styles/global.css";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { BRAND_SHORT, SITE_URL } from "@/lib/site";
+
+export interface Props {
+  title: string;
+  description: string;
+  /** Kanonik yol, örn "/danismanlik" */
+  path?: string;
+  keywords?: string;
+  ogImage?: string;
+  noindex?: boolean;
+  jsonLd?: object[];
+}
+
+const {
+  title,
+  description,
+  path = "",
+  keywords,
+  ogImage = "/og-default.png",
+  noindex = false,
+  jsonLd = [],
+} = Astro.props;
+
+const canonical = SITE_URL + (path || Astro.url.pathname);
+const fullTitle = title.includes(BRAND_SHORT) ? title : `${title} · ${BRAND_SHORT}`;
+const gscVerification = process.env.GSC_VERIFICATION?.trim() ?? "";
+const ogImageUrl = ogImage.startsWith("http") ? ogImage : SITE_URL + ogImage;
+
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Marine Emission Package",
+  alternateName: BRAND_SHORT,
+  url: SITE_URL,
+  description:
+    "Türkiye'de PPWR (AB Ambalaj ve Ambalaj Atığı Tüzüğü) uyum danışmanlığı ve analiz hizmetleri.",
+  areaServed: "TR",
+  knowsAbout: ["PPWR", "EU 2025/40", "CSRD", "Green Claims", "CBAM", "Ambalaj uyumu"],
+};
+---
+
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    <link rel="canonical" href={canonical} />
+    {noindex
+      ? <meta name="robots" content="noindex, nofollow" />
+      : <meta name="robots" content="index, follow" />}
+    {gscVerification && <meta name="google-site-verification" content={gscVerification} />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={BRAND_SHORT} />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    {jsonLd.map((block) => (
+      <script type="application/ld+json" set:html={JSON.stringify(block)} />
+    ))}
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

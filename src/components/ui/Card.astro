@@ -1,0 +1,33 @@
+---
+export interface Props {
+  title: string;
+  featured?: boolean;
+  id?: string;
+  href?: string;
+}
+
+const { title, featured = false, id, href } = Astro.props;
+---
+
+<article
+  id={id}
+  class:list={[
+    "ui-card group relative flex h-full flex-col border bg-white p-6 sm:p-7",
+    featured ? "border-green/40 bg-wash/50" : "border-line",
+    id && "scroll-mt-24",
+  ]}
+>
+  <h3 class="font-display text-lg font-semibold text-heading">
+    {href ? (
+      <a href={href} class="text-heading no-underline hover:text-green-deep">{title}</a>
+    ) : (
+      title
+    )}
+  </h3>
+  <div class="mt-2 flex-1 text-sm leading-relaxed text-muted">
+    <slot />
+  </div>
+  <div class="mt-4">
+    <slot name="footer" />
+  </div>
+</article>

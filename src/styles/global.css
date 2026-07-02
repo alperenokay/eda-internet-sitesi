@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+/*
+  Marine Emission Package — onaylı tasarım (mavi zemin + yeşil vurgu)
+  Referans: ONAYLI-TASARIM.html · .cursorrules 5a–5d
+*/
+@theme {
+  --color-bg: #e5edf6;
+  --color-bg-2: #d9e4f0;
+  --color-white: #ffffff;
+  --color-panel: #123c3e;
+  --color-green: #3a8c5f;
+  --color-green-deep: #2a6644;
+  --color-leaf: #7cc496;
+  --color-wash: #e9f3ec;
+  --color-text: #17323a;
+  --color-heading: #143a3d;
+  --color-muted: #5a6c74;
+  --color-line: #cfdae4;
+  --color-signal: #c45c2a;
+
+  /* Geriye dönük alias (form/admin) */
+  --color-ink: #17323a;
+  --color-paper: #ffffff;
+  --color-surface: #e5edf6;
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-chip: 20px;
+  --radius-btn: 26px;
+  --radius-panel: 20px;
+  --radius-card: 16px;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  margin: 0;
+  line-height: 1.62;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.hero-glow {
+  position: absolute;
+  right: -8.75rem;
+  top: -10rem;
+  width: 47.5rem;
+  height: 47.5rem;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(124, 196, 150, 0.22),
+    rgba(124, 196, 150, 0) 60%
+  );
+}
+
+.hero-botanic {
+  position: absolute;
+  right: 0;
+  bottom: -1.875rem;
+  width: 31.25rem;
+  max-width: 55vw;
+  opacity: 0.58;
+  pointer-events: none;
+}
+
+@media (max-width: 880px) {
+  .hero-botanic {
+    display: none;
+  }
+}
+
+.leaf-bg-soft {
+  position: absolute;
+  left: -4.375rem;
+  bottom: -4.375rem;
+  width: 21.875rem;
+  opacity: 0.44;
+  pointer-events: none;
+}
+
+.leaf-bg-footer {
+  position: absolute;
+  right: -2.5rem;
+  top: -1.875rem;
+  width: 15rem;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.countdown-panel {
+  display: flex;
+  align-items: center;
+  gap: 1.625rem;
+  border-radius: var(--radius-panel);
+  background: var(--color-panel);
+  color: #fff;
+  padding: 2.25rem 2.125rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-panel__info {
+  flex: 1;
+}
+
+.countdown-panel__art {
+  flex-shrink: 0;
+  opacity: 0.92;
+}
+
+.ui-card {
+  border-radius: var(--radius-card);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ui-card:hover {
+  border-color: var(--color-green);
+  box-shadow: 0 8px 28px rgba(23, 50, 58, 0.06);
+}
+
+@media (min-width: 1024px) {
+  .process-steps {
+    position: relative;
+  }
+
+  .process-steps::before {
+    content: "";
+    position: absolute;
+    top: 1.375rem;
+    left: 8%;
+    right: 8%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-wash), var(--color-leaf), var(--color-wash));
+    z-index: 0;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-green);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

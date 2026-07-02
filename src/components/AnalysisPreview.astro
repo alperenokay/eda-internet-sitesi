@@ -1,0 +1,38 @@
+---
+import type { AnalysisPreview } from "@/lib/analyses";
+import { FALLBACK_ANALYSES, fetchActiveAnalyses } from "@/lib/analyses";
+import Section from "@/components/ui/Section.astro";
+import Card from "@/components/ui/Card.astro";
+import Chip from "@/components/ui/Chip.astro";
+
+let analyses: AnalysisPreview[] = FALLBACK_ANALYSES;
+
+try {
+  const rows = await fetchActiveAnalyses();
+  if (rows.length > 0) {
+    analyses = rows;
+  }
+} catch (err) {
+  console.warn("[AnalysisPreview] DB erişilemedi, statik yedek kullanılıyor:", err);
+}
+---
+
+<Section variant="default" eyebrow="Katalog" title="Öne çıkan analizler">
+  <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {analyses.map((item) => (
+      <Card title={item.title} href={`/analizler#${item.slug}`}>
+        {item.summary}
+        {item.threshold && (
+          <p slot="footer">
+            <Chip>{item.threshold}</Chip>
+          </p>
+        )}
+      </Card>
+    ))}
+  </div>
+  <p class="mt-8">
+    <a href="/analizler" class="text-sm font-semibold text-green-deep no-underline hover:text-green">
+      Tüm analizler
+    </a>
+  </p>
+</Section>

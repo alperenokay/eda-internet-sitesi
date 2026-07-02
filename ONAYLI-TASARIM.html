@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>mepackage · mavi zemin + yeşil vurgu (referans v2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" />
+<style>
+  :root{
+    --bg:#e5edf6; --bg-2:#d9e4f0; --white:#fff;
+    --panel:#123c3e;            /* derin teal-petrol: marine + yeşil köprüsü */
+    --green:#3a8c5f; --green-deep:#2a6644; --leaf:#7cc496; --wash:#e9f3ec;
+    --text:#17323a; --heading:#143a3d; --muted:#5a6c74; --line:#cfdae4;
+    --display:"Space Grotesk",sans-serif; --body:"Inter",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--body);color:var(--text);background:var(--bg);line-height:1.62;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--display);line-height:1.06;letter-spacing:-.02em;margin:0;color:var(--heading)}
+  .wrap{max-width:1360px;margin:0 auto;padding:0 40px;position:relative}
+  .eyebrow{font-family:var(--body);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green-deep);font-weight:600}
+  .chip{font-size:.82rem;padding:.3em .8em;border:1px solid var(--green);background:var(--wash);color:var(--green-deep);border-radius:20px;display:inline-block;font-weight:500}
+
+  header{border-bottom:1px solid var(--line);background:rgba(237,242,246,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:30}
+  .nav{height:66px;display:flex;align-items:center;justify-content:space-between}
+  .brand{font-family:var(--display);font-weight:600;font-size:1.18rem;display:flex;gap:10px;align-items:center;color:var(--heading)}
+  .links{display:flex;gap:30px;font-size:.92rem}.links a{color:var(--muted);text-decoration:none}.links a.on{color:var(--heading);font-weight:500}
+  .btn{font-weight:500;font-size:.92rem;padding:12px 20px;border-radius:26px;text-decoration:none;display:inline-block;transition:.15s;cursor:pointer}
+  .btn-p{background:var(--green);color:#fff}.btn-p:hover{background:var(--green-deep)}
+  .btn-g{border:1px solid var(--muted);color:var(--text);background:transparent}.btn-g:hover{border-color:var(--green);color:var(--green-deep)}
+
+  .hero{position:relative;overflow:hidden}
+  .hero .glow{position:absolute;right:-140px;top:-160px;width:760px;height:760px;pointer-events:none;
+    background:radial-gradient(circle at 50% 50%,rgba(124,196,150,.22),rgba(124,196,150,0) 60%)}
+  .hero .botanic{position:absolute;right:0;bottom:-30px;width:500px;opacity:.58;pointer-events:none}
+  .hero-in{position:relative;padding:88px 0 78px;display:grid;grid-template-columns:1.35fr .95fr;gap:56px;align-items:center}
+  .eyebrow-row{display:flex;gap:14px;align-items:center;margin-bottom:20px}
+  h1{font-size:3.7rem;font-weight:600}
+  h1 .hl{color:var(--green)}
+  .lead{font-size:1.16rem;color:var(--muted);max-width:50ch;margin:22px 0 0}
+  .cta{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+
+  .panel{background:var(--panel);color:#fff;border-radius:20px;padding:36px 34px;position:relative;overflow:hidden;display:flex;align-items:center;gap:26px}
+  .panel .info{flex:1}
+  .panel .art{flex-shrink:0;opacity:.92}
+  .panel .lbl{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);font-weight:500}
+  .panel .num{font-family:var(--display);font-weight:600;font-size:3.6rem;line-height:1;margin:8px 0 4px}
+  .panel .num small{font-size:1rem;color:var(--leaf);font-weight:500}
+  .panel .date{font-size:.9rem;color:rgba(255,255,255,.8)}
+
+  section{padding:66px 0}
+  .soft{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .soft .leaf-bg{position:absolute;left:-70px;bottom:-70px;width:350px;opacity:.44;pointer-events:none}
+  .head{margin-bottom:22px;position:relative;z-index:1}
+  .head .eyebrow{display:block}
+  .head .cap{color:var(--muted);font-size:.98rem;margin-top:4px;display:block}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;position:relative;z-index:1}
+
+  .band{background:var(--panel);color:#fff;position:relative;overflow:hidden}
+  .band .leaves{position:absolute;inset:0;opacity:.15;pointer-events:none}
+  .band .in{position:relative;padding:72px 0;z-index:1;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
+  .band .eyebrow{color:var(--leaf)}
+  .band h2{color:#fff;font-size:2.1rem;margin-top:12px}
+  .band p{color:rgba(255,255,255,.75);max-width:44ch;margin:16px 0 0}
+  .band .loop{display:flex;justify-content:center}
+
+  footer{background:var(--panel);color:rgba(255,255,255,.6);position:relative;overflow:hidden}
+  footer .fin{padding:46px 0 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.86rem;position:relative;z-index:1}
+  footer .leaf-bg{position:absolute;right:-40px;top:-30px;width:240px;opacity:.12}
+
+  @media(max-width:880px){.hero-in,.band .in{grid-template-columns:1fr}.links{display:none}h1{font-size:2.6rem}.hero .botanic{display:none}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap nav">
+  <div class="brand">
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 3 C6 6 4 14 5 22 C13 22 21 18 22 8 C18 11 13 11 10 15" stroke="#3a8c5f" stroke-width="1.8" fill="rgba(124,196,150,.25)"/></svg>
+    mepackage
+  </div>
+  <nav class="links"><a class="on">Danışmanlık</a><a>Analizler</a><a>Blog</a><a>İletişim</a></nav>
+  <a class="btn btn-p">Başvur</a>
+</div></header>
+
+<section class="hero">
+  <div class="glow"></div>
+  <svg class="botanic" viewBox="0 0 430 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#3a8c5f" stroke-width="1.5" fill="none">
+      <path d="M215 400 C215 300 205 250 165 205 M215 320 C185 300 165 275 158 250 M215 268 C250 250 272 224 280 196"/>
+      <path d="M158 250 C132 236 128 205 141 184 C165 199 168 230 158 250Z" fill="rgba(124,196,150,.16)"/>
+      <path d="M280 196 C305 180 308 148 296 128 C272 143 268 174 280 196Z" fill="rgba(124,196,150,.16)"/>
+      <path d="M165 205 C139 190 135 158 149 137 C173 153 178 184 165 205Z" fill="rgba(124,196,150,.16)"/>
+    </g>
+  </svg>
+
+  <div class="wrap hero-in">
+    <div>
+      <div class="eyebrow-row"><span class="eyebrow">EU 2025/40</span><span class="chip">12 Ağustos 2026</span></div>
+      <h1>Ambalajınız <span class="hl">PPWR'a</span><br>hazır mı?</h1>
+      <p class="lead">PPWR (EU 2025/40), Avrupa'ya ambalajlı ürün gönderen üreticileri doğrudan ilgilendiriyor. Marine Emission ambalajınızı bu tüzüğe göre değerlendirir ve uyum yol haritanızı çıkarır.</p>
+      <div class="cta"><a class="btn btn-p">Ücretsiz ön değerlendirme</a><a class="btn btn-g">Analizleri gör</a></div>
+    </div>
+    <div class="panel">
+      <div class="info">
+        <div class="lbl">PPWR ana uygulamasına</div>
+        <div class="num"><span id="days">41</span> <small>gün</small></div>
+        <div class="date">12 Ağustos 2026</div>
+      </div>
+      <div class="art">
+        <svg width="118" height="100" viewBox="0 0 150 128" fill="none">
+          <path d="M25 48 L75 30 L125 48 L75 66 Z" stroke="#7cc496" stroke-width="2" fill="rgba(124,196,150,.14)"/>
+          <path d="M25 48 V96 L75 114 V66 Z" stroke="#7cc496" stroke-width="2" fill="rgba(124,196,150,.07)"/>
+          <path d="M125 48 V96 L75 114 V66 Z" stroke="#7cc496" stroke-width="2" fill="rgba(124,196,150,.03)"/>
+          <path d="M75 30 V10 M75 18 C68 14 60 16 58 8 C66 8 73 12 75 18 M75 18 C82 14 90 16 92 8 C84 8 77 12 75 18" stroke="#7cc496" stroke-width="2"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="soft">
+  <svg class="leaf-bg" viewBox="0 0 200 200" fill="none"><path d="M100 20 C60 40 40 90 55 160 C120 150 170 100 170 40 C140 60 110 65 90 95" stroke="#3a8c5f" stroke-width="2" fill="rgba(124,196,150,.14)"/></svg>
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Eşik değerleri</span>
+      <span class="cap">Ambalajınızın geçmesi gereken sınırların bir kısmı.</span>
+    </div>
+    <div class="chips">
+      <span class="chip">PFAS bireysel ≤ 25 ppb</span><span class="chip">Toplam flor ≤ 50 mg/kg</span>
+      <span class="chip">Ağır metal toplamı ≤ 100 mg/kg</span><span class="chip">Minimizasyon eşiği % 50</span>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <svg class="leaves" xmlns="http://www.w3.org/2000/svg"><defs>
+    <pattern id="lf" width="150" height="150" patternUnits="userSpaceOnUse" patternTransform="rotate(10)">
+      <path d="M34 24 C22 34 20 60 30 86 C60 78 80 55 76 28 C62 39 45 39 34 51" fill="none" stroke="#7cc496" stroke-width="1.4"/>
+    </pattern></defs><rect width="100%" height="100%" fill="url(#lf)"/></svg>
+  <div class="wrap in">
+    <div>
+      <span class="eyebrow">Farkımız</span>
+      <h2>Aynı veri, iki regülasyon</h2>
+      <p>PPWR için topladığınız ambalaj verisi, CSRD raporlamanızı da besler. İki tarafı tek veri modeliyle çalıştırırız, aynı işi iki kez yapmazsınız.</p>
+    </div>
+    <div class="loop">
+      <svg width="128" height="128" viewBox="0 0 130 130" fill="none" stroke="#7cc496" stroke-width="3">
+        <path d="M40 46 L52 24 L64 46" stroke-linejoin="round"/><path d="M92 58 L104 80 L80 80" stroke-linejoin="round"/><path d="M52 100 L28 96 L40 76" stroke-linejoin="round"/>
+        <path d="M52 24 A44 44 0 0 1 104 80" opacity=".85"/><path d="M104 80 A44 44 0 0 1 28 96" opacity=".85"/><path d="M28 96 A44 44 0 0 1 52 24" opacity=".85"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <svg class="leaf-bg" viewBox="0 0 200 200" fill="none"><path d="M100 20 C60 40 40 90 55 160 C120 150 170 100 170 40 C140 60 110 65 90 95" stroke="#fff" stroke-width="2" fill="rgba(255,255,255,.05)"/></svg>
+  <div class="wrap fin"><span>© 2026 Marine Emission</span><span>PPWR · EU 2025/40 · 12 Ağustos 2026</span></div>
+</footer>
+
+<script>
+  var d=Math.ceil((new Date("2026-08-12T00:00:00")-new Date())/864e5);
+  document.getElementById("days").textContent=d>0?d:0;
+</script>
+</body>
+</html>

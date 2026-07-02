@@ -1,0 +1,64 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ContactForm from "@/components/ContactForm";
+import PageHero from "@/components/ui/PageHero.astro";
+import Section from "@/components/ui/Section.astro";
+import { site } from "@/lib/site";
+
+const title = "İletişim ve PPWR Danışmanlık Talebi";
+const description =
+  "Marine Emission Package ile iletişime geçin. PPWR danışmanlık, ambalaj analizi ve iş birliği talepleri için formu doldurun.";
+
+const hasEmail = site.email.length > 0;
+const hasPhone = site.phone.length > 0;
+---
+
+<BaseLayout title={title} description={description} path="/iletisim">
+  <PageHero
+    title="İletişim"
+    lead="Sorularınız veya iş birliği talepleriniz için aşağıdaki formu doldurun, en kısa sürede dönüş yapalım."
+    primaryHref="#mesaj"
+    primaryLabel=""
+    showCountdown={false}
+    hideActions
+  />
+
+  <Section variant="soft">
+    <div class="grid gap-10 lg:grid-cols-2 lg:items-start">
+      <aside class="rounded-[var(--radius-card)] border border-line bg-white p-6 sm:p-8">
+        <h2 class="font-display text-xl font-semibold text-heading">İletişim bilgisi</h2>
+        <ul class="mt-5 space-y-4 text-sm" role="list">
+          {hasEmail && (
+            <li>
+              <span class="block font-medium text-heading">E-posta</span>
+              <a href={`mailto:${site.email}`} class="text-green-deep no-underline hover:text-green">
+                {site.email}
+              </a>
+            </li>
+          )}
+          {hasPhone && (
+            <li>
+              <span class="block font-medium text-heading">Telefon</span>
+              <a href={`tel:${site.phone.replace(/\s/g, "")}`} class="text-green-deep no-underline hover:text-green">
+                {site.phone}
+              </a>
+            </li>
+          )}
+          {site.cities.length > 0 && (
+            <li>
+              <span class="block font-medium text-heading">Ofisler</span>
+              <span class="text-muted">{site.cities.join(", ")}</span>
+            </li>
+          )}
+        </ul>
+      </aside>
+
+      <div class="rounded-[var(--radius-card)] border border-line bg-white p-6 sm:p-8">
+        <h2 class="font-display text-xl font-semibold text-heading">Mesaj gönderin</h2>
+        <div class="mt-5">
+          <ContactForm client:load />
+        </div>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>

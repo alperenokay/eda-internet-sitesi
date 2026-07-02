@@ -1,0 +1,27 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminBlogForm from "@/components/admin/AdminBlogForm.astro";
+import { fetchBlogPostByIdAdmin } from "@/lib/admin";
+
+const id = Number(Astro.params.id);
+let post = null;
+
+if (Number.isFinite(id)) {
+  try {
+    post = await fetchBlogPostByIdAdmin(id);
+  } catch (err) {
+    console.warn("[admin/blog/edit] yazı alınamadı:", err);
+  }
+}
+
+if (!post) {
+  return Astro.redirect("/admin/blog");
+}
+---
+
+<AdminLayout title="Yazı düzenle">
+  <h1 class="font-display text-2xl font-semibold">Yazı düzenle</h1>
+  <div class="mt-6 max-w-2xl">
+    <AdminBlogForm post={post} />
+  </div>
+</AdminLayout>

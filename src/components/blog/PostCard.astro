@@ -1,0 +1,33 @@
+---
+import { formatDateTR } from "@/lib/blog";
+
+export interface Props {
+  title: string;
+  excerpt: string | null;
+  slug: string;
+  publishedAt: Date | null;
+}
+
+const { title, excerpt, slug, publishedAt } = Astro.props;
+const dateLabel = formatDateTR(publishedAt);
+---
+
+<article class="rounded-[var(--radius-card)] border border-line bg-white p-6 transition-colors hover:border-green">
+  <h2 class="text-lg font-semibold text-heading">
+    <a href={`/blog/${slug}`} class="text-heading no-underline hover:text-green-deep">
+      {title}
+    </a>
+  </h2>
+  {dateLabel && (
+    <time datetime={publishedAt?.toISOString()} class="mt-1 block text-xs text-muted">
+      {dateLabel}
+    </time>
+  )}
+  {excerpt && <p class="mt-3 text-sm leading-relaxed text-muted">{excerpt}</p>}
+  <a
+    href={`/blog/${slug}`}
+    class="mt-4 inline-flex text-sm font-semibold text-green-deep no-underline hover:text-green"
+  >
+    Yazıyı oku
+  </a>
+</article>

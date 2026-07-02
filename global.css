@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/*
+  Marine Emission Package — tasarım token sistemi
+  Dünya: denizcilik/endüstri regülasyonu. Otorite + kesinlik + deadline farkındalığı.
+  Kliseden kaçınıyoruz (cream+terracotta yok, acid-green-on-black yok).
+*/
+@theme {
+  /* Renk */
+  --color-ink: #0a2027;        /* petrol laciverti - ana metin/koyu zemin */
+  --color-ink-soft: #14343d;
+  --color-surface: #f6f9f8;    /* hafif soğuk beyaz */
+  --color-surface-2: #eef3f2;
+  --color-paper: #ffffff;
+  --color-teal: #12a294;       /* Marine Emission brand teal - vurgu */
+  --color-teal-deep: #0c7c71;
+  --color-teal-wash: #e4f3f1;
+  --color-signal: #e07a2f;     /* deadline / uyarı amber'i */
+  --color-signal-wash: #fbeee2;
+  --color-line: #d7e2e0;       /* hairline */
+  --color-muted: #5b706e;      /* ikincil metin */
+
+  /* Tipografi */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+
+  /* Yarıçap */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+
+/* Fontlar <head>'de <link> ile yükleniyor (BaseLayout.astro) — self-host'a Faz 5'te geçilebilir. */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  margin: 0;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+/* İmza öğesi: regülasyon eşik değerleri için "veri çipi" */
+.data-chip {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.15em 0.5em;
+  border-radius: var(--radius-sm);
+  background: var(--color-teal-wash);
+  color: var(--color-teal-deep);
+  border: 1px solid color-mix(in srgb, var(--color-teal) 25%, transparent);
+  white-space: nowrap;
+}
+
+/* Erişilebilirlik: klavye odağı görünür */
+:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

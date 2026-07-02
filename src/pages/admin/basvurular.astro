@@ -1,0 +1,216 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminApplicationCard from "@/components/admin/AdminApplicationCard.astro";
+import { fetchAllApplications } from "@/lib/admin";
+
+let data = { analysis: [], consultancy: [], contact: [] };
+
+try {
+  data = await fetchAllApplications();
+} catch (err) {
+  console.warn("[admin/basvurular] veriler alınamadı:", err);
+}
+---
+
+<AdminLayout title="Başvurular">
+  <h1 class="font-display text-2xl font-semibold">Başvurular</h1>
+  <p class="mt-2 max-w-2xl text-sm text-muted">
+    Durum seçerek süreci güncelleyin: iletişim, fiyat, numune, ödeme, FCC ve sonuç adımları.
+  </p>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-semibold">Analiz başvuruları</h2>
+    {data.analysis.length > 0 ? (
+      <ul class="mt-4 space-y-4" role="list">
+        {data.analysis.map((row) => (
+          <AdminApplicationCard
+            type="analysis"
+            id={row.id}
+            fullName={row.full_name}
+            email={row.email}
+            phone={row.phone}
+            status={row.status}
+            createdAt={row.created_at}
+          >
+            <dl class="grid gap-1 text-xs text-muted">
+              {row.analysis_slug && (
+                <div>
+                  <dt class="inline font-medium text-ink">Analiz: </dt>
+                  <dd class="inline">{row.analysis_slug}</dd>
+                </div>
+              )}
+              {row.company && (
+                <div>
+                  <dt class="inline font-medium text-ink">Firma: </dt>
+                  <dd class="inline">{row.company}</dd>
+                </div>
+              )}
+              {row.material_type && (
+                <div>
+                  <dt class="inline font-medium text-ink">Malzeme: </dt>
+                  <dd class="inline">{row.material_type}</dd>
+                </div>
+              )}
+              {row.message && (
+                <div>
+                  <dt class="inline font-medium text-ink">Mesaj: </dt>
+                  <dd class="inline">{row.message}</dd>
+                </div>
+              )}
+            </dl>
+          </AdminApplicationCard>
+        ))}
+      </ul>
+    ) : (
+      <p class="mt-3 text-sm text-muted">Henüz analiz başvurusu yok.</p>
+    )}
+  </section>
+
+  <section class="mt-10">
+    <h2 class="text-lg font-semibold">Danışmanlık başvuruları</h2>
+    {data.consultancy.length > 0 ? (
+      <ul class="mt-4 space-y-4" role="list">
+        {data.consultancy.map((row) => (
+          <AdminApplicationCard
+            type="consultancy"
+            id={row.id}
+            fullName={row.full_name}
+            email={row.email}
+            phone={row.phone}
+            status={row.status}
+            createdAt={row.created_at}
+          >
+            <dl class="grid gap-1 text-xs text-muted">
+              {row.topic && (
+                <div>
+                  <dt class="inline font-medium text-ink">Konu: </dt>
+                  <dd class="inline">{row.topic}</dd>
+                </div>
+              )}
+              {row.company && (
+                <div>
+                  <dt class="inline font-medium text-ink">Firma: </dt>
+                  <dd class="inline">{row.company}</dd>
+                </div>
+              )}
+              {row.message && (
+                <div>
+                  <dt class="inline font-medium text-ink">Mesaj: </dt>
+                  <dd class="inline">{row.message}</dd>
+                </div>
+              )}
+            </dl>
+          </AdminApplicationCard>
+        ))}
+      </ul>
+    ) : (
+      <p class="mt-3 text-sm text-muted">Henüz danışmanlık başvurusu yok.</p>
+    )}
+  </section>
+
+  <section class="mt-10">
+    <h2 class="text-lg font-semibold">İletişim mesajları</h2>
+    {data.contact.length > 0 ? (
+      <ul class="mt-4 space-y-4" role="list">
+        {data.contact.map((row) => (
+          <AdminApplicationCard
+            type="contact"
+            id={row.id}
+            fullName={row.full_name}
+            email={row.email}
+            status={row.status}
+            createdAt={row.created_at}
+          >
+            <dl class="grid gap-1 text-xs text-muted">
+              {row.subject && (
+                <div>
+                  <dt class="inline font-medium text-ink">Konu: </dt>
+                  <dd class="inline">{row.subject}</dd>
+                </div>
+              )}
+              <div>
+                <dt class="inline font-medium text-ink">Mesaj: </dt>
+                <dd class="inline">{row.message}</dd>
+              </div>
+            </dl>
+          </AdminApplicationCard>
+        ))}
+      </ul>
+    ) : (
+      <p class="mt-3 text-sm text-muted">Henüz iletişim mesajı yok.</p>
+    )}
+  </section>
+
+  <script>
+    document.querySelectorAll(".status-select").forEach((select) => {
+      select.addEventListener("change", async () => {
+        const card = select.closest("[data-type]") as HTMLElement | null;
+        if (!card) return;
+        const type = card.dataset.type;
+        const id = Number(card.dataset.id);
+        const status = (select as HTMLSelectElement).value;
+        const previous = select.getAttribute("data-current") || status;
+        if (!type || !id || !status) return;
+
+        select.setAttribute("disabled", "true");
+        try {
+          const res = await fetch("/api/admin/status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              type,
+              id,
+              status,
+              previous_status: previous,
+            }),
+          });
+          const data = await res.json();
+          if (data.ok) {
+            window.location.reload();
+          } else {
+            alert(data.error || "Durum güncellenemedi.");
+            (select as HTMLSelectElement).value = previous;
+            select.removeAttribute("disabled");
+          }
+        } catch {
+          alert("Bağlantı sorunu oluştu.");
+          (select as HTMLSelectElement).value = previous;
+          select.removeAttribute("disabled");
+        }
+      });
+    });
+
+    document.querySelectorAll(".delete-app-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const type = (btn as HTMLButtonElement).dataset.type;
+        const id = Number((btn as HTMLButtonElement).dataset.id);
+        if (!type || !id) return;
+        if (
+          !confirm(
+            "Bu başvurudaki kişisel veriler anonimleştirilecek. CRM kaydı kalır, ad/e-posta silinir. Devam?"
+          )
+        ) {
+          return;
+        }
+        btn.setAttribute("disabled", "true");
+        try {
+          const res = await fetch("/api/admin/application", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type, id }),
+          });
+          const data = await res.json();
+          if (data.ok) {
+            window.location.reload();
+          } else {
+            alert(data.error || "Silme işlemi tamamlanamadı.");
+            btn.removeAttribute("disabled");
+          }
+        } catch {
+          alert("Bağlantı sorunu oluştu.");
+          btn.removeAttribute("disabled");
+        }
+      });
+    });
+  </script>
+</AdminLayout>

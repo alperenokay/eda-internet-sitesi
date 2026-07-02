@@ -1,0 +1,44 @@
+---
+import Logo from "@/components/ui/Logo.astro";
+import ButtonLink from "@/components/ui/ButtonLink.astro";
+
+const nav = [
+  { href: "/danismanlik", label: "Danışmanlık" },
+  { href: "/analizler", label: "Analizler" },
+  { href: "/blog", label: "Blog" },
+  { href: "/iletisim", label: "İletişim" },
+];
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
+  <div class="mx-auto flex min-h-[101px] max-w-[1360px] items-center gap-4 px-6 py-2 sm:min-h-[110px] sm:gap-6 sm:px-10 md:min-h-[115px]">
+    <a href="/" class="flex shrink-0 items-center no-underline" aria-label="Ana sayfa, ME Package">
+      <Logo variant="header" />
+    </a>
+    <nav aria-label="Ana menü" class="hidden min-w-0 flex-1 justify-center xl:flex">
+      <ul class="flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-[0.92rem]">
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} class="text-muted no-underline transition-colors hover:text-heading">
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <div class="ml-auto flex shrink-0 items-center gap-4">
+      <nav aria-label="Ana menü" class="hidden sm:block xl:hidden">
+        <ul class="flex items-center gap-x-5 text-[0.92rem]">
+          {nav.map((item) => (
+            <li>
+              <a href={item.href} class="text-muted no-underline transition-colors hover:text-heading">
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <ButtonLink href="/danismanlik#basvuru" variant="primary">Başvur</ButtonLink>
+    </div>
+  </div>
+</header>

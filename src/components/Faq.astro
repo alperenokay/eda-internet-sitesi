@@ -1,0 +1,15 @@
+---
+import { FAQ_ITEMS } from "@/lib/faq-data";
+import Section from "@/components/ui/Section.astro";
+---
+
+<Section variant="soft" id="sss" eyebrow="SSS" title="Sık sorulanlar">
+  <dl class="grid gap-6 md:grid-cols-2">
+    {FAQ_ITEMS.map((item) => (
+      <div class="rounded-[var(--radius-card)] border border-line bg-white p-5">
+        <dt class="text-base font-semibold text-heading">{item.question}</dt>
+        <dd class="mt-2 text-sm leading-relaxed text-muted">{item.answer}</dd>
+      </div>
+    ))}
+  </dl>
+</Section>

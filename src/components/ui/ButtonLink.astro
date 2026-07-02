@@ -1,0 +1,21 @@
+---
+export interface Props {
+  href: string;
+  variant?: "primary" | "ghost" | "ghost-dark";
+}
+
+const { href, variant = "primary" } = Astro.props;
+
+const base =
+  "inline-flex items-center justify-center rounded-[var(--radius-btn)] px-5 py-3 text-[0.92rem] font-medium no-underline transition-colors";
+
+const variants = {
+  primary: `${base} bg-green text-white hover:bg-green-deep`,
+  ghost: `${base} border border-muted bg-transparent text-text hover:border-green hover:text-green-deep`,
+  "ghost-dark": `${base} border border-white/25 text-white hover:border-leaf`,
+};
+---
+
+<a href={href} class={variants[variant]}>
+  <slot />
+</a>

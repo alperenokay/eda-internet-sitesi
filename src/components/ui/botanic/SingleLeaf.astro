@@ -1,0 +1,19 @@
+---
+export interface Props {
+  variant?: "soft" | "footer";
+}
+
+const { variant = "soft" } = Astro.props;
+const stroke = variant === "footer" ? "#fff" : "var(--color-green)";
+const fill = variant === "footer" ? "rgba(255,255,255,.05)" : "rgba(124,196,150,.14)";
+const className = variant === "footer" ? "leaf-bg-footer" : "leaf-bg-soft";
+---
+
+<svg class={className} viewBox="0 0 200 200" fill="none" aria-hidden="true">
+  <path
+    d="M100 20 C60 40 40 90 55 160 C120 150 170 100 170 40 C140 60 110 65 90 95"
+    stroke={stroke}
+    stroke-width="2"
+    fill={fill}
+  />
+</svg>

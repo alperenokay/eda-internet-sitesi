@@ -1,0 +1,213 @@
+---
+export interface Props {
+  post?: {
+    id: number;
+    slug: string;
+    title: string;
+    excerpt: string | null;
+    body_md: string;
+    cover_image: string | null;
+    meta_title: string | null;
+    meta_desc: string | null;
+    keywords: string | null;
+    status: string;
+  };
+}
+
+const { post } = Astro.props;
+const isEdit = Boolean(post);
+
+const inputClass =
+  "block w-full rounded-[var(--radius-sm)] border border-line bg-paper px-3 py-2 text-sm";
+---
+
+<form id="blog-form" class="space-y-5">
+  {isEdit && post && <input type="hidden" name="id" value={post.id} />}
+
+  <div>
+    <label for="title" class="mb-1 block text-sm font-medium">Başlık</label>
+    <input type="text" id="title" name="title" required class={inputClass} value={post?.title ?? ""} />
+  </div>
+
+  <div>
+    <label for="slug" class="mb-1 block text-sm font-medium">Slug</label>
+    <input type="text" id="slug" name="slug" required class={inputClass} value={post?.slug ?? ""} />
+    <p class="mt-1 text-xs text-muted">URL: /blog/&lt;slug&gt;</p>
+  </div>
+
+  <div>
+    <label for="excerpt" class="mb-1 block text-sm font-medium">Özet</label>
+    <textarea id="excerpt" name="excerpt" rows={2} class={inputClass}>{post?.excerpt ?? ""}</textarea>
+  </div>
+
+  <div>
+    <label for="body_md" class="mb-1 block text-sm font-medium">Gövde (Markdown)</label>
+    <textarea id="body_md" name="body_md" required rows={16} class={inputClass}>{post?.body_md ?? ""}</textarea>
+  </div>
+
+  <div>
+    <label for="cover_image" class="mb-1 block text-sm font-medium">Kapak görseli URL (opsiyonel)</label>
+    <input type="text" id="cover_image" name="cover_image" class={inputClass} value={post?.cover_image ?? ""} />
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label for="meta_title" class="mb-1 block text-sm font-medium">Meta title (opsiyonel)</label>
+      <input type="text" id="meta_title" name="meta_title" class={inputClass} value={post?.meta_title ?? ""} />
+    </div>
+    <div>
+      <label for="keywords" class="mb-1 block text-sm font-medium">Anahtar kelimeler (opsiyonel)</label>
+      <input type="text" id="keywords" name="keywords" class={inputClass} value={post?.keywords ?? ""} />
+    </div>
+  </div>
+
+  <div>
+    <label for="meta_desc" class="mb-1 block text-sm font-medium">Meta description (opsiyonel)</label>
+    <textarea id="meta_desc" name="meta_desc" rows={2} class={inputClass}>{post?.meta_desc ?? ""}</textarea>
+  </div>
+
+  <div>
+    <label for="status" class="mb-1 block text-sm font-medium">Durum</label>
+    <select id="status" name="status" class={inputClass}>
+      <option value="draft" selected={post?.status !== "published"}>Taslak</option>
+      <option value="published" selected={post?.status === "published"}>Yayında</option>
+    </select>
+    {isEdit && post?.status === "published" && (
+      <p class="mt-2 text-xs text-muted">
+        Yayında olan yazılar düzenlenebilir.
+        <a href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer" class="font-semibold text-green-deep no-underline hover:text-green">
+          Sitede gör
+        </a>
+      </p>
+    )}
+  </div>
+
+  <p id="form-error" class="hidden text-sm text-signal" role="alert" aria-live="polite"></p>
+  <p id="form-success" class="hidden text-sm text-green-deep" role="status"></p>
+
+  <div class="flex flex-wrap gap-3">
+    <button
+      type="submit"
+      id="save-btn"
+      class="inline-flex items-center justify-center rounded-[var(--radius-btn)] bg-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-deep disabled:opacity-60"
+    >
+      Kaydet
+    </button>
+    {isEdit && post && (
+      <button
+        type="button"
+        id="delete-btn"
+        class="inline-flex items-center justify-center rounded-[var(--radius-sm)] border border-line bg-paper px-5 py-2.5 text-sm font-semibold text-signal hover:border-signal"
+      >
+        Sil
+      </button>
+    )}
+  </div>
+</form>
+
+<script>
+  import { slugify } from "@/lib/slugify";
+
+  const form = document.getElementById("blog-form") as HTMLFormElement;
+  const titleInput = document.getElementById("title") as HTMLInputElement;
+  const slugInput = document.getElementById("slug") as HTMLInputElement;
+  const errorEl = document.getElementById("form-error") as HTMLParagraphElement;
+  const successEl = document.getElementById("form-success") as HTMLParagraphElement;
+  const saveBtn = document.getElementById("save-btn") as HTMLButtonElement;
+  const deleteBtn = document.getElementById("delete-btn") as HTMLButtonElement | null;
+  const idInput = form.querySelector('input[name="id"]') as HTMLInputElement | null;
+  const isEdit = Boolean(idInput);
+
+  let slugTouched = isEdit;
+
+  titleInput?.addEventListener("input", () => {
+    if (!slugTouched && titleInput.value) {
+      slugInput.value = slugify(titleInput.value);
+    }
+  });
+
+  slugInput?.addEventListener("input", () => {
+    slugTouched = true;
+  });
+
+  function showError(msg: string) {
+    errorEl.textContent = msg;
+    errorEl.classList.remove("hidden");
+    successEl.classList.add("hidden");
+  }
+
+  function showSuccess(msg: string) {
+    successEl.textContent = msg;
+    successEl.classList.remove("hidden");
+    errorEl.classList.add("hidden");
+  }
+
+  function getPayload() {
+    const fd = new FormData(form);
+    return {
+      id: idInput ? Number(idInput.value) : undefined,
+      title: String(fd.get("title") || "").trim(),
+      slug: String(fd.get("slug") || "").trim(),
+      excerpt: String(fd.get("excerpt") || "").trim() || null,
+      body_md: String(fd.get("body_md") || "").trim(),
+      cover_image: String(fd.get("cover_image") || "").trim() || null,
+      meta_title: String(fd.get("meta_title") || "").trim() || null,
+      meta_desc: String(fd.get("meta_desc") || "").trim() || null,
+      keywords: String(fd.get("keywords") || "").trim() || null,
+      status: String(fd.get("status") || "draft"),
+    };
+  }
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorEl.classList.add("hidden");
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Gönderiliyor...";
+
+    const payload = getPayload();
+    try {
+      const res = await fetch("/api/admin/blog", {
+        method: isEdit ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        showSuccess("Kaydedildi.");
+        if (!isEdit && data.id) {
+          window.location.href = `/admin/blog/${data.id}`;
+        }
+      } else {
+        showError(data.error || "Kayıt sırasında bir sorun oluştu.");
+      }
+    } catch {
+      showError("Bağlantı sorunu oluştu. Lütfen tekrar deneyin.");
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Kaydet";
+    }
+  });
+
+  deleteBtn?.addEventListener("click", async () => {
+    if (!idInput) return;
+    if (!confirm("Bu yazıyı silmek istediğinize emin misiniz?")) return;
+    deleteBtn.disabled = true;
+    try {
+      const res = await fetch("/api/admin/blog", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: Number(idInput.value) }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        window.location.href = "/admin/blog";
+      } else {
+        showError(data.error || "Silme sırasında bir sorun oluştu.");
+        deleteBtn.disabled = false;
+      }
+    } catch {
+      showError("Bağlantı sorunu oluştu. Lütfen tekrar deneyin.");
+      deleteBtn.disabled = false;
+    }
+  });
+</script>
