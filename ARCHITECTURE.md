@@ -30,6 +30,7 @@ Kurumsal avukatlık teması (ONAYLI iskelet evrimi):
 - Zemin: sıcak kağıt tonu (`--bg`, `--bg-2`); panel: lacivert (`--panel` #0f2438).
 - Vurgu: altın/bronz (`--green` token alias); botanik motif yok, adalet terazisi mührü.
 - Tipografi: Cormorant Garamond (başlık), Inter (gövde). Monospace yok.
+- Arka plan: `LawBackground` (terazi, sütun, kitap, çekiç, defne, mühür); hero, bölüm, CTA, footer ve sayfa zemininde düşük opaklık.
 
 ## İletişim sabitleri (site.ts)
 - Marka: Sağır Hukuk & Danışmanlık

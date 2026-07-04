@@ -1,32 +1,34 @@
----
-import Container from "./Container.astro";
-import ButtonLink from "./ButtonLink.astro";
-import FormattedText from "./FormattedText.astro";
-
-export interface Props {
-  title: string;
-  text: string;
-  buttonHref: string;
-  buttonLabel: string;
-}
-
-const { title, text, buttonHref, buttonLabel } = Astro.props;
----
-
-<section class="border-t border-line bg-panel py-14 text-white sm:py-16">
-  <Container>
-    <div class="flex flex-wrap items-center justify-between gap-6">
-      <div class="max-w-xl">
-        <h2 class="font-display text-2xl font-semibold text-white sm:text-3xl">
-          <FormattedText text={title} as="span" />
-        </h2>
-        <p class="mt-2 text-white/70">
-          <FormattedText text={text} as="span" />
-        </p>
-      </div>
-      <ButtonLink href={buttonHref} variant="ghost-dark">
-        <FormattedText text={buttonLabel} as="span" />
-      </ButtonLink>
-    </div>
-  </Container>
-</section>
+---
+import Container from "./Container.astro";
+import ButtonLink from "./ButtonLink.astro";
+import FormattedText from "./FormattedText.astro";
+import LawBackground from "./law/LawBackground.astro";
+
+export interface Props {
+  title: string;
+  text: string;
+  buttonHref: string;
+  buttonLabel: string;
+}
+
+const { title, text, buttonHref, buttonLabel } = Astro.props;
+---
+
+<section class="relative overflow-hidden border-t border-line bg-panel py-14 text-white sm:py-16">
+  <LawBackground tone="dark" density="band" />
+  <Container>
+    <div class="relative z-[1] flex flex-wrap items-center justify-between gap-6">
+      <div class="max-w-xl">
+        <h2 class="font-display text-2xl font-semibold text-white sm:text-3xl">
+          <FormattedText text={title} as="span" />
+        </h2>
+        <p class="mt-2 text-white/70">
+          <FormattedText text={text} as="span" />
+        </p>
+      </div>
+      <ButtonLink href={buttonHref} variant="ghost-dark">
+        <FormattedText text={buttonLabel} as="span" />
+      </ButtonLink>
+    </div>
+  </Container>
+</section>

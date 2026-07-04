@@ -1,0 +1,33 @@
+---
+export interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<svg viewBox="0 0 108 108" fill="none" aria-hidden="true" class:list={["h-full w-full", className]}>
+  <path
+    d="M18 86 78 26"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+  />
+  <rect
+    x="62"
+    y="14"
+    width="28"
+    height="18"
+    rx="2"
+    transform="rotate(45 76 23)"
+    stroke="currentColor"
+    stroke-width="1.6"
+  />
+  <path
+    d="M14 78h22l-4 12H18l-4-12Z"
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-linejoin="round"
+  />
+  <circle cx="18" cy="86" r="3" fill="currentColor" opacity="0.5" />
+</svg>

@@ -1,6 +1,7 @@
 ---
 import Container from "./Container.astro";
 import FormattedText from "./FormattedText.astro";
+import LawBackground from "./law/LawBackground.astro";
 
 export interface Props {
   variant?: "default" | "soft" | "panel";
@@ -23,7 +24,7 @@ const {
 } = Astro.props;
 
 const variants = {
-  default: "bg-bg",
+  default: "relative overflow-hidden bg-bg",
   soft: "relative overflow-hidden border-y border-line bg-bg-2",
   panel: "relative overflow-hidden bg-panel text-white",
 };
@@ -38,6 +39,9 @@ const eyebrowClass =
   class:list={[variants[variant], tight ? "py-14 sm:py-16" : "py-[4.125rem] sm:py-[4.125rem]"]}
   id={id}
 >
+  {variant === "default" && <LawBackground tone="light" density="section" class="opacity-70" />}
+  {variant === "soft" && <LawBackground tone="light" density="section" />}
+  {variant === "panel" && <LawBackground tone="dark" density="panel" />}
   <slot name="backdrop" />
   <Container>
     {(eyebrow || title || lead || caption) && (

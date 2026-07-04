@@ -563,18 +563,14 @@ src/lib/{content,content-defaults}.ts, src/pages/admin/icerik/, src/pages/api/ad
 
 ---
 
-## Faz: Admin paneli kullanılabilirlik
+## Faz: Hukuki arka plan figürleri
 
 **Tarih:** 2026-07-05
 
 **Yapılanlar**
-- Menü etiketleri: İçerik → Sayfa metinleri, Blog → Yayınlar
-- İçerik listesi gruplandı (tüm site / sayfalar / yasal / sistem)
-- Düzenleme sayfasında sol bölüm menüsü (sayfa içi atlama)
-- Her form bölümünde "Sitede: ..." konum açıklaması
-- Teknik etiketler sadeleştirildi (Hero, Eyebrow, SEO → Türkçe)
-- Özet sayfasında açıklamalı kısayol kartları
-- `src/lib/admin-content-ui.ts`, `AdminSection.astro`, `AdminContentSidebar.astro`
+- `src/components/ui/law/`: terazi, sütun, çekiç, kitap, defne, `LawBackground.astro`
+- Hero, Section, CtaBand, Footer ve sayfa zemininde dekoratif figürler
+- Koyu bölümlerde altın ton, açık zeminlerde lacivert çizgi; metin okunabilirliği korunur
 
 **Doğrulama:** `npm run build` hatasız
 

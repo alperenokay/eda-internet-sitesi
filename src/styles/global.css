@@ -61,10 +61,68 @@ h1, h2, h3, h4 {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.45;
+  opacity: 0.35;
   background:
     linear-gradient(90deg, rgba(15, 36, 56, 0.03) 1px, transparent 1px) 0 0 / 4rem 100%,
     linear-gradient(rgba(15, 36, 56, 0.025) 1px, transparent 1px) 0 0 / 100% 4rem;
+}
+
+/* Hukuki arka plan figürleri (terazi, sütun, kitap, çekiç) */
+.law-bg--light {
+  color: rgba(15, 36, 56, 0.11);
+}
+
+.law-bg--dark {
+  color: rgba(212, 188, 130, 0.14);
+}
+
+.law-fig {
+  position: absolute;
+  opacity: 1;
+}
+
+.law-fig--page-a { right: -2rem; top: 18%; width: 14rem; opacity: 0.055; }
+.law-fig--page-b { left: -1.5rem; bottom: 8%; width: 7rem; opacity: 0.05; }
+.law-fig--page-c { right: 18%; bottom: 22%; width: 9rem; opacity: 0.045; transform: rotate(-8deg); }
+.law-fig--page-d { left: 42%; top: 6%; width: 6rem; opacity: 0.04; }
+
+.law-fig--hero-a { right: 2%; top: 8%; width: 11rem; opacity: 0.13; }
+.law-fig--hero-b { left: -2%; bottom: -4%; width: 6.5rem; opacity: 0.09; }
+.law-fig--hero-c { right: 22%; bottom: 10%; width: 8.5rem; opacity: 0.08; transform: rotate(-6deg); }
+.law-fig--hero-d { left: 6%; top: 18%; width: 5.5rem; opacity: 0.07; transform: rotate(-18deg); }
+.law-fig--hero-e { right: 38%; top: 4%; width: 10rem; opacity: 0.06; }
+.law-fig--hero-f { left: 38%; bottom: 6%; width: 5rem; opacity: 0.06; }
+
+.law-fig--section-a { right: -1rem; top: 0; width: 8.5rem; opacity: 0.1; }
+.law-fig--section-b { left: 2%; bottom: 8%; width: 7rem; opacity: 0.08; transform: rotate(4deg); }
+.law-fig--section-c { right: 18%; bottom: 12%; width: 4.5rem; opacity: 0.07; transform: rotate(12deg); }
+
+.law-fig--panel-a { right: 4%; top: 10%; width: 10rem; opacity: 0.16; }
+.law-fig--panel-b { left: -1rem; bottom: -2rem; width: 6rem; opacity: 0.12; }
+.law-fig--panel-c { right: 28%; bottom: 8%; width: 9rem; opacity: 0.1; }
+.law-fig--panel-d { left: 12%; top: 12%; width: 5.5rem; opacity: 0.11; }
+
+.law-fig--footer-a { right: 6%; top: 14%; width: 9rem; opacity: 0.12; }
+.law-fig--footer-b { left: -1rem; bottom: 0; width: 5.5rem; opacity: 0.1; }
+.law-fig--footer-c { right: 24%; bottom: 18%; width: 7rem; opacity: 0.09; transform: rotate(-5deg); }
+.law-fig--footer-d { left: 8%; top: 20%; width: 5rem; opacity: 0.1; }
+.law-fig--footer-e { left: 42%; bottom: 8%; width: 4rem; opacity: 0.08; transform: rotate(-14deg); }
+
+.law-fig--band-a { right: 4%; top: 50%; width: 8rem; opacity: 0.14; transform: translateY(-50%); }
+.law-fig--band-b { left: 3%; bottom: 10%; width: 4.5rem; opacity: 0.11; transform: rotate(-12deg); }
+.law-fig--band-c { left: 46%; top: 8%; width: 5rem; opacity: 0.1; }
+
+@media (max-width: 640px) {
+  .law-fig--hero-a { width: 8rem; opacity: 0.1; right: -1rem; }
+  .law-fig--hero-b,
+  .law-fig--hero-e,
+  .law-fig--page-d,
+  .law-fig--footer-e { display: none; }
+  .law-fig--section-c { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .law-fig { transform: none !important; }
 }
 
 .hero-law-glow {
