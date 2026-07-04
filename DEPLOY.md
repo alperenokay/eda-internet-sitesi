@@ -2,7 +2,7 @@
 
 ## 1. GitHub'a kod gönderme
 
-Proje remote: `https://github.com/alperenokay/internet-sitesi.git`
+Proje remote: `https://github.com/alperenokay/eda-internet-sitesi.git` (mepackage ayrı repo: `internet-sitesi`)
 
 ```powershell
 cd "C:\Users\alper\OneDrive\Desktop\eda internet sitesi"
@@ -20,7 +20,7 @@ git push origin main
 
 1. [render.com](https://render.com) → giriş yap
 2. **New +** → **Blueprint**
-3. GitHub hesabını bağla, repo: `alperenokay/internet-sitesi`
+3. GitHub hesabını bağla, repo: `alperenokay/eda-internet-sitesi`
 4. `render.yaml` otomatik okunur; onayla
 
 Oluşacak kaynaklar:
