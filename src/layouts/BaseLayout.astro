@@ -5,6 +5,7 @@ import "@/styles/global.css";
 import Header from "@/components/Header.astro";
 
 import Footer from "@/components/Footer.astro";
+import LawDecorLayer from "@/components/ui/LawDecorLayer.astro";
 
 import { getContent, buildSiteFromGlobal } from "@/lib/content";
 import { stripInlineHtml } from "@/lib/render-inline-html";
@@ -202,11 +203,12 @@ const orgSchema = {
 
     <Header global={global} />
 
-    <main>
-
-      <slot />
-
-    </main>
+    <div class="law-decor-shell">
+      <LawDecorLayer />
+      <main class="law-decor-main">
+        <slot />
+      </main>
+    </div>
 
     <Footer global={global} site={site} />
 

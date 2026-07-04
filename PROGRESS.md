@@ -589,3 +589,16 @@ src/lib/{content,content-defaults}.ts, src/pages/admin/icerik/, src/pages/api/ad
 
 **Doğrulama:** `npm run build` hatasız
 
+---
+
+## Faz: Yan gutter hukuki dekor (v2)
+
+**Tarih:** 2026-07-05
+
+**Yapılanlar**
+- `LawDecorLayer`: 3 kolon, 3 terazi, 3 tokmak, 3 kalem; yan gutter'da sabit konum
+- İçerik alanı (1360px) dışında; tek opaklık, z-index dekor 1 / içerik 2
+- Logo mührü değiştirilmedi; 1280px altında dekor gizli
+
+**Doğrulama:** `npm run build` hatasız
+

@@ -1,0 +1,17 @@
+---
+export interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<svg viewBox="0 0 80 96" fill="none" aria-hidden="true" class:list={["law-decor-svg", className]}>
+  <path d="M28 86H52L50 94H30L28 86Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="miter" vector-effect="non-scaling-stroke" />
+  <path d="M40 86V24" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" vector-effect="non-scaling-stroke" />
+  <rect x="38" y="18" width="4" height="4" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke" />
+  <path d="M10 28H70" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" vector-effect="non-scaling-stroke" />
+  <path d="M10 28L10 44L22 56H10V28Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="miter" vector-effect="non-scaling-stroke" />
+  <path d="M70 28L70 44L58 56H70V28Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="miter" vector-effect="non-scaling-stroke" />
+  <path d="M16 56H26M54 56H64" stroke="currentColor" stroke-width="1.1" stroke-linecap="square" vector-effect="non-scaling-stroke" opacity="0.55" />
+</svg>

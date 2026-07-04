@@ -132,6 +132,73 @@ h1, h2, h3, h4 {
   background: linear-gradient(90deg, var(--color-panel), var(--color-green), var(--color-panel));
 }
 
+/* Yan gutter dekor: tek opaklık katmanı, içerik üstünde değil */
+.law-decor-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.law-decor-main {
+  position: relative;
+  z-index: 2;
+}
+
+.law-decor-layer {
+  display: none;
+}
+
+.law-decor-item {
+  position: fixed;
+  z-index: 1;
+  pointer-events: none;
+  color: rgba(15, 36, 56, 0.2);
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.65));
+}
+
+.law-decor-item--left {
+  left: max(0.75rem, calc((100vw - 1360px) / 2 - 5.25rem));
+}
+
+.law-decor-item--right {
+  right: max(0.75rem, calc((100vw - 1360px) / 2 - 5.25rem));
+}
+
+.law-decor-item--lg {
+  height: 9.5rem;
+}
+
+.law-decor-item--md {
+  height: 6.75rem;
+}
+
+.law-decor-item--sm {
+  height: 4.75rem;
+}
+
+.law-decor-svg {
+  display: block;
+  height: 100%;
+  width: auto;
+}
+
+@media (min-width: 1280px) {
+  .law-decor-layer {
+    display: block;
+  }
+}
+
+@media (max-width: 1279px) {
+  .law-decor-item {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .law-decor-item {
+    filter: none;
+  }
+}
+
 :focus-visible {
   outline: 2px solid var(--color-green);
   outline-offset: 2px;
