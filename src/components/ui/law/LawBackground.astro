@@ -4,7 +4,6 @@ import LawColumn from "./LawColumn.astro";
 import LawGavel from "./LawGavel.astro";
 import LawBook from "./LawBook.astro";
 import LawLaurel from "./LawLaurel.astro";
-import LawSeal from "./LawSeal.astro";
 
 export interface Props {
   tone?: "light" | "dark";
@@ -23,54 +22,40 @@ const toneClass = tone === "dark" ? "law-bg--dark" : "law-bg--light";
 >
   {density === "hero" && (
     <>
-      <div class="law-fig law-fig--hero-watermark"><LawScales /></div>
-      <div class="law-fig law-fig--hero-a"><LawScales /></div>
-      <div class="law-fig law-fig--hero-b"><LawColumn /></div>
-      <div class="law-fig law-fig--hero-c"><LawBook /></div>
-      <div class="law-fig law-fig--hero-d"><LawGavel /></div>
-      <div class="law-fig law-fig--hero-e"><LawLaurel /></div>
-      <div class="law-fig law-fig--hero-f"><LawSeal variant="watermark" /></div>
+      <div class="law-fig law-fig--lg law-fig--hero-scale"><LawScales /></div>
+      <div class="law-fig law-fig--md law-fig--hero-column"><LawColumn /></div>
+      <div class="law-fig law-fig--sm law-fig--hero-book"><LawBook /></div>
     </>
   )}
 
   {density === "section" && (
     <>
-      <div class="law-fig law-fig--section-watermark"><LawScales /></div>
-      <div class="law-fig law-fig--section-a"><LawScales /></div>
-      <div class="law-fig law-fig--section-b"><LawBook /></div>
-      <div class="law-fig law-fig--section-c"><LawGavel /></div>
-      <div class="law-fig law-fig--section-d"><LawColumn /></div>
+      <div class="law-fig law-fig--md law-fig--section-scale"><LawScales /></div>
+      <div class="law-fig law-fig--sm law-fig--section-book"><LawBook /></div>
+      <div class="law-fig law-fig--sm law-fig--section-column"><LawColumn /></div>
     </>
   )}
 
   {density === "panel" && (
     <>
-      <div class="law-fig law-fig--panel-watermark"><LawScales /></div>
-      <div class="law-fig law-fig--panel-a"><LawScales /></div>
-      <div class="law-fig law-fig--panel-b"><LawColumn /></div>
-      <div class="law-fig law-fig--panel-c"><LawLaurel /></div>
-      <div class="law-fig law-fig--panel-d"><LawSeal variant="watermark" /></div>
-      <div class="law-fig law-fig--panel-e"><LawGavel /></div>
+      <div class="law-fig law-fig--lg law-fig--panel-scale"><LawScales /></div>
+      <div class="law-fig law-fig--sm law-fig--panel-laurel"><LawLaurel /></div>
+      <div class="law-fig law-fig--md law-fig--panel-column"><LawColumn /></div>
     </>
   )}
 
   {density === "footer" && (
     <>
-      <div class="law-fig law-fig--footer-watermark"><LawScales /></div>
-      <div class="law-fig law-fig--footer-a"><LawScales /></div>
-      <div class="law-fig law-fig--footer-b"><LawColumn /></div>
-      <div class="law-fig law-fig--footer-c"><LawBook /></div>
-      <div class="law-fig law-fig--footer-d"><LawSeal variant="watermark" /></div>
-      <div class="law-fig law-fig--footer-e"><LawGavel /></div>
+      <div class="law-fig law-fig--md law-fig--footer-scale"><LawScales /></div>
+      <div class="law-fig law-fig--sm law-fig--footer-book"><LawBook /></div>
+      <div class="law-fig law-fig--sm law-fig--footer-column"><LawColumn /></div>
     </>
   )}
 
   {density === "band" && (
     <>
-      <div class="law-fig law-fig--band-watermark"><LawScales /></div>
-      <div class="law-fig law-fig--band-a"><LawScales /></div>
-      <div class="law-fig law-fig--band-b"><LawGavel /></div>
-      <div class="law-fig law-fig--band-c"><LawSeal variant="watermark" /></div>
+      <div class="law-fig law-fig--md law-fig--band-scale"><LawScales /></div>
+      <div class="law-fig law-fig--sm law-fig--band-gavel"><LawGavel /></div>
     </>
   )}
 </div>
