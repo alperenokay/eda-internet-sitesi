@@ -574,3 +574,18 @@ src/lib/{content,content-defaults}.ts, src/pages/admin/icerik/, src/pages/api/ad
 
 **Doğrulama:** `npm run build` hatasız
 
+---
+
+## Faz: Arka plan figürleri geri alındı
+
+**Tarih:** 2026-07-05
+
+**Neden:** Parşömen çerçeve ve dekoratif figürler istenen estetikte olmadı.
+
+**Yapılanlar**
+- Layout ve stiller `8de93f4` öncesi sade haline döndürüldü
+- `LawBackground`, parşömen çerçeve ve ek figür bileşenleri kaldırıldı
+- Logo mührü (`LawSeal`) korundu
+
+**Doğrulama:** `npm run build` hatasız
+
