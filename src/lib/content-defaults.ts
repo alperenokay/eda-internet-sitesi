@@ -283,7 +283,7 @@ export const CONTENT_DEFAULTS: ContentMap = {
       showTrustPanel: true,
     },
     principlesSection: {
-      eyebrow: "Yaklaşımımız",
+      eyebrow: "Misyon ve vizyonumuz",
       title: "Güvenilir ve ölçülü temsil",
       items: [
         { title: "Şeffaf iletişim", text: "Sürecin her aşamasında net bilgilendirme." },

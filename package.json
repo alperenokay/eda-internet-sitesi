@@ -11,6 +11,7 @@
     "db:setup": "node scripts/db-init.mjs && node scripts/db-migrate-content.mjs",
     "db:migrate-kvkk": "node scripts/db-migrate-kvkk.mjs",
     "db:migrate-content": "node scripts/db-migrate-content.mjs",
+    "db:restore-home-lists": "node --experimental-strip-types scripts/restore-home-lists.mjs",
     "db:seed-blog": "node --experimental-strip-types scripts/seed-blog.mjs",
     "purge:retention": "node scripts/purge-retention.mjs",
     "admin:create": "node scripts/admin-create.mjs",
