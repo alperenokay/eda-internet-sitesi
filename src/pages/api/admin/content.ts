@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { assertSameOrigin } from "@/lib/auth";
 import { writeAuditLog } from "@/lib/audit";
 import {
   getContent,
@@ -70,9 +69,8 @@ function sanitizeNav(items: { href: string; label: string }[]) {
     .slice(0, 12);
 }
 
-export const PUT: APIRoute = async ({ request, locals }) => {
+const saveContentHandler: APIRoute = async ({ request, locals }) => {
   if (!locals.adminId) return json({ ok: false, error: "Oturum gerekli." }, 401);
-  if (!assertSameOrigin(request)) return json({ ok: false, error: "Geçersiz kaynak." }, 403);
 
   let body: Record<string, unknown>;
   try {
@@ -103,3 +101,6 @@ export const PUT: APIRoute = async ({ request, locals }) => {
     return json({ ok: false, error: "Kayıt sırasında bir sorun oluştu." }, 500);
   }
 };
+
+export const PUT = saveContentHandler;
+export const POST = saveContentHandler;
