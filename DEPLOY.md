@@ -16,25 +16,60 @@ git push origin main
 
 ---
 
-## 2. Render Blueprint (ilk kurulum)
+## 2. PostgreSQL (me-package ile paylaşımlı, zorunlu ön adım)
 
-1. [render.com](https://render.com) → giriş yap
-2. **New +** → **Blueprint**
-3. GitHub hesabını bağla, repo: `alperenokay/eda-internet-sitesi`
-4. `render.yaml` otomatik okunur; onayla
+Render **ücretsiz planda hesap başına yalnızca 1 PostgreSQL** verir. me-package zaten `mepackage-db` kullanıyor. sagirhukuk **aynı sunucuda ayrı database** açar; veriler karışmaz.
 
-Oluşacak kaynaklar:
+### 2a. `sagirhukuk` database'ini oluştur
 
-| Kaynak | Ad |
-|---|---|
-| Web servisi | `sagirhukuk` |
-| PostgreSQL | `sagirhukuk-db` |
+1. Render → **mepackage-db** → **Shell** (veya PSQL)
+2. Bir kez çalıştır:
 
-İlk deploy birkaç dakika sürer. Health check: `/api/health` → `{"ok":true,"db":"up"}`.
+```sql
+CREATE DATABASE sagirhukuk;
+```
+
+(`database "sagirhukuk" already exists` derse sorun yok, devam edin.)
+
+### 2b. Bağlantı URL'sini hazırla
+
+1. **mepackage-db** → **Connections** → **Internal Database URL** kopyala
+2. URL'nin sonundaki `/mepackage` kısmını `/sagirhukuk` yap
+
+Örnek:
+
+```
+postgresql://mepackage_user:PAROLA@dpg-xxxxx-a/mepackage
+```
+
+→
+
+```
+postgresql://mepackage_user:PAROLA@dpg-xxxxx-a/sagirhukuk
+```
+
+Bu değeri not al; Blueprint sırasında `DATABASE_URL` olarak istenecek.
 
 ---
 
-## 3. Render Shell (bir kez, zorunlu)
+## 3. Render Blueprint (web servisi)
+
+1. [render.com](https://render.com) → giriş yap
+2. **New +** → **Blueprint** (veya mevcut Blueprint'te **Manual sync**)
+3. GitHub repo: `alperenokay/eda-internet-sitesi`
+4. `render.yaml` onayla; **`DATABASE_URL` alanına 2b'deki URL'yi yapıştır**
+5. Yalnızca **web servisi `sagirhukuk`** oluşur (yeni Postgres kaynağı yok)
+
+İlk deploy birkaç dakika sürer. Health check: `/api/health` → `{"ok":true,"db":"up"}`.
+
+| Kaynak | Ad | Not |
+|---|---|---|
+| Web servisi | `sagirhukuk` | Blueprint ile oluşur |
+| PostgreSQL | `mepackage-db` | me-package ile paylaşımlı; DB adı `sagirhukuk` |
+
+---
+
+## 4. Render Shell (bir kez, zorunlu)
 
 Deploy bittikten sonra: **sagirhukuk** servisi → **Shell**
 
@@ -50,14 +85,14 @@ Admin panel: `https://SENIN-RENDER-URL.onrender.com/admin/login`
 
 ---
 
-## 4. Ortam değişkenleri (Render Dashboard)
+## 5. Ortam değişkenleri (Render Dashboard)
 
 **sagirhukuk** → **Environment** → ekle/düzenle:
 
 | Değişken | Zorunlu | Açıklama |
 |---|---|---|
 | `SESSION_SECRET` | Evet | Blueprint otomatik üretir; değiştirme |
-| `DATABASE_URL` | Evet | DB'den otomatik bağlanır |
+| `DATABASE_URL` | Evet | 2b'deki URL (`.../sagirhukuk`); mepackage-db paylaşımlı |
 | `NOTIFY_TO` | Önerilir | `av.edasagir@sagirhukuk.net` (form bildirimi) |
 | `KVKK_CONTACT_EMAIL` | Önerilir | KVKK sayfası iletişim e-postası |
 | `SMTP_HOST` | Opsiyonel | E-posta bildirimi için |
@@ -69,7 +104,7 @@ SMTP boşsa form yine DB'ye kaydedilir; yalnızca e-posta gitmez.
 
 ---
 
-## 5. Özel domain (sagirhukuk.net)
+## 6. Özel domain (sagirhukuk.net)
 
 **sagirhukuk** → **Settings** → **Custom Domains**
 
@@ -84,7 +119,7 @@ DNS sağlayıcında (GoDaddy, Cloudflare vb.) kayıtları ekle. SSL Render taraf
 
 ---
 
-## 6. Sonraki deploylar
+## 7. Sonraki deploylar
 
 `main` branch'e push → Render otomatik deploy eder (`autoDeploy: true`).
 
@@ -92,9 +127,11 @@ Her deploy'da `npm run db:setup` şemayı günceller (IF NOT EXISTS, güvenli).
 
 ---
 
-## 7. Kontrol listesi
+## 8. Kontrol listesi
 
 - [ ] `git push origin main` tamam
+- [ ] `mepackage-db` üzerinde `CREATE DATABASE sagirhukuk`
+- [ ] `DATABASE_URL` → `.../sagirhukuk`
 - [ ] Render Blueprint deploy yeşil
 - [ ] `/api/health` → db up
 - [ ] Shell: `db:seed-blog` + `admin:create`
@@ -113,5 +150,6 @@ Her deploy'da `npm run db:setup` şemayı günceller (IF NOT EXISTS, güvenli).
 | Admin giriş olmuyor | Shell'de `admin:create` tekrar çalıştır |
 | Blog paneli boş | Shell'de `npm run db:seed-blog` |
 | Form kaydolmuyor | Environment'ta `DATABASE_URL` dolu mu kontrol et |
+| Blueprint: free tier database | `sagirhukuk-db` oluşturma; paylaşımlı `mepackage-db` + `/sagirhukuk` kullanın |
 
 Yerelde test: `npm run bug-test` (dev sunucu + Postgres açık olmalı).

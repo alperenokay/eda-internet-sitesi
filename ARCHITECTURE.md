@@ -22,7 +22,8 @@ Sonraki fazlarda eklenebilir: Hakkımızda, Hizmetler (detay sayfaları).
 | Veritabanı | PostgreSQL (pg) | İletişim formları kalıcı. |
 | Backend | Astro API routes | Tek servis, tek deploy. |
 | Mail | nodemailer (opsiyonel) | Form bildirimi; SMTP yoksa DB kaydı yine olur. |
-| Hosting | Render (web + managed Postgres) | render.yaml blueprint. |
+| Hosting | Render (web servisi) | render.yaml blueprint. |
+| Postgres (prod) | `mepackage-db` (paylaşımlı) | Render free tier 1 DB limiti; me-package `mepackage`, sagirhukuk `sagirhukuk` database adı. |
 
 ## Tasarım sistemi
 Kurumsal avukatlık teması (ONAYLI iskelet evrimi):

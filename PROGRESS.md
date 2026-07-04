@@ -514,3 +514,16 @@ src/lib/{content,content-defaults}.ts, src/pages/admin/icerik/, src/pages/api/ad
 **Doğrulama**
 - `npm run build` hatasız
 
+---
+
+## Render: paylaşımlı PostgreSQL (mepackage-db + sagirhukuk DB)
+
+**Neden:** Render ücretsiz planda hesap başına yalnızca 1 Postgres; iki site de canlı kalacak.
+
+**Karar**
+- `render.yaml` artık `sagirhukuk-db` oluşturmaz.
+- me-package: `mepackage-db` / database `mepackage`
+- sagirhukuk: aynı sunucu / database `sagirhukuk`, `DATABASE_URL` Environment'ta elle (`.../sagirhukuk`)
+
+**Adımlar:** DEPLOY.md §2 (`CREATE DATABASE sagirhukuk` + URL sonu `/sagirhukuk`)
+
