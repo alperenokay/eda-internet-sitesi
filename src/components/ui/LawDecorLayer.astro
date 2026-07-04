@@ -28,7 +28,7 @@ const iconMap: Record<LawDecorIcon, typeof LawColumn> = {
           `law-decor-item--${item.size}`,
           item.icon === "seal" && "law-decor-item--brand",
         ]}
-        style={{ top: `${item.top}%`, transform: rotate }}
+        style={{ top: `${item.top}vh`, transform: rotate }}
         data-decor-id={item.id}
       >
         {item.icon === "seal" ? <LawSeal variant="watermark" /> : <Icon />}

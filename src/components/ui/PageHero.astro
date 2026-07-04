@@ -1,119 +1,119 @@
----
-import Container from "./Container.astro";
-import ButtonLink from "./ButtonLink.astro";
-import Eyebrow from "./Eyebrow.astro";
-import Chip from "./Chip.astro";
-import HeroTrustPanel from "./HeroTrustPanel.astro";
-import FormattedText from "./FormattedText.astro";
-import { hasInlineHtml, stripInlineHtml } from "@/lib/render-inline-html";
-
-export interface Props {
-  chip?: string;
-  eyebrow?: string;
-  title: string;
-  titleHighlight?: string;
-  lead: string;
-  primaryHref: string;
-  primaryLabel: string;
-  secondaryHref?: string;
-  secondaryLabel?: string;
-  hideActions?: boolean;
-  showTrustPanel?: boolean;
-}
-
-const {
-  chip,
-  eyebrow,
-  title,
-  titleHighlight,
-  lead,
-  primaryHref,
-  primaryLabel,
-  secondaryHref,
-  secondaryLabel,
-  hideActions = false,
-  showTrustPanel = false,
-} = Astro.props;
-
-const plainTitle = stripInlineHtml(title);
-const canSplitHighlight =
-  Boolean(titleHighlight) &&
-  !hasInlineHtml(title) &&
-  plainTitle.includes(titleHighlight ?? "");
-
-let titleParts: { before: string; after: string } | null = null;
-if (canSplitHighlight && titleHighlight) {
-  const idx = plainTitle.indexOf(titleHighlight);
-  titleParts = {
-    before: plainTitle.slice(0, idx),
-    after: plainTitle.slice(idx + titleHighlight.length),
-  };
-}
-
-const split = showTrustPanel;
----
-
-<section class="relative overflow-hidden border-b border-line bg-white/40">
-  <div class="hero-law-pattern" aria-hidden="true"></div>
-  <div class="hero-law-glow" aria-hidden="true"></div>
-  <Container>
-    <div
-      class:list={[
-        "relative grid items-center gap-10 py-14 sm:gap-12 sm:py-[4.75rem]",
-        split && "lg:grid-cols-[1.28fr_0.92fr]",
-      ]}
-    >
-      <div class="relative z-[1]">
-        {(eyebrow || chip) && (
-          <div class="mb-5 flex flex-wrap items-center gap-3">
-            {eyebrow && (
-              <Eyebrow>
-                <FormattedText text={eyebrow} as="span" />
-              </Eyebrow>
-            )}
-            {chip && (
-              <Chip>
-                <FormattedText text={chip} as="span" />
-              </Chip>
-            )}
-          </div>
-        )}
-        <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl lg:text-[3.45rem] lg:leading-[1.08]">
-          {titleParts && titleHighlight ? (
-            <>
-              {titleParts.before}
-              <span class="text-green">{titleHighlight}</span>
-              {titleParts.after}
-            </>
-          ) : (
-            <FormattedText text={title} as="span" />
-          )}
-        </h1>
-        <p class="mt-5 max-w-[50ch] text-[1.08rem] leading-relaxed text-muted">
-          <slot name="lead">
-            <FormattedText text={lead} as="span" />
-          </slot>
-        </p>
-        {!hideActions && (
-          <div class="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href={primaryHref} variant="primary">
-              <FormattedText text={primaryLabel} as="span" />
-            </ButtonLink>
-            {secondaryHref && secondaryLabel && (
-              <ButtonLink href={secondaryHref} variant="ghost">
-                <FormattedText text={secondaryLabel} as="span" />
-              </ButtonLink>
-            )}
-          </div>
-        )}
-      </div>
-      {showTrustPanel && (
-        <div class="relative z-[1]">
-          <slot name="aside">
-            <HeroTrustPanel />
-          </slot>
-        </div>
-      )}
-    </div>
-  </Container>
-</section>
+---
+import Container from "./Container.astro";
+import ButtonLink from "./ButtonLink.astro";
+import Eyebrow from "./Eyebrow.astro";
+import Chip from "./Chip.astro";
+import HeroTrustPanel from "./HeroTrustPanel.astro";
+import FormattedText from "./FormattedText.astro";
+import { hasInlineHtml, stripInlineHtml } from "@/lib/render-inline-html";
+
+export interface Props {
+  chip?: string;
+  eyebrow?: string;
+  title: string;
+  titleHighlight?: string;
+  lead: string;
+  primaryHref: string;
+  primaryLabel: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
+  hideActions?: boolean;
+  showTrustPanel?: boolean;
+}
+
+const {
+  chip,
+  eyebrow,
+  title,
+  titleHighlight,
+  lead,
+  primaryHref,
+  primaryLabel,
+  secondaryHref,
+  secondaryLabel,
+  hideActions = false,
+  showTrustPanel = false,
+} = Astro.props;
+
+const plainTitle = stripInlineHtml(title);
+const canSplitHighlight =
+  Boolean(titleHighlight) &&
+  !hasInlineHtml(title) &&
+  plainTitle.includes(titleHighlight ?? "");
+
+let titleParts: { before: string; after: string } | null = null;
+if (canSplitHighlight && titleHighlight) {
+  const idx = plainTitle.indexOf(titleHighlight);
+  titleParts = {
+    before: plainTitle.slice(0, idx),
+    after: plainTitle.slice(idx + titleHighlight.length),
+  };
+}
+
+const split = showTrustPanel;
+---
+
+<section class="relative z-[20] overflow-hidden border-b border-line bg-white/40">
+  <div class="hero-law-pattern" aria-hidden="true"></div>
+  <div class="hero-law-glow" aria-hidden="true"></div>
+  <Container>
+    <div
+      class:list={[
+        "relative grid items-center gap-10 py-14 sm:gap-12 sm:py-[4.75rem]",
+        split && "lg:grid-cols-[1.28fr_0.92fr]",
+      ]}
+    >
+      <div class="relative z-[1]">
+        {(eyebrow || chip) && (
+          <div class="mb-5 flex flex-wrap items-center gap-3">
+            {eyebrow && (
+              <Eyebrow>
+                <FormattedText text={eyebrow} as="span" />
+              </Eyebrow>
+            )}
+            {chip && (
+              <Chip>
+                <FormattedText text={chip} as="span" />
+              </Chip>
+            )}
+          </div>
+        )}
+        <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl lg:text-[3.45rem] lg:leading-[1.08]">
+          {titleParts && titleHighlight ? (
+            <>
+              {titleParts.before}
+              <span class="text-green">{titleHighlight}</span>
+              {titleParts.after}
+            </>
+          ) : (
+            <FormattedText text={title} as="span" />
+          )}
+        </h1>
+        <p class="mt-5 max-w-[50ch] text-[1.08rem] leading-relaxed text-muted">
+          <slot name="lead">
+            <FormattedText text={lead} as="span" />
+          </slot>
+        </p>
+        {!hideActions && (
+          <div class="mt-8 flex flex-wrap gap-3">
+            <ButtonLink href={primaryHref} variant="primary">
+              <FormattedText text={primaryLabel} as="span" />
+            </ButtonLink>
+            {secondaryHref && secondaryLabel && (
+              <ButtonLink href={secondaryHref} variant="ghost">
+                <FormattedText text={secondaryLabel} as="span" />
+              </ButtonLink>
+            )}
+          </div>
+        )}
+      </div>
+      {showTrustPanel && (
+        <div class="relative z-[1]">
+          <slot name="aside">
+            <HeroTrustPanel />
+          </slot>
+        </div>
+      )}
+    </div>
+  </Container>
+</section>
