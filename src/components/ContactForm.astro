@@ -1,0 +1,169 @@
+---
+import { inputClass, submitButtonClass, successBoxClass } from "@/components/form/formStyles";
+import FormattedText from "@/components/ui/FormattedText.astro";
+
+export interface Props {
+  formCopy?: {
+    submitLabel: string;
+    successMessage: string;
+    consentPrefix: string;
+    consentLinkLabel: string;
+    consentSuffix: string;
+  };
+}
+
+const {
+  formCopy = {
+    submitLabel: "Mesajı gönder",
+    successMessage: "Mesajınız iletildi. Teşekkürler.",
+    consentPrefix: "Kişisel Verilerin Korunması",
+    consentLinkLabel: "Aydınlatma Metnini",
+    consentSuffix:
+      "okudum. Başvurum kapsamında kişisel verilerimin belirtilen amaçlarla işlenmesine onay veriyorum.",
+  },
+} = Astro.props;
+---
+
+<form id="contact-form" class="space-y-5" novalidate>
+  <div class="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+    <label for="website">Web sitesi</label>
+    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div>
+    <label for="full_name" class="mb-1 block text-sm font-medium text-ink">
+      Ad soyad <span class="text-signal">*</span>
+    </label>
+    <input type="text" id="full_name" name="full_name" required autocomplete="name" class={inputClass} />
+  </div>
+
+  <div>
+    <label for="email" class="mb-1 block text-sm font-medium text-ink">
+      E-posta <span class="text-signal">*</span>
+    </label>
+    <input type="email" id="email" name="email" required autocomplete="email" class={inputClass} />
+  </div>
+
+  <div>
+    <label for="subject" class="mb-1 block text-sm font-medium text-ink">Konu</label>
+    <input type="text" id="subject" name="subject" class={inputClass} />
+  </div>
+
+  <div>
+    <label for="message" class="mb-1 block text-sm font-medium text-ink">
+      Mesaj <span class="text-signal">*</span>
+    </label>
+    <textarea id="message" name="message" rows={5} required class={inputClass}></textarea>
+  </div>
+
+  <p id="contact-form-error" class="hidden text-sm text-red-600" role="alert" aria-live="polite"></p>
+
+  <div class="flex items-start gap-3">
+    <input
+      type="checkbox"
+      id="kvkk_consent"
+      name="kvkk_consent"
+      required
+      class="mt-1 h-4 w-4 shrink-0 rounded border-line text-green focus:ring-green"
+    />
+    <label for="kvkk_consent" class="text-sm leading-snug text-muted">
+      <FormattedText text={formCopy.consentPrefix} as="span" />{" "}
+      <a
+        href="/kvkk"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-medium text-green-deep underline-offset-2 hover:text-green hover:underline"
+      >
+        <FormattedText text={formCopy.consentLinkLabel} as="span" />
+      </a>{" "}
+      <FormattedText text={formCopy.consentSuffix} as="span" /> <span class="text-signal">*</span>
+    </label>
+  </div>
+
+  <button type="submit" id="contact-form-submit" class={submitButtonClass}>
+    <FormattedText text={formCopy.submitLabel} as="span" />
+  </button>
+</form>
+
+<div id="contact-form-success" class="hidden" role="status">
+  <div class={successBoxClass}>
+    <FormattedText text={formCopy.successMessage} as="span" />
+  </div>
+</div>
+
+<script define:vars={{ submitLabel: formCopy.submitLabel }}>
+  function isValidEmail(value: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const successBox = document.getElementById("contact-form-success");
+  const errorEl = document.getElementById("contact-form-error");
+  const submitBtn = document.getElementById("contact-form-submit") as HTMLButtonElement | null;
+
+  if (form && successBox && errorEl && submitBtn) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorEl.classList.add("hidden");
+      errorEl.textContent = "";
+
+      const website = (form.querySelector("#website") as HTMLInputElement).value.trim();
+      if (website) {
+        form.classList.add("hidden");
+        successBox.classList.remove("hidden");
+        return;
+      }
+
+      const fullName = (form.querySelector("#full_name") as HTMLInputElement).value.trim();
+      const email = (form.querySelector("#email") as HTMLInputElement).value.trim();
+      const subject = (form.querySelector("#subject") as HTMLInputElement).value.trim();
+      const message = (form.querySelector("#message") as HTMLTextAreaElement).value.trim();
+      const kvkkConsent = (form.querySelector("#kvkk_consent") as HTMLInputElement).checked;
+
+      let err: string | null = null;
+      if (!fullName) err = "Lütfen ad soyad girin.";
+      else if (!isValidEmail(email)) err = "Geçerli bir e-posta adresi girin.";
+      else if (!message) err = "Lütfen mesajınızı yazın.";
+      else if (!kvkkConsent) err = "Devam etmek için aydınlatma metnini okuyup onay vermeniz gerekiyor.";
+
+      if (err) {
+        errorEl.textContent = err;
+        errorEl.classList.remove("hidden");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Gönderiliyor...";
+
+      try {
+        const res = await fetch("/api/iletisim", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            full_name: fullName,
+            email,
+            subject: subject || undefined,
+            message,
+            kvkk_consent: kvkkConsent,
+          }),
+        });
+        const data = (await res.json()) as { ok?: boolean; error?: string };
+
+        if (data.ok) {
+          form.classList.add("hidden");
+          successBox.classList.remove("hidden");
+          return;
+        }
+
+        errorEl.textContent = data.error || "Kayıt sırasında bir sorun oluştu. Lütfen tekrar deneyin.";
+        errorEl.classList.remove("hidden");
+      } catch {
+        errorEl.textContent = "Bağlantı sorunu oluştu. Lütfen tekrar deneyin.";
+        errorEl.classList.remove("hidden");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitLabel;
+      }
+    });
+  }
+</script>

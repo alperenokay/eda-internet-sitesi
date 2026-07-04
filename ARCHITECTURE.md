@@ -1,71 +1,65 @@
-# ARCHITECTURE.md — mepackage
+# ARCHITECTURE.md — sagirhukuk
 
 ## Amaç ve kapsam
-Marine Emission'ın PPWR alt markası. Tek işi: Türkçe PPWR aramalarında organik
-görünmek ve iki tür başvuru toplamak — **danışmanlık** ve **analiz**. Yanında SEO
-motoru olarak bir **blog** ve tam bir **iletişim/DB** altyapısı.
+Av. Eda Öykü Sağır, Sağır Hukuk & Danışmanlık bürosunun kurumsal web sitesi.
+Asıl domain: **www.sagirhukuk.net**.
 
-Asıl domain: **www.me-package.com** (Marine Emission Package).
-Not: Domainde "ppwr" keyword'ü yok → on-page SEO (title/meta/schema/içerik) ağır çalışır.
+Şu anki kapsam (minimal iskelet):
+- Ana sayfa (tanıtım + çalışma alanları özeti)
+- Blog / yayınlar (bilgilendirme yazıları)
+- İletişim sayfası + form
+- KVKK aydınlatma metni
+- SEO omurgası (sitemap, schema, robots)
+
+Sonraki fazlarda eklenebilir: Hakkımızda, Hizmetler (detay sayfaları).
 
 ## Teknoloji kararları
 | Katman | Seçim | Gerekçe |
 |---|---|---|
-| Framework | Astro 5, SSR (node standalone) | Tam HTML servis → SEO. SPA'nın client-render dezavantajı yok. |
-| İnteraktif | React island (@astrojs/react) | Sadece formlar. Statik içerik .astro. |
+| Framework | Astro 5, SSR (node standalone) | Tam HTML servis → SEO. |
+| İnteraktif | React island (@astrojs/react) | Yalnızca iletişim formu. |
 | Stil | Tailwind v4 (@tailwindcss/vite) | Token tabanlı; global.css @theme. |
-| Veritabanı | PostgreSQL (pg) | Render ephemeral → sql.js başvuruları uçurur. Kalıcı DB şart. |
-| Backend | Astro API routes | Ayrı Express yok → Render'da tek servis, tek deploy. |
-| Mail | nodemailer (opsiyonel) | Başvuru bildirimi; SMTP yoksa sessiz geçer, DB kaydı yine olur. |
+| Veritabanı | PostgreSQL (pg) | İletişim formları kalıcı. |
+| Backend | Astro API routes | Tek servis, tek deploy. |
+| Mail | nodemailer (opsiyonel) | Form bildirimi; SMTP yoksa DB kaydı yine olur. |
 | Hosting | Render (web + managed Postgres) | render.yaml blueprint. |
 
 ## Tasarım sistemi
-- Renk: petrol laciverti (ink #0a2027), brand teal (#12a294), deadline amber (#e07a2f).
-- Tipografi: Space Grotesk (display), Inter (gövde), IBM Plex Mono (veri/eşik değerleri).
-- İmza öğesi: regülasyon eşiklerinin mono "veri çipi" olarak gösterimi (.data-chip).
-- Kliseden kaçış: cream+terracotta yok, acid-green-on-black yok.
+Kurumsal avukatlık teması (ONAYLI iskelet evrimi):
+- Zemin: sıcak kağıt tonu (`--bg`, `--bg-2`); panel: lacivert (`--panel` #0f2438).
+- Vurgu: altın/bronz (`--green` token alias); botanik motif yok, adalet terazisi mührü.
+- Tipografi: Cormorant Garamond (başlık), Inter (gövde). Monospace yok.
 
-## Regülasyon sabitleri (BİREBİR korunacak)
-- PPWR (EU) 2025/40: yürürlük 11 Şub 2025, ana uygulama 12 Ağu 2026.
-- PFAS: bireysel non-polimerik ≤25 ppb, toplam ≤250 ppb, toplam flor ≤50 mg/kg
-  (>50 → otomatik FAIL değil, farklılaştırma tetikler).
-- Ağır metal toplamı (Pb+Cd+Hg+Cr(VI)) ≤100 mg/kg.
-- Minimizasyon eşiği: %50 (e-ticaret %40) — %30 DEĞİL.
-- Yeniden kullanım hedefleri: %40/%70 genel nakliye, AB içi %100; boş alan %50 tavanı (Oca 2030).
-- DoC saklama: 5/10 yıl. Almanya EPR sistemi: LUCID.
-- CSRD = ambalaj-dilimi export filtresi (ayrı modül değil). PPWR×CSRD = farklılaştırıcı.
-- EPR = yalnızca temiz veri ihracı, portal API entegrasyonu YOK.
-- Advisory modüller her zaman disclaimer taşır.
+## İletişim sabitleri (site.ts)
+- Marka: Sağır Hukuk & Danışmanlık
+- Avukat: Av. Eda Öykü Sağır
+- Adres: İsmet Kaptan Mah. Gazi Bulvarı No:83 D:801 K:8 Hasan Bozkurt İş Hanı, Konak/İzmir
+- Telefon: 0541 805 55 77
+- E-posta: av.edasagir@sagirhukuk.net
+- Çalışma saatleri: Pazartesi–Cuma, 09:00–18:30
 
 ## Veri modeli (db/schema.sql)
-- `analyses` — analiz kataloğu (seed'li).
-- `analysis_applications` — analiz başvuruları.
-- `consultancy_applications` — danışmanlık başvuruları.
-- `contact_messages` — iletişim.
-- `blog_posts` — DB-driven blog (admin CRUD).
-- `admin_users` — panel erişimi (hash'li parola).
-- `admin_audit_log` — admin işlem izi (KVKK).
-- Başvuru tablolarında `consent_at`, `retention_until`, `deleted_at` (KVKK).
+Aktif kullanım: `contact_messages` (iletişim formu).
+Eski me-package tabloları şemada durabilir; yeni fazlarda sadeleştirilebilir.
 
 ## Dizin yapısı
 ```
 src/
-  layouts/BaseLayout.astro     # SEO omurgası (meta, OG, JSON-LD)
-  components/                  # Header, Footer, (Faz'larda büyüyecek)
+  layouts/BaseLayout.astro
+  components/Header.astro, Footer.astro, ContactForm.tsx, ui/*
   pages/
-    index.astro                # ana sayfa
-    api/                       # basvuru-analiz, basvuru-danismanlik, iletisim, health
-  lib/                         # db, mail, validate
-  styles/global.css            # token sistemi
-db/schema.sql                  # PostgreSQL şema + seed
-scripts/db-init.mjs            # şema uygula
-render.yaml                    # Render blueprint
+    index.astro, iletisim.astro, kvkk.astro, 404.astro
+    blog/index.astro, blog/[slug].astro
+    api/iletisim.ts, api/health.ts
+    sitemap.xml.ts
+  lib/site.ts, db.ts, mail.ts, validate.ts, kvkk.ts, rate-limit.ts, blog.ts, blog-data.ts, render-markdown.ts
+  styles/global.css
+db/schema.sql
+render.yaml
 ```
 
 ## Faz yol haritası
-- **Faz 0** — İskelet: Astro SSR + React + Tailwind + DB şema + form API + Render config. ✅
-- **Faz 1** — Ana sayfa (gerçek hero) + SEO temeli (sitemap, schema, TR keyword yapısı).
-- **Faz 2** — Analiz kataloğu sayfası + başvuru formu (island).
-- **Faz 3** — Danışmanlık sayfası + iletişim sayfası + formlar.
-- **Faz 4** — Blog (liste + detay, SSR) + admin panel (auth + blog CRUD + başvuru görüntüleme).
-- **Faz 5 Kol A** — Deploy öncesi güvenlik denetimi, SEO, prod header'ları. ✅ (Kol B: deploy elle)
+- **Faz 0** — Minimal iskelet: domain geçişi, PPWR içerik temizliği, iletişim formu. ✅
+- **Faz 1** — Blog / yayınlar (statik içerik + DB yedek). ✅
+- **Faz 2** — Hakkımızda + Hizmetler sayfaları
+- **Faz 3** — Deploy + domain bağlama

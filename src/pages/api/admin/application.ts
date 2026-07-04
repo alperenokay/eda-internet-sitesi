@@ -1,10 +1,8 @@
 import type { APIRoute } from "astro";
 import { assertSameOrigin } from "@/lib/auth";
 import { writeAuditLog } from "@/lib/audit";
-import { anonymizeApplication } from "@/lib/admin";
+import { anonymizeContactMessage } from "@/lib/admin";
 import { getIp, json } from "@/lib/validate";
-
-const TABLES = new Set(["analysis", "consultancy", "contact"]);
 
 export const POST: APIRoute = async ({ request, locals }) => {
   if (!locals.adminId) return json({ ok: false, error: "Oturum gerekli." }, 401);
@@ -17,23 +15,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json({ ok: false, error: "Geçersiz istek." }, 400);
   }
 
-  const type = String(data.type || "");
   const id = Number(data.id);
-
-  if (!TABLES.has(type)) return json({ ok: false, error: "Geçersiz kayıt türü." }, 422);
   if (!Number.isFinite(id)) return json({ ok: false, error: "Geçersiz kayıt." }, 422);
 
   try {
-    const deleted = await anonymizeApplication(
-      type as "analysis" | "consultancy" | "contact",
-      id
-    );
+    const deleted = await anonymizeContactMessage(id);
     if (!deleted) return json({ ok: false, error: "Kayıt bulunamadı veya zaten silinmiş." }, 404);
 
     await writeAuditLog({
       adminId: locals.adminId,
       action: "application_anonymize",
-      resourceType: type,
+      resourceType: "contact",
       resourceId: id,
       ip: getIp(request),
     });

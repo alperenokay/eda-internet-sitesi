@@ -1,0 +1,35 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminContentForm from "@/components/admin/AdminContentForm.astro";
+import { getContent, parseContentKey } from "@/lib/content";
+import { CONTENT_REGISTRY } from "@/lib/content-defaults";
+
+const key = parseContentKey(Astro.params.key);
+if (!key) {
+  return Astro.redirect("/admin/icerik");
+}
+
+const data = await getContent(key);
+const meta = CONTENT_REGISTRY[key];
+---
+
+<AdminLayout title={meta.label}>
+  <div class="mb-6">
+    <p class="text-sm text-muted">
+      <a href="/admin/icerik" class="text-green-deep no-underline hover:text-green">Site içeriği</a>
+      <span aria-hidden="true"> / </span>
+      {meta.label}
+    </p>
+    <h1 class="mt-2 font-display text-2xl font-semibold">{meta.label}</h1>
+    <p class="mt-2 text-sm text-muted">{meta.description}</p>
+    {meta.publicPath && (
+      <p class="mt-2 text-sm">
+        <a href={meta.publicPath} target="_blank" rel="noopener" class="text-green-deep no-underline hover:text-green">
+          Sitede önizle
+        </a>
+      </p>
+    )}
+  </div>
+
+  <AdminContentForm contentKey={key} data={data} />
+</AdminLayout>

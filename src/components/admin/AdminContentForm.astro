@@ -1,0 +1,346 @@
+---
+import type { ContentKey, ContentMap } from "@/lib/content-defaults";
+import AdminField from "./content/AdminField.astro";
+import AdminRichTextarea from "./AdminRichTextarea.astro";
+import AdminSeoSection from "./content/AdminSeoSection.astro";
+import AdminHeroSection from "./content/AdminHeroSection.astro";
+import AdminNavList from "./content/AdminNavList.astro";
+import AdminTitleTextList from "./content/AdminTitleTextList.astro";
+
+export interface Props {
+  contentKey: ContentKey;
+  data: ContentMap[ContentKey];
+}
+
+const { contentKey, data } = Astro.props;
+const initialJson = JSON.stringify(data);
+---
+
+<form id="content-form" class="space-y-6">
+  <script type="application/json" id="content-initial">{initialJson}</script>
+
+  {contentKey === "global" && (
+    <>
+      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+        <legend class="px-1 text-sm font-semibold">Marka ve iletişim</legend>
+        <AdminField label="Tam marka adı" field="brandFull" value={(data as ContentMap["global"]).brandFull} />
+        <AdminField label="Avukat unvanı" field="attorney" value={(data as ContentMap["global"]).attorney} />
+        <AdminField label="E-posta" field="email" value={(data as ContentMap["global"]).email} type="email" plain />
+        <AdminField label="Telefon" field="phone" value={(data as ContentMap["global"]).phone} plain />
+        <AdminField label="Adres" field="address" value={(data as ContentMap["global"]).address} rows={2} />
+        <AdminField label="Çalışma saatleri" field="workingHours" value={(data as ContentMap["global"]).workingHours} />
+        <AdminField label="Schema açıklaması" field="orgDescription" value={(data as ContentMap["global"]).orgDescription} rows={2} />
+      </fieldset>
+      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+        <legend class="px-1 text-sm font-semibold">Harita</legend>
+        <AdminField label="Embed URL" field="mapEmbedUrl" value={(data as ContentMap["global"]).mapEmbedUrl} rows={2} plain />
+        <AdminField label="Yol tarifi URL" field="mapsDirectionsUrl" value={(data as ContentMap["global"]).mapsDirectionsUrl} rows={2} plain />
+      </fieldset>
+      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+        <legend class="px-1 text-sm font-semibold">Header / footer</legend>
+        <AdminField label="Header CTA linki" field="headerCtaHref" value={(data as ContentMap["global"]).headerCtaHref} plain />
+        <AdminField label="Header CTA metni" field="headerCtaLabel" value={(data as ContentMap["global"]).headerCtaLabel} />
+        <AdminField label="Footer kısa metin" field="footerBlurb" value={(data as ContentMap["global"]).footerBlurb} rows={3} />
+      </fieldset>
+      <AdminNavList path="headerNav" label="Header menüsü" items={(data as ContentMap["global"]).headerNav} />
+      <AdminNavList path="footerNav" label="Footer menüsü" items={(data as ContentMap["global"]).footerNav} />
+    </>
+  )}
+
+  {contentKey === "home" && (
+    <>
+      <AdminSeoSection prefix="seo" seo={(data as ContentMap["home"]).seo} showKeywords />
+      <AdminHeroSection prefix="hero" hero={(data as ContentMap["home"]).hero} showChip showTrust />
+      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+        <legend class="px-1 text-sm font-semibold">Yaklaşım bandı</legend>
+        <AdminField label="Eyebrow" field="principlesSection.eyebrow" value={(data as ContentMap["home"]).principlesSection.eyebrow} />
+        <AdminField label="Başlık" field="principlesSection.title" value={(data as ContentMap["home"]).principlesSection.title} />
+      </fieldset>
+      <AdminTitleTextList path="principlesSection.items" label="Yaklaşım kartları" items={(data as ContentMap["home"]).principlesSection.items} />
+      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+        <legend class="px-1 text-sm font-semibold">Çalışma alanları</legend>
+        <AdminField label="Eyebrow" field="practiceSection.eyebrow" value={(data as ContentMap["home"]).practiceSection.eyebrow} />
+        <AdminField label="Başlık" field="practiceSection.title" value={(data as ContentMap["home"]).practiceSection.title} />
+        <AdminField label="Lead" field="practiceSection.lead" value={(data as ContentMap["home"]).practiceSection.lead} rows={2} />
+      </fieldset>
+      <AdminTitleTextList path="practiceSection.items" label="Çalışma alanı kartları" items={(data as ContentMap["home"]).practiceSection.items} />
+      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+        <legend class="px-1 text-sm font-semibold">Son yazılar bölümü</legend>
+        <AdminField label="Eyebrow" field="postsSection.eyebrow" value={(data as ContentMap["home"]).postsSection.eyebrow} />
+        <AdminField label="Başlık" field="postsSection.title" value={(data as ContentMap["home"]).postsSection.title} />
+        <AdminField label="Lead" field="postsSection.lead" value={(data as ContentMap["home"]).postsSection.lead} rows={2} />
+        <AdminField label="Buton metni" field="postsSection.buttonLabel" value={(data as ContentMap["home"]).postsSection.buttonLabel} />
+      </fieldset>
+      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+        <legend class="px-1 text-sm font-semibold">Alt CTA bandı</legend>
+        <AdminField label="Başlık" field="cta.title" value={(data as ContentMap["home"]).cta.title} />
+        <AdminField label="Metin" field="cta.text" value={(data as ContentMap["home"]).cta.text} rows={2} />
+        <AdminField label="Buton linki" field="cta.buttonHref" value={(data as ContentMap["home"]).cta.buttonHref} />
+        <AdminField label="Buton metni" field="cta.buttonLabel" value={(data as ContentMap["home"]).cta.buttonLabel} />
+      </fieldset>
+    </>
+  )}
+
+  {contentKey === "contact" && (
+    <>
+      <AdminSeoSection prefix="seo" seo={(data as ContentMap["contact"]).seo} />
+      <AdminHeroSection prefix="hero" hero={(data as ContentMap["contact"]).hero} showTrust />
+      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+        <legend class="px-1 text-sm font-semibold">Yan panel</legend>
+        <AdminField label="Panel başlığı" field="sidebar.title" value={(data as ContentMap["contact"]).sidebar.title} />
+        <AdminField label="Avukat etiketi" field="sidebar.labels.attorney" value={(data as ContentMap["contact"]).sidebar.labels.attorney} />
+        <AdminField label="E-posta etiketi" field="sidebar.labels.email" value={(data as ContentMap["contact"]).sidebar.labels.email} />
+        <AdminField label="Telefon etiketi" field="sidebar.labels.phone" value={(data as ContentMap["contact"]).sidebar.labels.phone} />
+        <AdminField label="Adres etiketi" field="sidebar.labels.address" value={(data as ContentMap["contact"]).sidebar.labels.address} />
+        <AdminField label="Saat etiketi" field="sidebar.labels.workingHours" value={(data as ContentMap["contact"]).sidebar.labels.workingHours} />
+      </fieldset>
+      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+        <legend class="px-1 text-sm font-semibold">Form</legend>
+        <AdminField label="Form bölüm başlığı" field="formSection.title" value={(data as ContentMap["contact"]).formSection.title} />
+        <AdminField label="Gönder butonu" field="form.submitLabel" value={(data as ContentMap["contact"]).form.submitLabel} />
+        <AdminField label="Başarı mesajı" field="form.successMessage" value={(data as ContentMap["contact"]).form.successMessage} rows={2} />
+        <AdminField label="KVKK onay öneki" field="form.consentPrefix" value={(data as ContentMap["contact"]).form.consentPrefix} />
+        <AdminField label="KVKK link metni" field="form.consentLinkLabel" value={(data as ContentMap["contact"]).form.consentLinkLabel} />
+        <AdminField label="KVKK onay sonu" field="form.consentSuffix" value={(data as ContentMap["contact"]).form.consentSuffix} rows={2} />
+      </fieldset>
+      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+        <legend class="px-1 text-sm font-semibold">Harita bölümü</legend>
+        <AdminField label="Eyebrow" field="mapSection.eyebrow" value={(data as ContentMap["contact"]).mapSection.eyebrow} />
+        <AdminField label="Başlık" field="mapSection.title" value={(data as ContentMap["contact"]).mapSection.title} />
+        <AdminField label="Lead" field="mapSection.lead" value={(data as ContentMap["contact"]).mapSection.lead} />
+        <AdminField label="Yol tarifi link metni" field="mapSection.directionsLinkLabel" value={(data as ContentMap["contact"]).mapSection.directionsLinkLabel} />
+      </fieldset>
+    </>
+  )}
+
+  {contentKey === "blog_page" && (
+    <>
+      <AdminSeoSection prefix="seo" seo={(data as ContentMap["blog_page"]).seo} showKeywords />
+      <AdminHeroSection prefix="hero" hero={(data as ContentMap["blog_page"]).hero} />
+      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+        <legend class="px-1 text-sm font-semibold">Liste bölümü</legend>
+        <AdminField label="Başlık" field="listSection.title" value={(data as ContentMap["blog_page"]).listSection.title} />
+        <AdminField label="Lead" field="listSection.lead" value={(data as ContentMap["blog_page"]).listSection.lead} rows={2} />
+        <AdminField label="Boş liste mesajı" field="listSection.emptyMessage" value={(data as ContentMap["blog_page"]).listSection.emptyMessage} rows={2} />
+      </fieldset>
+    </>
+  )}
+
+  {contentKey === "kvkk" && (
+    <>
+      <AdminSeoSection prefix="seo" seo={(data as ContentMap["kvkk"]).seo} showKeywords />
+      <AdminField label="Sayfa H1" field="pageTitle" value={(data as ContentMap["kvkk"]).pageTitle} />
+      <AdminField label="Son güncelleme metni" field="lastUpdated" value={(data as ContentMap["kvkk"]).lastUpdated} />
+      <AdminRichTextarea
+        id="kvkk-body"
+        field="bodyMd"
+        label="Gövde (Markdown)"
+        value={(data as ContentMap["kvkk"]).bodyMd}
+        rows={24}
+        hint="Yer tutucular: {{brandFull}}, {{attorney}}, {{domain}}, {{contactEmail}}, {{retentionMonths}}. Font, punto ve renk araç çubuğu ile biçimlendirme yapılabilir."
+      />
+      <AdminField label="Alt not" field="disclaimer" value={(data as ContentMap["kvkk"]).disclaimer} rows={3} />
+    </>
+  )}
+
+  {contentKey === "not_found" && (
+    <>
+      <AdminSeoSection prefix="seo" seo={(data as ContentMap["not_found"]).seo} />
+      <AdminField label="Kod (404)" field="code" value={(data as ContentMap["not_found"]).code} />
+      <AdminField label="Başlık" field="title" value={(data as ContentMap["not_found"]).title} />
+      <AdminField label="Lead" field="lead" value={(data as ContentMap["not_found"]).lead} rows={3} />
+      <AdminNavList path="buttons" label="Butonlar" items={(data as ContentMap["not_found"]).buttons} />
+    </>
+  )}
+
+  <p id="content-form-error" class="hidden text-sm text-red-600" role="alert"></p>
+  <p id="content-form-success" class="hidden text-sm text-green-deep" role="status"></p>
+
+  <div class="flex flex-wrap gap-3">
+    <button
+      type="submit"
+      id="content-form-submit"
+      class="rounded-[var(--radius-btn)] bg-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-deep"
+    >
+      Kaydet
+    </button>
+    <a href="/admin/icerik" class="inline-flex items-center text-sm text-muted no-underline hover:text-heading">
+      Listeye dön
+    </a>
+  </div>
+</form>
+
+<script define:vars={{ contentKey }}>
+  const inputClass =
+    "block w-full rounded-[var(--radius-sm)] border border-line bg-paper px-3 py-2 text-sm";
+
+  function setDeepValue(obj, path, value) {
+    const keys = path.split(".");
+    let cur = obj;
+    for (let i = 0; i < keys.length - 1; i++) {
+      const key = keys[i];
+      const nextKey = keys[i + 1];
+      if (/^\d+$/.test(nextKey)) {
+        if (!Array.isArray(cur[key])) cur[key] = [];
+      } else if (!cur[key] || typeof cur[key] !== "object") {
+        cur[key] = {};
+      }
+      cur = cur[key];
+    }
+    const last = keys[keys.length - 1];
+    cur[last] = value;
+  }
+
+  function collectFormData(form) {
+    const initialEl = document.getElementById("content-initial");
+    const data = JSON.parse(initialEl?.textContent || "{}");
+
+    form.querySelectorAll("[data-field]").forEach((el) => {
+      const path = el.getAttribute("data-field");
+      if (!path) return;
+      let value;
+      if (el instanceof HTMLInputElement && el.type === "checkbox") {
+        value = el.checked;
+      } else if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+        value = el.value;
+      } else {
+        return;
+      }
+      setDeepValue(data, path, value);
+    });
+
+    reindexListFields(form, data);
+    return data;
+  }
+
+  function reindexListFields(form, data) {
+    form.querySelectorAll("[data-list-path]").forEach((fieldset) => {
+      const path = fieldset.getAttribute("data-list-path");
+      if (!path) return;
+      const rows = fieldset.querySelectorAll(".list-row");
+      const items = [];
+      rows.forEach((row) => {
+        const hrefEl = row.querySelector('[data-field$=".href"]');
+        const labelEl = row.querySelector('[data-field$=".label"]');
+        const titleEl = row.querySelector('[data-field$=".title"]');
+        const textEl = row.querySelector('[data-field$=".text"]');
+        if (titleEl && textEl) {
+          items.push({ title: titleEl.value.trim(), text: textEl.value.trim() });
+        } else if (hrefEl && labelEl) {
+          items.push({ href: hrefEl.value.trim(), label: labelEl.value.trim() });
+        }
+      });
+      setDeepValue(data, path, items.filter((item) => Object.values(item).some(Boolean)));
+    });
+  }
+
+  function renumberListRow(row, path, index, listType) {
+    if (listType === "titleText") {
+      row.querySelector('[data-field$=".title"]')?.setAttribute("data-field", `${path}.${index}.title`);
+      row.querySelector('[data-field$=".text"]')?.setAttribute("data-field", `${path}.${index}.text`);
+    } else {
+      row.querySelector('[data-field$=".href"]')?.setAttribute("data-field", `${path}.${index}.href`);
+      row.querySelector('[data-field$=".label"]')?.setAttribute("data-field", `${path}.${index}.label`);
+    }
+  }
+
+  function renumberList(fieldset) {
+    const path = fieldset.getAttribute("data-list-path");
+    const listType = fieldset.querySelector(".list-add")?.getAttribute("data-list-type") || "nav";
+    if (!path) return;
+    fieldset.querySelectorAll(".list-row").forEach((row, index) => {
+      renumberListRow(row, path, index, listType);
+    });
+  }
+
+  function createNavRow(path, index) {
+    const row = document.createElement("div");
+    row.className = "list-row grid gap-2 sm:grid-cols-[1fr_1fr_auto]";
+    row.innerHTML = `
+      <input type="text" data-field="${path}.${index}.href" placeholder="/ornek" class="${inputClass}" />
+      <input type="text" data-field="${path}.${index}.label" data-rich-input placeholder="Menü metni" class="${inputClass}" />
+      <button type="button" class="list-remove text-sm text-red-700">Kaldır</button>
+    `;
+    return row;
+  }
+
+  function createTitleTextRow(path, index) {
+    const row = document.createElement("div");
+    row.className = "list-row space-y-2 rounded-[var(--radius-sm)] border border-line/70 p-3";
+    row.innerHTML = `
+      <input type="text" data-field="${path}.${index}.title" data-rich-input placeholder="Başlık" class="${inputClass}" />
+      <textarea data-field="${path}.${index}.text" data-rich-input rows="2" placeholder="Metin" class="${inputClass}"></textarea>
+      <button type="button" class="list-remove text-sm text-red-700">Kaldır</button>
+    `;
+    return row;
+  }
+
+  document.querySelectorAll("[data-list-path]").forEach((fieldset) => {
+    fieldset.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      if (target.classList.contains("list-add")) {
+        const path = target.getAttribute("data-list-path");
+        const listType = target.getAttribute("data-list-type") || "nav";
+        const rows = fieldset.querySelector(".list-rows");
+        if (!path || !rows) return;
+        const index = rows.querySelectorAll(".list-row").length;
+        const row = listType === "titleText" ? createTitleTextRow(path, index) : createNavRow(path, index);
+        rows.appendChild(row);
+      }
+
+      if (target.classList.contains("list-remove")) {
+        const row = target.closest(".list-row");
+        row?.remove();
+        renumberList(fieldset);
+      }
+    });
+  });
+
+  const form = document.getElementById("content-form");
+  const errorEl = document.getElementById("content-form-error");
+  const successEl = document.getElementById("content-form-success");
+  const submitBtn = document.getElementById("content-form-submit");
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    errorEl?.classList.add("hidden");
+    successEl?.classList.add("hidden");
+    if (!(form instanceof HTMLFormElement) || !(submitBtn instanceof HTMLButtonElement)) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Kaydediliyor...";
+
+    try {
+      const payload = collectFormData(form);
+      const res = await fetch("/api/admin/content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: contentKey, data: payload }),
+      });
+      const result = await res.json();
+      if (result.ok) {
+        successEl.textContent = "İçerik kaydedildi.";
+        successEl?.classList.remove("hidden");
+        const initialEl = document.getElementById("content-initial");
+        if (initialEl && result.data) {
+          initialEl.textContent = JSON.stringify(result.data);
+        }
+      } else {
+        errorEl.textContent = result.error || "Kayıt sırasında bir sorun oluştu.";
+        errorEl?.classList.remove("hidden");
+      }
+    } catch {
+      errorEl.textContent = "Bağlantı sorunu oluştu.";
+      errorEl?.classList.remove("hidden");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Kaydet";
+    }
+  });
+</script>
+
+<script>
+  import "@/scripts/admin-rich-text.ts";
+</script>

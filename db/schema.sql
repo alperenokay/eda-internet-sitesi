@@ -130,6 +130,17 @@ CREATE TABLE IF NOT EXISTS admin_audit_log (
 CREATE INDEX IF NOT EXISTS idx_audit_created ON admin_audit_log (created_at DESC);
 
 -- =========================================================
+-- Site içeriği (CMS: admin panelden düzenlenen metinler)
+-- =========================================================
+CREATE TABLE IF NOT EXISTS site_content (
+  content_key TEXT PRIMARY KEY,
+  data        JSONB NOT NULL DEFAULT '{}',
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_by  INTEGER REFERENCES admin_users(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_site_content_updated ON site_content (updated_at DESC);
+
+-- =========================================================
 -- Seed: PPWR analiz kataloğu (readme'deki sabitlerle uyumlu)
 -- =========================================================
 INSERT INTO analyses (slug, title, summary, threshold, sort_order) VALUES

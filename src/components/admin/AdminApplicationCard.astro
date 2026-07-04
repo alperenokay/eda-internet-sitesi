@@ -3,18 +3,16 @@ import { APPLICATION_STATUSES, applicationStatusLabel } from "@/lib/application-
 import { formatAdminDate } from "@/lib/admin";
 
 export interface Props {
-  type: "analysis" | "consultancy" | "contact";
   id: number;
   fullName: string;
   email: string;
-  phone?: string | null;
   status: string;
   createdAt: Date;
 }
 
-const { type, id, fullName, email, phone, status, createdAt } = Astro.props;
+const { id, fullName, email, status, createdAt } = Astro.props;
 const isNew = status === "new";
-const isDone = status === "results_ready" || status === "closed";
+const isDone = status === "closed";
 ---
 
 <li
@@ -22,13 +20,12 @@ const isDone = status === "results_ready" || status === "closed";
     "rounded-[var(--radius)] border p-4 text-sm",
     isNew ? "border-green bg-wash/40" : isDone ? "border-line bg-surface/50" : "border-line bg-white",
   ]}
-  data-type={type}
   data-id={id}
 >
   <div class="flex flex-wrap items-start justify-between gap-3">
     <div class="min-w-0 flex-1">
       <p class="font-semibold text-ink">{fullName}</p>
-      <p class="text-muted">{email}{phone ? ` · ${phone}` : ""}</p>
+      <p class="text-muted">{email}</p>
       <p class="mt-1 text-xs text-muted">
         {formatAdminDate(createdAt)} · <span class="font-medium text-ink">{applicationStatusLabel(status)}</span>
       </p>
@@ -48,7 +45,6 @@ const isDone = status === "results_ready" || status === "closed";
       <button
         type="button"
         class="delete-app-btn mt-2 text-xs font-medium text-signal hover:underline"
-        data-type={type}
         data-id={id}
       >
         Kişisel veriyi sil (anonimleştir)

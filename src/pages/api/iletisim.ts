@@ -60,7 +60,7 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ ok: false, error: "Kayıt sırasında bir sorun oluştu. Lütfen tekrar deneyin." }, 500);
   }
 
-  await notify("Yeni İLETİŞİM mesajı, me-package.com", {
+  await notify("Yeni iletişim mesajı, sagirhukuk.net", {
     "Ad Soyad": payload.full_name,
     "E-posta": payload.email,
     Konu: payload.subject,

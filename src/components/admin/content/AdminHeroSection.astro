@@ -1,0 +1,46 @@
+---
+import AdminField from "./AdminField.astro";
+
+export interface Props {
+  prefix: string;
+  hero: {
+    eyebrow: string;
+    chip?: string;
+    title: string;
+    titleHighlight: string;
+    lead: string;
+    primaryHref: string;
+    primaryLabel: string;
+    secondaryHref: string;
+    secondaryLabel: string;
+    showTrustPanel?: boolean;
+  };
+  showChip?: boolean;
+  showTrust?: boolean;
+}
+
+const { prefix, hero, showChip = false, showTrust = false } = Astro.props;
+---
+
+<fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+  <legend class="px-1 text-sm font-semibold">Hero</legend>
+  <AdminField label="Eyebrow" field={`${prefix}.eyebrow`} value={hero.eyebrow} />
+  {showChip && (
+    <AdminField label="Chip (opsiyonel)" field={`${prefix}.chip`} value={hero.chip ?? ""} />
+  )}
+  <AdminField label="Başlık" field={`${prefix}.title`} value={hero.title} />
+  <AdminField label="Vurgulu kelime" field={`${prefix}.titleHighlight`} value={hero.titleHighlight} />
+  <AdminField label="Lead metni" field={`${prefix}.lead`} value={hero.lead} rows={3} />
+  <div class="grid gap-4 sm:grid-cols-2">
+  <AdminField label="Birincil buton linki" field={`${prefix}.primaryHref`} value={hero.primaryHref} plain />
+    <AdminField label="Birincil buton metni" field={`${prefix}.primaryLabel`} value={hero.primaryLabel} />
+    <AdminField label="İkincil buton linki" field={`${prefix}.secondaryHref`} value={hero.secondaryHref} plain />
+    <AdminField label="İkincil buton metni" field={`${prefix}.secondaryLabel`} value={hero.secondaryLabel} />
+  </div>
+  {showTrust && (
+    <label class="flex items-center gap-2 text-sm">
+      <input type="checkbox" data-field={`${prefix}.showTrustPanel`} checked={hero.showTrustPanel} />
+      Güven panelini göster
+    </label>
+  )}
+</fieldset>

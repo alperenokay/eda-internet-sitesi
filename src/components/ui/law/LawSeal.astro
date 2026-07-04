@@ -1,0 +1,27 @@
+---
+export interface Props {
+  variant?: "brand" | "watermark";
+  class?: string;
+}
+
+const { variant = "brand", class: className } = Astro.props;
+const stroke = variant === "watermark" ? "currentColor" : "var(--color-green)";
+const fill = variant === "watermark" ? "currentColor" : "var(--color-green)";
+---
+
+<svg
+  viewBox="0 0 48 48"
+  fill="none"
+  aria-hidden="true"
+  class:list={[variant === "brand" ? "h-11 w-11 sm:h-12 sm:w-12" : "h-full w-full", className]}
+>
+  <circle cx="24" cy="24" r="22" stroke={stroke} stroke-width="1.5" opacity={variant === "watermark" ? "1" : "0.35"} />
+  <path
+    d="M24 10v28M14 18h20M16 30c2.5-4 9.5-4 12 0M16 18c2.5 4 9.5 4 12 0"
+    stroke={stroke}
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <circle cx="24" cy="34" r="2.5" fill={fill} opacity="0.85" />
+</svg>

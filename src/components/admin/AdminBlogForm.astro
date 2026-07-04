@@ -1,4 +1,6 @@
 ---
+import AdminRichTextarea from "./AdminRichTextarea.astro";
+
 export interface Props {
   post?: {
     id: number;
@@ -40,10 +42,15 @@ const inputClass =
     <textarea id="excerpt" name="excerpt" rows={2} class={inputClass}>{post?.excerpt ?? ""}</textarea>
   </div>
 
-  <div>
-    <label for="body_md" class="mb-1 block text-sm font-medium">Gövde (Markdown)</label>
-    <textarea id="body_md" name="body_md" required rows={16} class={inputClass}>{post?.body_md ?? ""}</textarea>
-  </div>
+  <AdminRichTextarea
+    id="body_md"
+    name="body_md"
+    label="Gövde (Markdown + biçimlendirme)"
+    value={post?.body_md ?? ""}
+    rows={18}
+    required
+    hint="Metni seçin, font/punto/renk seçip «Seçili metne uygula» deyin. Kalın ve başlık için Markdown (#, ##, **) kullanılabilir."
+  />
 
   <div>
     <label for="cover_image" class="mb-1 block text-sm font-medium">Kapak görseli URL (opsiyonel)</label>
@@ -210,4 +217,8 @@ const inputClass =
       deleteBtn.disabled = false;
     }
   });
+</script>
+
+<script>
+  import "@/scripts/admin-rich-text.ts";
 </script>

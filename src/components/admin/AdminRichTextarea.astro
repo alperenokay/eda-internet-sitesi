@@ -1,0 +1,33 @@
+---
+import AdminRichToolbar from "./content/AdminRichToolbar.astro";
+
+export interface Props {
+  id: string;
+  label: string;
+  value?: string;
+  rows?: number;
+  required?: boolean;
+  hint?: string;
+  name?: string;
+  field?: string;
+}
+
+const { id, label, value = "", rows = 16, required = false, hint, name, field } = Astro.props;
+const inputClass =
+  "block w-full rounded-[var(--radius-sm)] border border-line bg-paper px-3 py-2 text-sm font-normal leading-relaxed";
+---
+
+<div class="rich-text-field" data-rich-text-root>
+  <label class="mb-1 block text-sm font-medium" for={id}>{label}</label>
+  <AdminRichToolbar />
+  <textarea
+    id={id}
+    name={name}
+    data-rich-textarea
+    data-rich-input
+    data-field={field}
+    rows={rows}
+    required={required}
+    class={inputClass}>{value}</textarea>
+  {hint && <p class="mt-1 text-xs text-muted">{hint}</p>}
+</div>

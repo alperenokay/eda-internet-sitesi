@@ -1,0 +1,19 @@
+---
+import { hasInlineHtml, renderInlineHtml } from "@/lib/render-inline-html";
+
+export interface Props {
+  text: string;
+  as?: "span" | "p" | "h1" | "h2" | "h3" | "div" | "a" | "button";
+  class?: string;
+}
+
+const { text, as = "span", class: className } = Astro.props;
+const html = hasInlineHtml(text) ? renderInlineHtml(text) : text;
+const Tag = as;
+---
+
+{hasInlineHtml(text) ? (
+  <Tag class={className} set:html={html} />
+) : (
+  <Tag class={className}>{text}</Tag>
+)}

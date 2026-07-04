@@ -1,37 +1,182 @@
 ---
+
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import Hero from "@/components/Hero.astro";
-import ThresholdStrip from "@/components/ThresholdStrip.astro";
-import WhyNow from "@/components/WhyNow.astro";
-import PathCards from "@/components/PathCards.astro";
-import AnalysisPreview from "@/components/AnalysisPreview.astro";
-import Differentiator from "@/components/Differentiator.astro";
-import Faq from "@/components/Faq.astro";
-import Cta from "@/components/Cta.astro";
-import { buildFaqPageSchema, FAQ_ITEMS, SERVICE_SCHEMA } from "@/lib/faq-data";
 
-const title = "PPWR Uyum Danışmanlığı ve Ambalaj Analizleri";
-const description =
-  "Avrupa'ya ihracat yapan üreticiler için PPWR (EU 2025/40) uyum danışmanlığı ve ambalaj analiz hizmetleri. Ücretsiz ön değerlendirme.";
-const keywords =
-  "PPWR, PPWR nedir, PPWR uyum, PPWR danışmanlık, ambalaj tüzüğü, EU 2025/40, PFAS analizi, ağır metal analizi";
+import PageHero from "@/components/ui/PageHero.astro";
 
-const jsonLd = [buildFaqPageSchema(FAQ_ITEMS), SERVICE_SCHEMA];
+import Section from "@/components/ui/Section.astro";
+
+import Card from "@/components/ui/Card.astro";
+
+import CtaBand from "@/components/ui/CtaBand.astro";
+
+import PostCard from "@/components/blog/PostCard.astro";
+
+import ButtonLink from "@/components/ui/ButtonLink.astro";
+
+import FormattedText from "@/components/ui/FormattedText.astro";
+
+import { fetchPublishedPosts } from "@/lib/blog";
+
+import { getContent, getSite } from "@/lib/content";
+
+
+
+const home = await getContent("home");
+
+const site = await getSite();
+
+const latestPosts = (await fetchPublishedPosts()).slice(0, 3);
+
 ---
 
+
+
 <BaseLayout
-  title={title}
-  description={description}
+
+  title={home.seo.title}
+
+  description={home.seo.description}
+
   path="/"
-  keywords={keywords}
-  jsonLd={jsonLd}
+
+  keywords={home.seo.keywords}
+
 >
-  <Hero />
-  <ThresholdStrip />
-  <WhyNow />
-  <PathCards />
-  <AnalysisPreview />
-  <Differentiator />
-  <Faq />
-  <Cta />
+
+  <PageHero
+
+    eyebrow={home.hero.eyebrow}
+
+    chip={home.hero.chip ?? site.attorney}
+
+    title={home.hero.title}
+
+    titleHighlight={home.hero.titleHighlight}
+
+    lead={home.hero.lead}
+
+    primaryHref={home.hero.primaryHref}
+
+    primaryLabel={home.hero.primaryLabel}
+
+    secondaryHref={home.hero.secondaryHref}
+
+    secondaryLabel={home.hero.secondaryLabel}
+
+    showTrustPanel={home.hero.showTrustPanel}
+
+  />
+
+
+
+  <Section variant="panel" eyebrow={home.principlesSection.eyebrow} title={home.principlesSection.title}>
+
+    <div class="grid gap-6 sm:grid-cols-3">
+
+      {home.principlesSection.items.map((item) => (
+
+        <div class="rounded-[var(--radius-card)] border border-white/10 bg-white/5 p-5">
+
+          <h3 class="font-display text-lg font-semibold text-white">
+
+            <FormattedText text={item.title} as="span" />
+
+          </h3>
+
+          <p class="mt-2 text-sm leading-relaxed text-white/70">
+
+            <FormattedText text={item.text} as="span" />
+
+          </p>
+
+        </div>
+
+      ))}
+
+    </div>
+
+  </Section>
+
+
+
+  <Section
+
+    variant="soft"
+
+    eyebrow={home.practiceSection.eyebrow}
+
+    title={home.practiceSection.title}
+
+    lead={home.practiceSection.lead}
+
+  >
+
+    <div class="grid gap-5 sm:grid-cols-2">
+
+      {home.practiceSection.items.map((area, i) => (
+
+        <Card title={area.title} index={i + 1}>
+          <FormattedText text={area.text} as="span" />
+        </Card>
+
+      ))}
+
+    </div>
+
+  </Section>
+
+
+
+  {latestPosts.length > 0 && (
+
+    <Section
+
+      variant="default"
+
+      eyebrow={home.postsSection.eyebrow}
+
+      title={home.postsSection.title}
+
+      lead={home.postsSection.lead}
+
+    >
+
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+        {latestPosts.map((post) => (
+
+          <PostCard post={post} />
+
+        ))}
+
+      </div>
+
+      <div class="mt-8">
+
+        <ButtonLink href="/blog" variant="ghost">
+          <FormattedText text={home.postsSection.buttonLabel} as="span" />
+        </ButtonLink>
+
+      </div>
+
+    </Section>
+
+  )}
+
+
+
+  <CtaBand
+
+    title={home.cta.title}
+
+    text={home.cta.text}
+
+    buttonHref={home.cta.buttonHref}
+
+    buttonLabel={home.cta.buttonLabel}
+
+  />
+
 </BaseLayout>
+

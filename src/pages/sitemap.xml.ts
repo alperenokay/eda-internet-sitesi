@@ -1,14 +1,11 @@
 import type { APIRoute } from "astro";
 import { fetchPublishedSlugsForSitemap } from "@/lib/blog";
-
 import { SITE_URL } from "@/lib/site";
 
 const STATIC_ROUTES = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
-  { path: "/danismanlik", changefreq: "monthly", priority: "0.9" },
-  { path: "/analizler", changefreq: "monthly", priority: "0.9" },
-  { path: "/blog", changefreq: "weekly", priority: "0.8" },
-  { path: "/iletisim", changefreq: "monthly", priority: "0.7" },
+  { path: "/blog", changefreq: "weekly", priority: "0.85" },
+  { path: "/iletisim", changefreq: "monthly", priority: "0.8" },
   { path: "/kvkk", changefreq: "yearly", priority: "0.4" },
 ];
 
@@ -35,7 +32,7 @@ export const GET: APIRoute = async () => {
         buildUrlEntry(
           `/blog/${post.slug}`,
           "monthly",
-          "0.6",
+          "0.7",
           post.updated_at.toISOString().slice(0, 10)
         )
       );

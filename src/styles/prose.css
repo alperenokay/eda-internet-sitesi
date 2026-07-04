@@ -96,6 +96,10 @@
   margin: 2em 0;
 }
 
+.prose span[style] {
+  line-height: 1.65;
+}
+
 .prose strong {
   font-weight: 600;
 }

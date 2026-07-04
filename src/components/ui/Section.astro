@@ -1,6 +1,6 @@
 ---
 import Container from "./Container.astro";
-import Eyebrow from "./Eyebrow.astro";
+import FormattedText from "./FormattedText.astro";
 
 export interface Props {
   variant?: "default" | "soft" | "panel";
@@ -27,6 +27,11 @@ const variants = {
   soft: "relative overflow-hidden border-y border-line bg-bg-2",
   panel: "relative overflow-hidden bg-panel text-white",
 };
+
+const eyebrowClass =
+  variant === "panel"
+    ? "text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-leaf"
+    : "text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-green-deep";
 ---
 
 <section
@@ -38,30 +43,36 @@ const variants = {
     {(eyebrow || title || lead || caption) && (
       <div class="relative z-[1] max-w-2xl">
         {eyebrow && (
-          <Eyebrow tone={variant === "panel" ? "on-dark" : "default"}>{eyebrow}</Eyebrow>
+          <FormattedText text={eyebrow} as="p" class={eyebrowClass} />
         )}
         {title && (
-          <h2 class:list={[
-            "mt-2 font-display text-3xl font-semibold tracking-tight sm:text-[2.1rem]",
-            variant === "panel" ? "text-white" : "text-heading",
-          ]}>
-            {title}
+          <h2
+            class:list={[
+              "mt-2 font-display text-3xl font-semibold tracking-tight sm:text-[2.1rem]",
+              variant === "panel" ? "text-white" : "text-heading",
+            ]}
+          >
+            <FormattedText text={title} as="span" />
           </h2>
         )}
         {caption && (
-          <p class:list={[
-            "mt-1 text-[0.98rem]",
-            variant === "panel" ? "text-white/75" : "text-muted",
-          ]}>
-            {caption}
+          <p
+            class:list={[
+              "mt-1 text-[0.98rem]",
+              variant === "panel" ? "text-white/75" : "text-muted",
+            ]}
+          >
+            <FormattedText text={caption} as="span" />
           </p>
         )}
         {lead && (
-          <p class:list={[
-            "mt-3 text-base leading-relaxed",
-            variant === "panel" ? "text-white/75" : "text-muted",
-          ]}>
-            {lead}
+          <p
+            class:list={[
+              "mt-3 text-base leading-relaxed",
+              variant === "panel" ? "text-white/75" : "text-muted",
+            ]}
+          >
+            <FormattedText text={lead} as="span" />
           </p>
         )}
       </div>

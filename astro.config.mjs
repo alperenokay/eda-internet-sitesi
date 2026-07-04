@@ -19,5 +19,5 @@ export default defineConfig({
       include: ["react", "react-dom", "react/jsx-dev-runtime", "react/jsx-runtime"],
     },
   },
-  site: "https://www.me-package.com",
+  site: "https://www.sagirhukuk.net",
 });

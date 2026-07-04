@@ -1,5 +1,5 @@
 {
-  "name": "mepackage",
+  "name": "sagirhukuk",
   "type": "module",
   "version": "0.1.0",
   "scripts": {
@@ -8,9 +8,13 @@
     "start": "node ./dist/server/entry.mjs",
     "preview": "astro preview",
     "db:init": "node scripts/db-init.mjs",
+    "db:setup": "node scripts/db-init.mjs && node scripts/db-migrate-content.mjs",
     "db:migrate-kvkk": "node scripts/db-migrate-kvkk.mjs",
+    "db:migrate-content": "node scripts/db-migrate-content.mjs",
+    "db:seed-blog": "node --experimental-strip-types scripts/seed-blog.mjs",
     "purge:retention": "node scripts/purge-retention.mjs",
-    "admin:create": "node scripts/admin-create.mjs"
+    "admin:create": "node scripts/admin-create.mjs",
+    "bug-test": "node scripts/bug-test.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^9.1.3",

@@ -1,4 +1,4 @@
-# PROGRESS.md — mepackage
+# PROGRESS.md — sagirhukuk
 
 > KURAL: Bu dosyanın üzerine ASLA yazılmaz. Her faz sonunda EN ALTA yeni giriş eklenir.
 
@@ -405,5 +405,112 @@ DATABASE_URL, DATABASE_SSL, SESSION_SECRET, ADMIN_*, SMTP_*, NOTIFY_TO, KVKK_*, 
 
 **Doğrulama**
 - Eski domain grep temiz (src, config, docs)
+- `npm run build` hatasız
+
+---
+
+## Faz 0 — sagirhukuk.net geçişi (minimal iskelet, tamamlandı)
+
+**Ne yapıldı**
+- me-package.com PPWR içeriği kaldırıldı: analizler, danışmanlık, blog, admin paneli ve ilgili API/bileşenler.
+- Domain ve marka `sagirhukuk.net` / Sağır Hukuk & Danışmanlık olarak güncellendi (`site.ts`, BaseLayout schema, robots, sitemap).
+- Minimal public yapı: ana sayfa (hero + çalışma alanları + CTA), iletişim formu, KVKK, 404.
+- Header/Footer sadeleştirildi; metin logo (BrandLeaf) kullanıldı.
+- Admin middleware kaldırıldı; güvenlik header'ları korundu.
+
+**Dosyalar**
+src/lib/site.ts, src/pages/{index,iletisim,kvkk}.astro, src/layouts/BaseLayout.astro,
+src/components/{Header,Footer,NotFoundContent}.astro, src/components/ui/{Logo,PageHero}.astro,
+src/middleware.ts, astro.config.mjs, package.json, render.yaml, .env.example, ARCHITECTURE.md
+
+**Bilinen eksikler / sonraki faza devir**
+- Hakkımızda, Hizmetler sayfaları yok.
+- og-default.png repoda yok.
+- DB şeması eski me-package tablolarını içeriyor (contact_messages aktif).
+
+**Doğrulama**
+- `npm run build` (faz sonunda)
+- Görünen metinde em dash yok
+
+---
+
+## Faz 1 — Blog / yayınlar (tamamlandı)
+
+**Ne yapıldı**
+- `/blog` liste ve `/blog/[slug]` detay sayfaları eklendi (SSR).
+- 6 bilgilendirme yazısı: anlaşmalı boşanma, çekişmeli boşanma, ceza savunma hakları,
+  limited şirket kuruluşu, idari dava süresi, saklı pay (`blog-data.ts`).
+- DB varsa `blog_posts` okunur; yoksa statik yedek. Markdown + DOMPurify render.
+- BlogPosting JSON-LD, sitemap blog rotaları, ana sayfada son 3 yazı.
+- Header/Footer menüsüne "Yazılar" eklendi.
+
+**Dosyalar**
+src/lib/{blog,blog-data,render-markdown}.ts, src/components/blog/PostCard.astro,
+src/pages/blog/{index,[slug]}.astro, src/pages/{index,sitemap.xml}.ts (güncellendi),
+src/components/{Header,Footer,NotFoundContent}.astro
+
+**Doğrulama**
+- `npm run build` hatasız
+- Görünen metinde em dash yok
+
+---
+
+## Admin paneli geri yüklendi (tamamlandı)
+
+**Neden kaldırılmıştı:** sagirhukuk.net geçişinde "içeriği sil, çok kısıtlı iskelet" talimatıyla blog/admin birlikte temizlenmişti.
+
+**Ne yapıldı**
+- `/admin` oturum, blog CRUD, iletişim mesajları CRM geri eklendi.
+- PPWR analiz/danışmanlık başvuru ekranları kaldırıldı; yalnızca `contact_messages` + `blog_posts`.
+- Durum pipeline: Yeni, İletişime geçildi, Randevu verildi, Dosya takibi, Kapatıldı.
+
+**Komut:** `npm run admin:create` (SESSION_SECRET + DATABASE_URL gerekli)
+
+---
+
+## Hukuk sitesi tasarım uyarlaması (tamamlandı)
+
+**Ne yapıldı**
+- ONAYLI iskelet korundu; palet avukatlık temasına çekildi: lacivert panel, altın vurgu, sıcak kağıt zemin.
+- Botanik motifler kaldırıldı; LawSeal (terazi mührü), HeroTrustPanel, grid desenli hero.
+- Tipografi: Cormorant Garamond başlık + Inter gövde.
+- Ana sayfa: güven paneli, yaklaşım bandı, numaralı çalışma alanı kartları, koyu CTA bandı.
+- Header/footer kurumsal düzen; iletişim sayfasında trust paneli.
+
+**Doğrulama**
+- `npm run build` hatasız
+
+---
+
+## Site içeriği CMS (tamamlandı)
+
+**Ne yapıldı**
+- `site_content` tablosu (JSONB): admin panelden düzenlenebilir metinler.
+- `/admin/icerik` listesi ve `/admin/icerik/[key]` düzenleme formları.
+- `PUT /api/admin/content` kayıt + audit log.
+- Anahtarlar: `global`, `home`, `contact`, `blog_page`, `kvkk`, `not_found`.
+- Public sayfalar `getContent()` / `getSite()` ile DB + varsayılan birleşimi kullanır.
+- Blog yazıları mevcut `/admin/blog` CRUD ile kalır.
+
+**Komutlar**
+- Yeni DB: `npm run db:init`
+- Mevcut DB: `npm run db:migrate-content`
+
+**Dosyalar**
+src/lib/{content,content-defaults}.ts, src/pages/admin/icerik/, src/pages/api/admin/content.ts,
+**Doğrulama**
+- `npm run build` hatasız
+- Görünen metinde em dash yok
+
+---
+
+## Blog paneli: içe aktarma ve biçimlendirme (tamamlandı)
+
+**Ne yapıldı**
+- 6 statik blog yazısı DB'ye aktarıldı (`npm run db:seed-blog` veya admin panelde «Statik yazıları içe aktar»).
+- Blog ve KVKK düzenleyicisine font (Inter / Cormorant), punto (14–24 pt) ve renk araç çubuğu eklendi.
+- Seçili metne `<span style="...">` ile biçim uygulanır; sitede güvenli şekilde render edilir.
+
+**Doğrulama**
 - `npm run build` hatasız
 

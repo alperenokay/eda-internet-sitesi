@@ -1,33 +1,42 @@
----
-export interface Props {
-  title: string;
-  featured?: boolean;
-  id?: string;
-  href?: string;
-}
-
-const { title, featured = false, id, href } = Astro.props;
----
-
-<article
-  id={id}
-  class:list={[
-    "ui-card group relative flex h-full flex-col border bg-white p-6 sm:p-7",
-    featured ? "border-green/40 bg-wash/50" : "border-line",
-    id && "scroll-mt-24",
-  ]}
->
-  <h3 class="font-display text-lg font-semibold text-heading">
-    {href ? (
-      <a href={href} class="text-heading no-underline hover:text-green-deep">{title}</a>
-    ) : (
-      title
-    )}
-  </h3>
-  <div class="mt-2 flex-1 text-sm leading-relaxed text-muted">
-    <slot />
-  </div>
-  <div class="mt-4">
-    <slot name="footer" />
-  </div>
-</article>
+---
+import FormattedText from "./FormattedText.astro";
+
+export interface Props {
+  title: string;
+  featured?: boolean;
+  id?: string;
+  href?: string;
+  index?: number;
+}
+
+const { title, featured = false, id, href, index } = Astro.props;
+const indexLabel = index !== undefined ? String(index).padStart(2, "0") : null;
+---
+
+<article
+  id={id}
+  class:list={[
+    "ui-card law-card-accent group relative flex h-full flex-col border bg-white p-6 sm:p-7",
+    featured ? "border-green/30 bg-wash/30" : "border-line",
+    id && "scroll-mt-24",
+  ]}
+>
+  {indexLabel && (
+    <p class="font-display text-2xl leading-none text-green/35">{indexLabel}</p>
+  )}
+  <h3 class:list={["font-display text-xl font-semibold text-heading", indexLabel && "mt-2"]}>
+    {href ? (
+      <a href={href} class="text-heading no-underline hover:text-green-deep">
+        <FormattedText text={title} as="span" />
+      </a>
+    ) : (
+      <FormattedText text={title} as="span" />
+    )}
+  </h3>
+  <div class="mt-2 flex-1 text-sm leading-relaxed text-muted">
+    <slot />
+  </div>
+  <div class="mt-4">
+    <slot name="footer" />
+  </div>
+</article>

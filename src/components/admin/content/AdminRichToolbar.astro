@@ -1,0 +1,41 @@
+---
+const toolbarClass =
+  "mb-2 flex flex-wrap items-end gap-2 rounded-[var(--radius-sm)] border border-line bg-surface p-2";
+---
+
+<div class={toolbarClass} data-rich-toolbar>
+  <div>
+    <span class="mb-1 block text-[0.68rem] font-semibold uppercase tracking-wide text-muted">Font</span>
+    <select data-rich-font class="rounded-[var(--radius-sm)] border border-line bg-paper px-2 py-1.5 text-xs">
+      <option value="inter">Gövde (Inter)</option>
+      <option value="display">Başlık (Cormorant)</option>
+    </select>
+  </div>
+  <div>
+    <span class="mb-1 block text-[0.68rem] font-semibold uppercase tracking-wide text-muted">Punto</span>
+    <select data-rich-size class="rounded-[var(--radius-sm)] border border-line bg-paper px-2 py-1.5 text-xs">
+      <option value="14px">14 pt</option>
+      <option value="16px" selected>16 pt</option>
+      <option value="18px">18 pt</option>
+      <option value="20px">20 pt</option>
+      <option value="24px">24 pt</option>
+    </select>
+  </div>
+  <div>
+    <span class="mb-1 block text-[0.68rem] font-semibold uppercase tracking-wide text-muted">Renk</span>
+    <div class="flex flex-wrap gap-1">
+      <button type="button" data-rich-color="#17323a" class="h-7 w-7 rounded-full border border-line bg-[#17323a]" title="Metin"></button>
+      <button type="button" data-rich-color="#143a3d" class="h-7 w-7 rounded-full border border-line bg-[#143a3d]" title="Başlık"></button>
+      <button type="button" data-rich-color="#2a6644" class="h-7 w-7 rounded-full border border-line bg-[#2a6644]" title="Vurgu"></button>
+      <button type="button" data-rich-color="#5a6c74" class="h-7 w-7 rounded-full border border-line bg-[#5a6c74]" title="Gri"></button>
+      <button type="button" data-rich-color="#8b1e1e" class="h-7 w-7 rounded-full border border-line bg-[#8b1e1e]" title="Kırmızı"></button>
+    </div>
+  </div>
+  <button
+    type="button"
+    data-rich-apply
+    class="ml-auto rounded-[var(--radius-sm)] bg-green px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-deep"
+  >
+    Seçili metne uygula
+  </button>
+</div>

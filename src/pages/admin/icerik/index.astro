@@ -1,0 +1,58 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { listContentForAdmin } from "@/lib/content";
+
+let items = [];
+try {
+  items = await listContentForAdmin();
+} catch (err) {
+  console.warn("[admin/icerik] liste alınamadı:", err);
+}
+
+function formatDate(value: Date | null) {
+  if (!value) return "Varsayılan (henüz kaydedilmedi)";
+  return new Intl.DateTimeFormat("tr-TR", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(value);
+}
+---
+
+<AdminLayout title="Site içeriği">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h1 class="font-display text-2xl font-semibold">Site içeriği</h1>
+      <p class="mt-2 max-w-2xl text-sm text-muted">
+        Ana sayfa, iletişim, menü, KVKK ve diğer sabit metinler buradan düzenlenir. Blog yazıları
+        ayrı menüden yönetilir.
+      </p>
+    </div>
+    <a href="/" target="_blank" rel="noopener" class="text-sm text-muted no-underline hover:text-heading">
+      Siteyi aç
+    </a>
+  </div>
+
+  <ul class="mt-8 space-y-3">
+    {items.map((item) => (
+      <li class="rounded-[var(--radius)] border border-line bg-paper p-4">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p class="font-semibold text-heading">{item.label}</p>
+            <p class="mt-1 text-sm text-muted">{item.description}</p>
+            <p class="mt-2 text-xs text-muted">Son kayıt: {formatDate(item.updatedAt)}</p>
+          </div>
+          <div class="flex flex-wrap gap-3 text-sm">
+            <a href={`/admin/icerik/${item.key}`} class="font-semibold text-green-deep no-underline hover:text-green">
+              Düzenle
+            </a>
+            {item.publicPath && (
+              <a href={item.publicPath} target="_blank" rel="noopener" class="text-muted no-underline hover:text-heading">
+                Sitede gör
+              </a>
+            )}
+          </div>
+        </div>
+      </li>
+    ))}
+  </ul>
+</AdminLayout>

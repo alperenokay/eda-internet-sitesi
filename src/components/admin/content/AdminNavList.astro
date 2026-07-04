@@ -1,0 +1,48 @@
+---
+import AdminRichToolbar from "./AdminRichToolbar.astro";
+
+export interface Props {
+  path: string;
+  label: string;
+  items: { href: string; label: string }[];
+}
+
+const { path, label, items } = Astro.props;
+const inputClass =
+  "block w-full rounded-[var(--radius-sm)] border border-line bg-paper px-3 py-2 text-sm font-normal leading-relaxed";
+---
+
+<fieldset
+  class="rich-text-field rounded-[var(--radius)] border border-line p-4"
+  data-rich-text-root
+  data-list-path={path}
+>
+  <legend class="px-1 text-sm font-semibold">{label}</legend>
+  <AdminRichToolbar />
+  <p class="mb-2 text-xs text-muted">Biçimlendirme yalnızca menü metni (label) alanına uygulanır.</p>
+  <div class="list-rows space-y-3">
+    {items.map((item, i) => (
+      <div class="list-row grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
+        <input
+          type="text"
+          data-field={`${path}.${i}.href`}
+          value={item.href}
+          placeholder="/ornek"
+          class={inputClass}
+        />
+        <input
+          type="text"
+          data-field={`${path}.${i}.label`}
+          data-rich-input
+          value={item.label}
+          placeholder="Menü metni"
+          class={inputClass}
+        />
+        <button type="button" class="list-remove text-sm text-red-700">Kaldır</button>
+      </div>
+    ))}
+  </div>
+  <button type="button" class="list-add mt-3 text-sm font-semibold text-green-deep" data-list-path={path}>
+    Satır ekle
+  </button>
+</fieldset>

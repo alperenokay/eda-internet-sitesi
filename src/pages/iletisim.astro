@@ -1,64 +1,374 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import ContactForm from "@/components/ContactForm";
-import PageHero from "@/components/ui/PageHero.astro";
-import Section from "@/components/ui/Section.astro";
-import { site } from "@/lib/site";
 
-const title = "İletişim ve PPWR Danışmanlık Talebi";
-const description =
-  "Marine Emission Package ile iletişime geçin. PPWR danışmanlık, ambalaj analizi ve iş birliği talepleri için formu doldurun.";
+
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+
+
+import ContactForm from "@/components/ContactForm.astro";
+
+
+
+import OfficeMap from "@/components/OfficeMap.astro";
+
+
+
+import PageHero from "@/components/ui/PageHero.astro";
+
+
+
+import Section from "@/components/ui/Section.astro";
+
+
+
+import FormattedText from "@/components/ui/FormattedText.astro";
+
+
+
+import { getContent, getSite } from "@/lib/content";
+
+
+
+
+
+
+
+const contact = await getContent("contact");
+
+
+
+const site = await getSite();
+
+
+
+
+
+
 
 const hasEmail = site.email.length > 0;
+
+
+
 const hasPhone = site.phone.length > 0;
+
+
+
+
+
+
+
+const heroSecondaryHref = contact.hero.secondaryHref.startsWith("tel:")
+
+
+
+  ? contact.hero.secondaryHref
+
+
+
+  : `tel:${site.phone.replace(/\s/g, "")}`;
+
+
+
 ---
 
-<BaseLayout title={title} description={description} path="/iletisim">
+
+
+
+
+
+
+<BaseLayout title={contact.seo.title} description={contact.seo.description} path="/iletisim">
+
+
+
   <PageHero
-    title="İletişim"
-    lead="Sorularınız veya iş birliği talepleriniz için aşağıdaki formu doldurun, en kısa sürede dönüş yapalım."
-    primaryHref="#mesaj"
-    primaryLabel=""
-    showCountdown={false}
-    hideActions
+
+
+
+    eyebrow={contact.hero.eyebrow}
+
+
+
+    title={contact.hero.title}
+
+
+
+    titleHighlight={contact.hero.titleHighlight}
+
+
+
+    lead={contact.hero.lead}
+
+
+
+    primaryHref={contact.hero.primaryHref}
+
+
+
+    primaryLabel={contact.hero.primaryLabel}
+
+
+
+    secondaryHref={heroSecondaryHref}
+
+
+
+    secondaryLabel={contact.hero.secondaryLabel}
+
+
+
+    showTrustPanel={contact.hero.showTrustPanel}
+
+
+
   />
 
+
+
+
+
+
+
   <Section variant="soft">
+
+
+
     <div class="grid gap-10 lg:grid-cols-2 lg:items-start">
+
+
+
       <aside class="rounded-[var(--radius-card)] border border-line bg-white p-6 sm:p-8">
-        <h2 class="font-display text-xl font-semibold text-heading">İletişim bilgisi</h2>
+
+
+
+        <h2 class="font-display text-xl font-semibold text-heading">
+
+          <FormattedText text={contact.sidebar.title} as="span" />
+
+        </h2>
+
+
+
         <ul class="mt-5 space-y-4 text-sm" role="list">
+
+
+
+          <li>
+
+
+
+            <span class="block font-medium text-heading">
+
+              <FormattedText text={contact.sidebar.labels.attorney} as="span" />
+
+            </span>
+
+
+
+            <span class="text-muted">{site.attorney}</span>
+
+
+
+          </li>
+
+
+
           {hasEmail && (
+
+
+
             <li>
-              <span class="block font-medium text-heading">E-posta</span>
+
+
+
+              <span class="block font-medium text-heading">
+
+                <FormattedText text={contact.sidebar.labels.email} as="span" />
+
+              </span>
+
+
+
               <a href={`mailto:${site.email}`} class="text-green-deep no-underline hover:text-green">
+
+
+
                 {site.email}
+
+
+
               </a>
+
+
+
             </li>
+
+
+
           )}
+
+
+
           {hasPhone && (
+
+
+
             <li>
-              <span class="block font-medium text-heading">Telefon</span>
+
+
+
+              <span class="block font-medium text-heading">
+
+                <FormattedText text={contact.sidebar.labels.phone} as="span" />
+
+              </span>
+
+
+
               <a href={`tel:${site.phone.replace(/\s/g, "")}`} class="text-green-deep no-underline hover:text-green">
+
+
+
                 {site.phone}
+
+
+
               </a>
+
+
+
             </li>
+
+
+
           )}
-          {site.cities.length > 0 && (
-            <li>
-              <span class="block font-medium text-heading">Ofisler</span>
-              <span class="text-muted">{site.cities.join(", ")}</span>
-            </li>
-          )}
+
+
+
+          <li>
+
+
+
+            <span class="block font-medium text-heading">
+
+              <FormattedText text={contact.sidebar.labels.address} as="span" />
+
+            </span>
+
+
+
+            <span class="text-muted">{site.address}</span>
+
+
+
+          </li>
+
+
+
+          <li>
+
+
+
+            <span class="block font-medium text-heading">
+
+              <FormattedText text={contact.sidebar.labels.workingHours} as="span" />
+
+            </span>
+
+
+
+            <span class="text-muted">{site.workingHours}</span>
+
+
+
+          </li>
+
+
+
         </ul>
+
+
+
       </aside>
 
-      <div class="rounded-[var(--radius-card)] border border-line bg-white p-6 sm:p-8">
-        <h2 class="font-display text-xl font-semibold text-heading">Mesaj gönderin</h2>
-        <div class="mt-5">
-          <ContactForm client:load />
+
+
+
+
+
+
+      <div id="mesaj" class="relative rounded-[var(--radius-card)] border border-line bg-white p-6 sm:p-8">
+
+
+
+        <h2 class="font-display text-xl font-semibold text-heading">
+
+          <FormattedText text={contact.formSection.title} as="span" />
+
+        </h2>
+
+
+
+        <div class="relative mt-5">
+
+
+
+          <ContactForm formCopy={contact.form} />
+
+
+
         </div>
+
+
+
       </div>
+
+
+
     </div>
+
+
+
   </Section>
+
+
+
+
+
+
+
+  <Section
+
+
+
+    variant="default"
+
+
+
+    eyebrow={contact.mapSection.eyebrow}
+
+
+
+    title={contact.mapSection.title}
+
+
+
+    lead={contact.mapSection.lead}
+
+
+
+  >
+
+
+
+    <OfficeMap directionsLabel={contact.mapSection.directionsLinkLabel} />
+
+
+
+  </Section>
+
+
+
 </BaseLayout>
+

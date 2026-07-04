@@ -1,37 +1,59 @@
 ---
-import SingleLeaf from "@/components/ui/botanic/SingleLeaf.astro";
 import Logo from "@/components/ui/Logo.astro";
+import FormattedText from "@/components/ui/FormattedText.astro";
+import type { GlobalContent } from "@/lib/content-defaults";
+import type { SiteInfo } from "@/lib/content";
 
-const nav = [
-  { href: "/danismanlik", label: "Danışmanlık" },
-  { href: "/analizler", label: "Analizler" },
-  { href: "/blog", label: "Blog" },
-  { href: "/iletisim", label: "İletişim" },
-];
+export interface Props {
+  global: GlobalContent;
+  site: SiteInfo;
+}
+
+const { global, site } = Astro.props;
 ---
 
-<footer class="relative overflow-hidden bg-panel text-white/60">
-  <SingleLeaf variant="footer" />
+<footer class="relative overflow-hidden bg-panel text-white/70">
+  <div class="site-header-bar opacity-80" aria-hidden="true"></div>
   <div class="relative mx-auto max-w-[1360px] px-6 py-12 sm:px-10">
-    <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+    <div class="grid gap-10 lg:grid-cols-[1.2fr_0.8fr_1fr]">
       <div>
         <Logo variant="footer" />
-        <p class="mt-3 max-w-md text-sm text-white/60">
-          PPWR (EU 2025/40) uyum danışmanlığı ve ambalaj analizleri. Marine Emission alt markası.
+        <p class="mt-4 max-w-md text-sm leading-relaxed text-white/60">
+          <FormattedText text={global.footerBlurb} as="span" />
         </p>
       </div>
       <nav aria-label="Alt menü">
-        <ul class="flex flex-wrap gap-x-5 gap-y-2 text-sm">
-          <li><a href="/danismanlik" class="text-white/60 no-underline hover:text-white">Danışmanlık</a></li>
-          <li><a href="/analizler" class="text-white/60 no-underline hover:text-white">Analizler</a></li>
-          <li><a href="/blog" class="text-white/60 no-underline hover:text-white">Blog</a></li>
-          <li><a href="/iletisim" class="text-white/60 no-underline hover:text-white">İletişim</a></li>
-          <li><a href="/kvkk" class="text-white/60 no-underline hover:text-white">KVKK</a></li>
+        <p class="text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-leaf">Menü</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          {global.footerNav.map((item) => (
+            <li>
+              <a href={item.href} class="text-white/65 no-underline hover:text-white">
+                <FormattedText text={item.label} as="span" />
+              </a>
+            </li>
+          ))}
         </ul>
       </nav>
+      <div>
+        <p class="text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-leaf">İletişim</p>
+        <ul class="mt-3 space-y-2 text-sm text-white/65" role="list">
+          <li>{site.address}</li>
+          <li>
+            <a href={`tel:${site.phone.replace(/\s/g, "")}`} class="text-white/65 no-underline hover:text-white">
+              {site.phone}
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${site.email}`} class="text-white/65 no-underline hover:text-white">
+              {site.email}
+            </a>
+          </li>
+          <li>{site.workingHours}</li>
+        </ul>
+      </div>
     </div>
-    <p class="mt-8 border-t border-white/10 pt-6 text-xs text-white/45">
-      © {new Date().getFullYear()} Marine Emission. Tüm hakları saklıdır.
+    <p class="mt-10 border-t border-white/10 pt-6 text-xs text-white/45">
+      © {new Date().getFullYear()} {site.brandFull}. Tüm hakları saklıdır.
     </p>
   </div>
 </footer>

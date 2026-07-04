@@ -1,0 +1,20 @@
+---
+import AdminField from "./AdminField.astro";
+
+export interface Props {
+  prefix: string;
+  seo: { title: string; description: string; keywords?: string };
+  showKeywords?: boolean;
+}
+
+const { prefix, seo, showKeywords = false } = Astro.props;
+---
+
+<fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
+  <legend class="px-1 text-sm font-semibold">SEO</legend>
+  <AdminField label="Sayfa başlığı (title)" field={`${prefix}.title`} value={seo.title} />
+  <AdminField label="Meta açıklama" field={`${prefix}.description`} value={seo.description} rows={2} />
+  {showKeywords && (
+    <AdminField label="Anahtar kelimeler" field={`${prefix}.keywords`} value={seo.keywords ?? ""} />
+  )}
+</fieldset>

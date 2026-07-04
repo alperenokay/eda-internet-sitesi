@@ -1,102 +1,44 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { applyKvkkPlaceholders, getContent, getSite } from "@/lib/content";
 import { getKvkkContactEmail, getRetentionMonths } from "@/lib/kvkk";
+import { renderMarkdown } from "@/lib/render-markdown";
+import FormattedText from "@/components/ui/FormattedText.astro";
 
+const kvkk = await getContent("kvkk");
+const site = await getSite();
 const retentionMonths = getRetentionMonths();
 const contactEmail = getKvkkContactEmail();
+
+const bodyMd = applyKvkkPlaceholders(kvkk.bodyMd, {
+  brandFull: site.brandFull,
+  attorney: site.attorney,
+  domain: site.domain,
+  contactEmail,
+  retentionMonths: String(retentionMonths),
+});
+
+const bodyHtml = renderMarkdown(bodyMd);
 ---
 
 <BaseLayout
-  title="Kişisel Verilerin Korunması Aydınlatma Metni"
-  description="me-package.com başvuru formlarında toplanan kişisel verilerin işlenmesine ilişkin KVKK aydınlatma metni."
+  title={kvkk.seo.title}
+  description={kvkk.seo.description}
   path="/kvkk"
-  keywords="KVKK, kişisel veriler, aydınlatma metni, mepackage"
+  keywords={kvkk.seo.keywords}
 >
   <article class="border-b border-line bg-white">
     <div class="mx-auto max-w-[760px] px-6 py-14 sm:px-10">
       <h1 class="text-3xl font-semibold tracking-tight text-heading">
-        Kişisel Verilerin Korunması Aydınlatma Metni
+        {kvkk.pageTitle}
       </h1>
-      <p class="mt-3 text-sm text-muted">Son güncelleme: 1 Temmuz 2026</p>
+      <p class="mt-3 text-sm text-muted">Son güncelleme: {kvkk.lastUpdated}</p>
 
-      <div class="prose mt-10 max-w-none text-text">
-        <h2>1. Veri sorumlusu</h2>
-        <p>
-          6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında veri sorumlusu:
-          <strong> Marine Emission</strong> (me-package.com, Marine Emission Package alt markası).
-        </p>
-        <p>
-          KVKK başvuruları için iletişim:
-          <a href={`mailto:${contactEmail}`} class="font-medium text-green-deep no-underline hover:text-green">
-            {contactEmail}
-          </a>
-        </p>
+      <div class="prose mt-10 max-w-none text-text" set:html={bodyHtml} />
 
-        <h2>2. İşlenen kişisel veriler</h2>
-        <p>Web formları aracılığıyla aşağıdaki veriler toplanabilir:</p>
-        <ul>
-          <li>Kimlik / iletişim: ad soyad, e-posta, telefon (opsiyonel), firma adı (opsiyonel)</li>
-          <li>Başvuru içeriği: mesaj, analiz türü, ambalaj/malzeme tipi, danışmanlık konusu</li>
-          <li>Teknik: IP adresi, başvuru tarihi, form onay kaydı (rıza zamanı)</li>
-        </ul>
-
-        <h2>3. İşleme amaçları</h2>
-        <ul>
-          <li>Danışmanlık ve analiz başvurularını değerlendirmek, sizinle iletişime geçmek</li>
-          <li>Teklif, numune süreci ve hizmet takibini yürütmek</li>
-          <li>Yasal yükümlülüklerin yerine getirilmesi ve meşru menfaat kapsamında kayıt tutma</li>
-          <li>Spam ve kötüye kullanımın önlenmesi (teknik loglar)</li>
-        </ul>
-
-        <h2>4. Hukuki sebep</h2>
-        <p>
-          Kişisel verileriniz; KVKK md. 5/2 (c) sözleşmenin kurulması veya ifası, md. 5/2 (f) meşru
-          menfaat ve formda verdiğiniz <strong>açık rıza</strong> kapsamında işlenir. Rıza vermeden
-          başvuru formu gönderilemez.
-        </p>
-
-        <h2>5. Aktarım</h2>
-        <p>
-          Veriler; barındırma (Render, PostgreSQL), opsiyonel e-posta bildirimi (SMTP sağlayıcınız)
-          ve hizmet sunumu için zorunlu iş ortakları dışında üçüncü taraflara satılmaz. Yurt dışına
-          aktarım, altyapı sağlayıcılarının lokasyonuna bağlı olarak söz konusu olabilir; aktarımda
-          KVKK md. 9 hükümlerine uygun önlemler hedeflenir.
-        </p>
-
-        <h2>6. Saklama süresi</h2>
-        <p>
-          Başvuru kayıtları, başvuru tarihinden itibaren <strong>{retentionMonths} ay</strong>
-          saklanır. Süre sonunda kişisel veriler anonimleştirilir veya silinir; yasal zorunluluk
-          varsa ilgili süre kadar muhafaza edilir.
-        </p>
-
-        <h2>7. KVKK kapsamındaki haklarınız</h2>
-        <p>KVKK md. 11 uyarınca;</p>
-        <ul>
-          <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme</li>
-          <li>İşlenmişse bilgi talep etme</li>
-          <li>Amacına uygun kullanılıp kullanılmadığını öğrenme</li>
-          <li>Eksik veya yanlış işlenmişse düzeltilmesini isteme</li>
-          <li>KVKK md. 7 kapsamında silinmesini veya yok edilmesini isteme</li>
-          <li>İşlemenin otomatik sistemlerle analiz edilmesine itiraz etme</li>
-          <li>Kanuna aykırı işleme nedeniyle zarara uğramanız hâlinde tazminat talep etme</li>
-        </ul>
-        <p>
-          Taleplerinizi <a href={`mailto:${contactEmail}`}>{contactEmail}</a> adresine iletebilirsiniz.
-          Başvurular en geç 30 gün içinde yanıtlanır.
-        </p>
-
-        <h2>8. Güvenlik</h2>
-        <p>
-          Veriler şifreli bağlantı (HTTPS) üzerinden iletilir; veritabanı erişimi yetkilendirilmiş
-          admin hesaplarıyla sınırlıdır. Admin işlemleri audit log ile izlenir.
-        </p>
-
-        <p class="mt-8 rounded-[var(--radius-sm)] border border-line bg-surface px-4 py-3 text-sm text-muted">
-          Bu metin bilgilendirme amaçlıdır; bağlayıcı hukuki görüş değildir. Güncellemeler bu
-          sayfada yayımlanır.
-        </p>
-      </div>
+      <p class="mt-8 rounded-[var(--radius-sm)] border border-line bg-surface px-4 py-3 text-sm text-muted">
+        <FormattedText text={kvkk.disclaimer} as="span" />
+      </p>
     </div>
   </article>
 </BaseLayout>

@@ -1,14 +1,9 @@
-/** Başvuru CRM durumları (sıralı pipeline). */
+/** İletişim mesajı CRM durumları. */
 export const APPLICATION_STATUSES = [
   { value: "new", label: "Yeni" },
   { value: "contacted", label: "İletişime geçildi" },
-  { value: "quoted", label: "Fiyat verildi" },
-  { value: "quote_accepted", label: "Fiyat kabul edildi" },
-  { value: "sample_received", label: "Numune teslim alındı" },
-  { value: "payment_received", label: "Ödeme alındı" },
-  { value: "sample_in_transit", label: "Numune navlungoda" },
-  { value: "sample_at_fcc", label: "Numune FCC'de" },
-  { value: "results_ready", label: "Sonuç çıktı" },
+  { value: "appointment_set", label: "Randevu verildi" },
+  { value: "in_progress", label: "Dosya takibi" },
   { value: "closed", label: "Kapatıldı" },
 ] as const;
 

@@ -1,44 +1,71 @@
-import { marked } from "marked";
-import DOMPurify from "isomorphic-dompurify";
-import { SITE_URL } from "@/lib/site";
+import { query } from "@/lib/db";
+import { STATIC_BLOG_POSTS, type BlogPostRecord } from "@/lib/blog-data";
+import { BRAND_SHORT, site } from "@/lib/site";
 
-export interface BlogPostListItem {
+export interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  bodyMd: string;
+  category: string;
+  keywords: string;
+  coverImage: string | null;
+  metaTitle: string | null;
+  metaDesc: string | null;
+  publishedAt: Date;
+  updatedAt: Date;
+}
+
+interface DbBlogRow {
   slug: string;
   title: string;
   excerpt: string | null;
-  published_at: Date | null;
-}
-
-export interface BlogPost extends BlogPostListItem {
-  id: number;
   body_md: string;
   cover_image: string | null;
   meta_title: string | null;
   meta_desc: string | null;
   keywords: string | null;
-  status: string;
+  published_at: Date;
   updated_at: Date;
 }
 
-marked.setOptions({
-  gfm: true,
-  breaks: false,
-});
-
-export function renderMarkdown(md: string): string {
-  const raw = marked.parse(md, { async: false }) as string;
-  return DOMPurify.sanitize(raw, {
-    ALLOWED_TAGS: [
-      "p", "br", "strong", "em", "b", "i", "u", "h1", "h2", "h3", "h4", "h5", "h6",
-      "ul", "ol", "li", "a", "blockquote", "code", "pre", "hr",
-      "table", "thead", "tbody", "tr", "th", "td", "img",
-    ],
-    ALLOWED_ATTR: ["href", "title", "target", "rel", "src", "alt", "class"],
-  });
+function mapStatic(record: BlogPostRecord): BlogPost {
+  return {
+    slug: record.slug,
+    title: record.title,
+    excerpt: record.excerpt,
+    bodyMd: record.bodyMd,
+    category: record.category,
+    keywords: record.keywords,
+    coverImage: null,
+    metaTitle: null,
+    metaDesc: null,
+    publishedAt: new Date(record.publishedAt),
+    updatedAt: new Date(record.updatedAt),
+  };
 }
 
-export function formatDateTR(date: Date | null): string {
-  if (!date) return "";
+function mapDb(row: DbBlogRow): BlogPost {
+  return {
+    slug: row.slug,
+    title: row.title,
+    excerpt: row.excerpt ?? "",
+    bodyMd: row.body_md,
+    category: "Hukuk",
+    keywords: row.keywords ?? "",
+    coverImage: row.cover_image,
+    metaTitle: row.meta_title,
+    metaDesc: row.meta_desc,
+    publishedAt: new Date(row.published_at),
+    updatedAt: new Date(row.updated_at),
+  };
+}
+
+function sortByDateDesc(posts: BlogPost[]): BlogPost[] {
+  return [...posts].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+}
+
+export function formatDateTR(date: Date): string {
   return new Intl.DateTimeFormat("tr-TR", {
     day: "numeric",
     month: "long",
@@ -46,72 +73,78 @@ export function formatDateTR(date: Date | null): string {
   }).format(date);
 }
 
-export async function fetchPublishedPosts(): Promise<BlogPostListItem[]> {
-  const { query } = await import("@/lib/db");
-  const result = await query<BlogPostListItem>(
-    `SELECT slug, title, excerpt, published_at
-     FROM blog_posts
-     WHERE status = 'published'
-     ORDER BY published_at DESC NULLS LAST`
-  );
-  return result.rows;
+export async function fetchPublishedPosts(): Promise<BlogPost[]> {
+  try {
+    const result = await query<DbBlogRow>(
+      `SELECT slug, title, excerpt, body_md, cover_image, meta_title, meta_desc, keywords,
+              published_at, updated_at
+       FROM blog_posts
+       WHERE status = 'published' AND published_at IS NOT NULL
+       ORDER BY published_at DESC`
+    );
+    if (result.rows.length > 0) {
+      return sortByDateDesc(result.rows.map(mapDb));
+    }
+  } catch (err) {
+    console.warn("[blog] DB okunamadı, statik yedek kullanılıyor:", err);
+  }
+  return sortByDateDesc(STATIC_BLOG_POSTS.map(mapStatic));
 }
 
-export async function fetchPublishedPostBySlug(slug: string): Promise<BlogPost | null> {
-  const { query } = await import("@/lib/db");
-  const result = await query<BlogPost>(
-    `SELECT id, slug, title, excerpt, body_md, cover_image,
-            meta_title, meta_desc, keywords, status, published_at, updated_at
-     FROM blog_posts
-     WHERE slug = $1 AND status = 'published'
-     LIMIT 1`,
-    [slug]
-  );
-  return result.rows[0] ?? null;
+export async function fetchPostBySlug(slug: string): Promise<BlogPost | null> {
+  try {
+    const result = await query<DbBlogRow>(
+      `SELECT slug, title, excerpt, body_md, cover_image, meta_title, meta_desc, keywords,
+              published_at, updated_at
+       FROM blog_posts
+       WHERE slug = $1 AND status = 'published' AND published_at IS NOT NULL
+       LIMIT 1`,
+      [slug]
+    );
+    if (result.rows[0]) return mapDb(result.rows[0]);
+  } catch (err) {
+    console.warn("[blog] slug DB okunamadı:", err);
+  }
+  const fallback = STATIC_BLOG_POSTS.find((p) => p.slug === slug);
+  return fallback ? mapStatic(fallback) : null;
 }
 
 export async function fetchPublishedSlugsForSitemap(): Promise<
   { slug: string; updated_at: Date }[]
 > {
-  const { query } = await import("@/lib/db");
-  const result = await query<{ slug: string; updated_at: Date }>(
-    `SELECT slug, updated_at
-     FROM blog_posts
-     WHERE status = 'published'
-     ORDER BY published_at DESC`
-  );
-  return result.rows;
+  try {
+    const result = await query<{ slug: string; updated_at: Date }>(
+      `SELECT slug, updated_at FROM blog_posts
+       WHERE status = 'published' AND published_at IS NOT NULL
+       ORDER BY published_at DESC`
+    );
+    if (result.rows.length > 0) return result.rows;
+  } catch {
+    /* statik yedek */
+  }
+  return STATIC_BLOG_POSTS.map((p) => ({
+    slug: p.slug,
+    updated_at: new Date(p.updatedAt),
+  }));
 }
 
-export function buildBlogPostingSchema(post: BlogPost) {
-  const description = post.meta_desc || post.excerpt || "";
-  const url = `${SITE_URL}/blog/${post.slug}`;
+export function buildBlogPostingSchema(post: BlogPost, canonicalUrl: string) {
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
-    description,
-    datePublished: post.published_at?.toISOString(),
-    dateModified: post.updated_at.toISOString(),
-    url,
-    mainEntityOfPage: url,
+    description: post.metaDesc ?? post.excerpt,
+    datePublished: post.publishedAt.toISOString(),
+    dateModified: post.updatedAt.toISOString(),
+    url: canonicalUrl,
     author: {
-      "@type": "Organization",
-      name: "Marine Emission Package",
-      url: SITE,
+      "@type": "Person",
+      name: site.attorney,
     },
     publisher: {
       "@type": "Organization",
-      name: "Marine Emission Package",
-      url: SITE,
+      name: site.brandFull,
+      alternateName: BRAND_SHORT,
     },
   };
-}
-
-export function getPostSeoTitle(post: BlogPost): string {
-  return post.meta_title || post.title;
-}
-
-export function getPostSeoDescription(post: BlogPost): string {
-  return post.meta_desc || post.excerpt || "";
 }

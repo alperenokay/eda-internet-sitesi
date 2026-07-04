@@ -2,7 +2,7 @@
 import AdminLayout from "@/layouts/AdminLayout.astro";
 import { fetchAdminDashboardCounts } from "@/lib/admin";
 
-let counts = { newAnalysis: 0, newConsultancy: 0, newContact: 0, totalPosts: 0 };
+let counts = { newContact: 0, publishedPosts: 0, draftPosts: 0 };
 
 try {
   counts = await fetchAdminDashboardCounts();
@@ -13,27 +13,24 @@ try {
 
 <AdminLayout title="Özet">
   <h1 class="font-display text-2xl font-semibold">Özet</h1>
-  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="rounded-[var(--radius)] border border-line bg-paper p-4">
-      <p class="text-sm text-muted">Yeni analiz başvurusu</p>
-      <p class="mt-1 text-2xl font-semibold">{counts.newAnalysis}</p>
-    </div>
-    <div class="rounded-[var(--radius)] border border-line bg-paper p-4">
-      <p class="text-sm text-muted">Yeni danışmanlık başvurusu</p>
-      <p class="mt-1 text-2xl font-semibold">{counts.newConsultancy}</p>
-    </div>
+  <div class="mt-6 grid gap-4 sm:grid-cols-3">
     <div class="rounded-[var(--radius)] border border-line bg-paper p-4">
       <p class="text-sm text-muted">Yeni iletişim mesajı</p>
       <p class="mt-1 text-2xl font-semibold">{counts.newContact}</p>
     </div>
     <div class="rounded-[var(--radius)] border border-line bg-paper p-4">
-      <p class="text-sm text-muted">Blog yazısı</p>
-      <p class="mt-1 text-2xl font-semibold">{counts.totalPosts}</p>
+      <p class="text-sm text-muted">Yayında blog yazısı</p>
+      <p class="mt-1 text-2xl font-semibold">{counts.publishedPosts}</p>
+    </div>
+    <div class="rounded-[var(--radius)] border border-line bg-paper p-4">
+      <p class="text-sm text-muted">Taslak yazı</p>
+      <p class="mt-1 text-2xl font-semibold">{counts.draftPosts}</p>
     </div>
   </div>
   <ul class="mt-8 flex flex-wrap gap-4 text-sm">
+    <li><a href="/admin/icerik" class="font-semibold text-green-deep no-underline hover:text-green">Site içeriği</a></li>
     <li><a href="/admin/blog/new" class="font-semibold text-green-deep no-underline hover:text-green">Yeni yazı</a></li>
-    <li><a href="/admin/basvurular" class="font-semibold text-green-deep no-underline hover:text-green">Başvuruları gör</a></li>
+    <li><a href="/admin/basvurular" class="font-semibold text-green-deep no-underline hover:text-green">Mesajları gör</a></li>
     <li><a href="/blog" class="text-muted no-underline hover:text-ink" target="_blank" rel="noopener">Public blog</a></li>
   </ul>
 </AdminLayout>

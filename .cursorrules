@@ -1,18 +1,16 @@
-# .cursorrules — mepackage (Marine Emission Package)
+# .cursorrules — sagirhukuk (Sağır Hukuk & Danışmanlık)
 
 ## 0. Proje ne, niye var
-PPWR odaklı, Türkçe lead-gen sitesi. Tek işi: Google'da Türkçe "PPWR" ve ilgili
-aramalarda organik görünmek ve iki tür başvuru toplamak (danışmanlık ve analiz).
-Marine Emission'ın alt markası. Asıl domain: www.me-package.com.
-Not: Domainde "ppwr" kelimesi geçmiyor, yani sıralamayı on-page SEO taşıyacak
-(title, meta, içerik, schema). Bu yüzden içerik ve SEO disiplini pazarlık konusu değil.
+Av. Eda Öykü Sağır, Sağır Hukuk & Danışmanlık bürosunun kurumsal web sitesi.
+Asıl domain: www.sagirhukuk.net. İzmir merkezli avukatlık ve danışmanlık tanıtımı,
+iletişim formu ve KVKK uyumu. İçerik Türkçe; profesyonel, somut, abartısız.
 
 ## 1. Her faz başında (ZORUNLU sıra)
 1. ARCHITECTURE.md ve PROGRESS.md'yi oku.
 2. İlgili tüm mevcut dosyaları tara. Yeni bir sayfa/desen eklemeden önce src/ altını
    gez, hangi bileşen/yardımcı zaten var gör, TEKRAR YAZMA, mevcudu kullan.
 3. Regülasyon sayısı veya eşik kullanacaksan ARCHITECTURE.md'deki sabit listesini aç,
-   birebir oradan al. Ezberden sayı yazma.
+   birebir oradan al. Ezberden sayı yazma. (Avukatlık sitesinde regülasyon eşiği yok.)
 4. Faz bitince PROGRESS.md'nin EN ALTINA giriş ekle (üzerine ASLA yazma, additive-only).
    Yeni mimari karar çıktıysa ARCHITECTURE.md'ye işle.
 
@@ -38,32 +36,17 @@ description, blog gövdeleri, buton yazıları, hata ve boş-durum mesajları.
   sonuç (pazar erişimi, uygunluk beyanı zorunluluğu).
 - Aktif dil ve net eylem. Buton ne yapıyorsa onu yazar: "Danışmanlık başvurusu",
   "Analiz talep et". "Gönder" gibi jenerik etiket kullanma.
-- UYDURMA KANIT YASAK. Sahte müşteri logosu, sahte referans/testimonial, kaynaksız
-  istatistik ("firmaların %80'i hazır değil" gibi) KESİNLİKLE yok. Green Claims
-  danışmanlığı veren bir marka kendi sitesinde kanıtlanamaz iddia kullanamaz.
-  Gerçek olanları kullan: Marine Emission, 100+ gemi, DNV / SwissClimate / Polish
-  Register iş birlikleri (partner olarak, onay/endorsement iması vermeden).
+- UYDURMA KANIT YASAK. Sahte müşteri referansı, kaynaksız istatistik, uydurma başarı
+  hikâyesi yok. Gerçek olanları kullan: Av. Eda Öykü Sağır, İzmir Barosu, ofis adresi.
 
-## 4. PPWR / regülatif doğruluk kuralları (SERT)
-Bu sabitler ARCHITECTURE.md ile birebir aynı olacak, değiştirilmeyecek:
-- PPWR (EU) 2025/40: yürürlük 11 Şubat 2025, ana uygulama 12 Ağustos 2026.
-  Her yükümlülüğün 12 Ağustos 2026'da başladığını iddia etme, bazıları kademeli.
-- PFAS: bireysel non-polimerik ≤25 ppb, toplam ≤250 ppb, toplam flor ≤50 mg/kg.
-  Toplam flor >50 mg/kg "otomatik FAIL" DEĞİLDİR, farklılaştırma (ek inceleme)
-  tetikler. Metinde "otomatik red" gibi ifade kullanma.
-- Ağır metal toplamı (Pb+Cd+Hg+Cr(VI)) ≤100 mg/kg.
-- Minimizasyon eşiği %50, e-ticaret %40. %30 YAZMA.
-- Yeniden kullanım hedefleri %40 / %70, AB içi %100; boş alan %50 tavanı (Ocak 2030).
-- DoC saklama 5 / 10 yıl. Almanya EPR sistemi: LUCID.
-- EPR yalnızca temiz veri ihracı. Portal API entegrasyonu iddia etme.
-- CSRD ayrı modül değil, ambalaj-dilimi export filtresi. PPWR + CSRD aynı veriyle:
-  bu farklılaştırıcıyı öne çıkar, dürüst çerçevele.
-Konumlandırma:
-- Marine Emission danışman ve kolaylaştırıcıdır, DOĞRULAYICI (verifier) DEĞİL.
-  "Doğrulama yaparız" deme. Doğrulama kuruluşu seçiminde yönlendiririz de.
-- Tavsiye/advisory içeren her blok görünür bir "Bu içerik danışmanlık niteliğindedir,
-  bağlayıcı hukuki görüş değildir." notu taşır.
-- Kesin hukuki güvence verme. "Uyum garanti ederiz" gibi ifade yok.
+## 4. Avukatlık / içerik doğruluk kuralları (SERT)
+- İletişim bilgileri ARCHITECTURE.md / site.ts ile birebir aynı olacak.
+- Avukatlık Reklam Yönetmeliği ve meslek kurallarına aykırı iddia yok: "en iyi avukat",
+  "garantili kazanma", " %100 başarı" gibi ifadeler kullanma.
+- Web sitesi bilgilendirme amaçlıdır; avukat-müvekkil ilişkisi form doldurmakla doğmaz.
+- Kesin hukuki güvence verme. "Kesin kazanırız" gibi ifade yok.
+- Danışmanlık niteliğindeki içeriklerde: "Bu içerik bilgilendirme amaçlıdır,
+  bağlayıcı hukuki görüş değildir." notu uygun yerde kullanılabilir.
 
 ## 5. Tasarım kuralları (KİLİTLİ)
 ONAYLI referans: `_reference/ONAYLI-TASARIM.html`. Tüm sayfalar bu dile uyar. Bu tasarım
@@ -115,14 +98,13 @@ YEŞİL VURGUDUR, zemin değildir. Zemin mavi kalır, yeşil butonlarda/çiplerd
 Sor: mavi zemin + yeşil vurgu tutuyor mu, monospace sızmış mı (sızmamalı), koyu panel
 düzeni doğru mu, botanik motif var mı, ONAYLI-TASARIM.html seviyesinde mi. Değilse bitmedi.
 
-## 6. SEO kuralları (bu sitenin varlık nedeni)
+## 6. SEO kuralları
 - Her sayfada benzersiz, anlamlı title ve description. Kelime doldurma değil.
-- lang="tr". Hedef aramalar metinde doğal geçsin: "PPWR nedir", "PPWR uyum",
-  "PPWR danışmanlık", "ambalaj tüzüğü", "PFAS analizi", "EU 2025/40".
-- admin ve /api sayfaları noindex.
+- lang="tr". Hedef aramalar metinde doğal geçsin: "İzmir avukat", "Sağır Hukuk",
+  "ceza avukatı İzmir", "ticaret hukuku avukatı" vb.
+- /api sayfaları noindex (admin yok).
 - Yeni public route eklenince sitemap.xml'e girmeli.
-- Uygun yerde schema.org (Organization var; Service, FAQPage eklenebilir) kullan,
-  ama uydurma veriyle işaretleme yapma.
+- Uygun yerde schema.org (LegalService, Organization) kullan, uydurma veriyle işaretleme yapma.
 
 ## 7. Kod ve güvenlik
 - Form endpoint deseni: doğrula → DB'ye yaz → notify() → JSON dön. Bu deseni koru.

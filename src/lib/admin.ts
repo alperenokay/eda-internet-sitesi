@@ -121,49 +121,22 @@ export async function slugExists(slug: string, excludeId?: number): Promise<bool
 
 export async function fetchAdminDashboardCounts() {
   const { query } = await import("@/lib/db");
-  const [analysis, consult, contact, posts] = await Promise.all([
-    query<{ count: string }>(
-      "SELECT count(*)::text AS count FROM analysis_applications WHERE status = 'new' AND deleted_at IS NULL"
-    ),
-    query<{ count: string }>(
-      "SELECT count(*)::text AS count FROM consultancy_applications WHERE status = 'new' AND deleted_at IS NULL"
-    ),
+  const [contact, posts, drafts] = await Promise.all([
     query<{ count: string }>(
       "SELECT count(*)::text AS count FROM contact_messages WHERE status = 'new' AND deleted_at IS NULL"
     ),
-    query<{ count: string }>("SELECT count(*)::text AS count FROM blog_posts"),
+    query<{ count: string }>(
+      "SELECT count(*)::text AS count FROM blog_posts WHERE status = 'published'"
+    ),
+    query<{ count: string }>(
+      "SELECT count(*)::text AS count FROM blog_posts WHERE status = 'draft'"
+    ),
   ]);
   return {
-    newAnalysis: Number(analysis.rows[0]?.count ?? 0),
-    newConsultancy: Number(consult.rows[0]?.count ?? 0),
     newContact: Number(contact.rows[0]?.count ?? 0),
-    totalPosts: Number(posts.rows[0]?.count ?? 0),
+    publishedPosts: Number(posts.rows[0]?.count ?? 0),
+    draftPosts: Number(drafts.rows[0]?.count ?? 0),
   };
-}
-
-export interface AnalysisApplicationRow {
-  id: number;
-  analysis_slug: string | null;
-  company: string | null;
-  full_name: string;
-  email: string;
-  phone: string | null;
-  message: string | null;
-  material_type: string | null;
-  status: string;
-  created_at: Date;
-}
-
-export interface ConsultancyApplicationRow {
-  id: number;
-  company: string | null;
-  full_name: string;
-  email: string;
-  phone: string | null;
-  topic: string | null;
-  message: string | null;
-  status: string;
-  created_at: Date;
 }
 
 export interface ContactMessageRow {
@@ -176,78 +149,27 @@ export interface ContactMessageRow {
   created_at: Date;
 }
 
-export async function fetchAllApplications() {
+export async function fetchContactMessages(): Promise<ContactMessageRow[]> {
   const { query } = await import("@/lib/db");
-  const [analysis, consult, contact] = await Promise.all([
-    query<AnalysisApplicationRow>(
-      `SELECT id, analysis_slug, company, full_name, email, phone, message, material_type, status, created_at
-       FROM analysis_applications WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT 200`
-    ),
-    query<ConsultancyApplicationRow>(
-      `SELECT id, company, full_name, email, phone, topic, message, status, created_at
-       FROM consultancy_applications WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT 200`
-    ),
-    query<ContactMessageRow>(
-      `SELECT id, full_name, email, subject, message, status, created_at
-       FROM contact_messages WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT 200`
-    ),
-  ]);
-  return {
-    analysis: analysis.rows,
-    consultancy: consult.rows,
-    contact: contact.rows,
-  };
+  const result = await query<ContactMessageRow>(
+    `SELECT id, full_name, email, subject, message, status, created_at
+     FROM contact_messages WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT 200`
+  );
+  return result.rows;
 }
 
-export async function updateApplicationStatus(
-  table: "analysis" | "consultancy" | "contact",
-  id: number,
-  status: string
-): Promise<boolean> {
+export async function updateContactStatus(id: number, status: string): Promise<boolean> {
   const { query } = await import("@/lib/db");
-  const tableName =
-    table === "analysis"
-      ? "analysis_applications"
-      : table === "consultancy"
-        ? "consultancy_applications"
-        : "contact_messages";
   const result = await query(
-    `UPDATE ${tableName} SET status = $2 WHERE id = $1 AND deleted_at IS NULL`,
+    `UPDATE contact_messages SET status = $2 WHERE id = $1 AND deleted_at IS NULL`,
     [id, status]
   );
   return (result.rowCount ?? 0) > 0;
 }
 
-export async function anonymizeApplication(
-  table: "analysis" | "consultancy" | "contact",
-  id: number
-): Promise<boolean> {
+export async function anonymizeContactMessage(id: number): Promise<boolean> {
   const { query } = await import("@/lib/db");
   const email = `deleted-${id}@anonymized.local`;
-
-  if (table === "analysis") {
-    const result = await query(
-      `UPDATE analysis_applications SET
-         full_name = '[silindi]', email = $2, phone = NULL, company = NULL,
-         message = NULL, material_type = NULL, analysis_slug = NULL, ip = NULL,
-         deleted_at = now()
-       WHERE id = $1 AND deleted_at IS NULL`,
-      [id, email]
-    );
-    return (result.rowCount ?? 0) > 0;
-  }
-
-  if (table === "consultancy") {
-    const result = await query(
-      `UPDATE consultancy_applications SET
-         full_name = '[silindi]', email = $2, phone = NULL, company = NULL,
-         message = NULL, topic = NULL, ip = NULL, deleted_at = now()
-       WHERE id = $1 AND deleted_at IS NULL`,
-      [id, email]
-    );
-    return (result.rowCount ?? 0) > 0;
-  }
-
   const result = await query(
     `UPDATE contact_messages SET
        full_name = '[silindi]', email = $2, subject = NULL, message = '[silindi]',

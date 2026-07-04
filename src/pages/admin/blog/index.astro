@@ -1,6 +1,7 @@
 ---
 import AdminLayout from "@/layouts/AdminLayout.astro";
 import { fetchAllBlogPostsAdmin, formatAdminDate, statusLabel } from "@/lib/admin";
+import { STATIC_BLOG_POSTS } from "@/lib/blog-data";
 
 let posts: Awaited<ReturnType<typeof fetchAllBlogPostsAdmin>> = [];
 
@@ -78,13 +79,50 @@ try {
       </table>
     </div>
   ) : (
-    <p class="mt-6 text-muted">
-      Henüz yazı yok.
-      <a href="/admin/blog/new" class="font-semibold text-green-deep no-underline hover:text-green">İlk yazıyı ekleyin.</a>
-    </p>
+    <div class="mt-6 space-y-4">
+      <p class="text-muted">
+        Henüz yazı yok.
+        <a href="/admin/blog/new" class="font-semibold text-green-deep no-underline hover:text-green">İlk yazıyı ekleyin</a>
+        veya mevcut {STATIC_BLOG_POSTS.length} statik yazıyı içe aktarın.
+      </p>
+      <button
+        type="button"
+        id="seed-blog-btn"
+        class="rounded-[var(--radius-btn)] border border-line bg-paper px-4 py-2 text-sm font-semibold text-green-deep hover:border-green"
+      >
+        Statik yazıları içe aktar ({STATIC_BLOG_POSTS.length})
+      </button>
+      <p id="seed-blog-msg" class="hidden text-sm" role="status"></p>
+    </div>
   )}
 
   <script>
+    document.getElementById("seed-blog-btn")?.addEventListener("click", async () => {
+      const btn = document.getElementById("seed-blog-btn") as HTMLButtonElement;
+      const msg = document.getElementById("seed-blog-msg") as HTMLParagraphElement;
+      if (!btn || !msg) return;
+      btn.disabled = true;
+      msg.classList.remove("hidden");
+      msg.textContent = "İçe aktarılıyor...";
+      try {
+        const res = await fetch("/api/admin/blog/seed", { method: "POST" });
+        const data = await res.json();
+        if (data.ok) {
+          msg.textContent = `${data.inserted} yazı eklendi, ${data.skipped} zaten vardı. Sayfa yenileniyor...`;
+          msg.className = "text-sm text-green-deep";
+          window.setTimeout(() => window.location.reload(), 800);
+        } else {
+          msg.textContent = data.error || "İçe aktarma başarısız.";
+          msg.className = "text-sm text-signal";
+          btn.disabled = false;
+        }
+      } catch {
+        msg.textContent = "Bağlantı sorunu oluştu.";
+        msg.className = "text-sm text-signal";
+        btn.disabled = false;
+      }
+    });
+
     document.querySelectorAll(".delete-post-btn").forEach((btn) => {
       btn.addEventListener("click", async () => {
         const id = Number((btn as HTMLButtonElement).dataset.id);

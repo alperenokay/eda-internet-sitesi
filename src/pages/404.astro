@@ -1,15 +1,18 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import NotFoundContent from "@/components/NotFoundContent.astro";
+import { getContent } from "@/lib/content";
+
+const notFound = await getContent("not_found");
 
 Astro.response.status = 404;
 ---
 
 <BaseLayout
-  title="Sayfa bulunamadı"
-  description="Aradığınız sayfa bulunamadı."
+  title={notFound.seo.title}
+  description={notFound.seo.description}
   path="/404"
   noindex
 >
-  <NotFoundContent />
+  <NotFoundContent content={notFound} />
 </BaseLayout>

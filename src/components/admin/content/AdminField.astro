@@ -1,0 +1,42 @@
+---
+import AdminRichToolbar from "./AdminRichToolbar.astro";
+
+export interface Props {
+  label: string;
+  field: string;
+  value?: string;
+  type?: string;
+  hint?: string;
+  rows?: number;
+  /** true ise biçimlendirme araç çubuğu gösterilmez (URL, e-posta vb.) */
+  plain?: boolean;
+}
+
+const { label, field, value = "", type = "text", hint, rows, plain = false } = Astro.props;
+const inputClass =
+  "block w-full rounded-[var(--radius-sm)] border border-line bg-paper px-3 py-2 text-sm font-normal leading-relaxed";
+const showRich = !plain && type === "text";
+---
+
+<div class:list={[showRich && "rich-text-field"]} data-rich-text-root={showRich || undefined}>
+  <label class="mb-1 block text-sm font-medium" for={field}>{label}</label>
+  {showRich && <AdminRichToolbar />}
+  {rows ? (
+    <textarea
+      id={field}
+      data-field={field}
+      data-rich-input={showRich || undefined}
+      rows={rows}
+      class={inputClass}>{value}</textarea>
+  ) : (
+    <input
+      id={field}
+      type={type}
+      data-field={field}
+      data-rich-input={showRich || undefined}
+      value={value}
+      class={inputClass}
+    />
+  )}
+  {hint && <p class="mt-1 text-xs text-muted">{hint}</p>}
+</div>

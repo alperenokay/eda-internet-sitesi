@@ -1,36 +1,37 @@
 @import "tailwindcss";
 
 /*
-  Marine Emission Package — onaylı tasarım (mavi zemin + yeşil vurgu)
-  Referans: ONAYLI-TASARIM.html · .cursorrules 5a–5d
+  Sağır Hukuk & Danışmanlık, kurumsal avukatlık teması
+  ONAYLI iskelet korunur; renk, motif ve tipografi hukuk sitesine uyarlandı.
 */
 @theme {
-  --color-bg: #e5edf6;
-  --color-bg-2: #d9e4f0;
+  --color-bg: #f7f5f1;
+  --color-bg-2: #ece8e1;
   --color-white: #ffffff;
-  --color-panel: #123c3e;
-  --color-green: #3a8c5f;
-  --color-green-deep: #2a6644;
-  --color-leaf: #7cc496;
-  --color-wash: #e9f3ec;
-  --color-text: #17323a;
-  --color-heading: #143a3d;
-  --color-muted: #5a6c74;
-  --color-line: #cfdae4;
-  --color-signal: #c45c2a;
+  --color-panel: #0f2438;
+  --color-panel-2: #1a3348;
+  /* Birincil vurgu: altın/bronz (Tailwind green sınıfları bu tokenları kullanır) */
+  --color-green: #b8924a;
+  --color-green-deep: #8f7038;
+  --color-leaf: #d4bc82;
+  --color-wash: #f5efe4;
+  --color-text: #243447;
+  --color-heading: #0f2438;
+  --color-muted: #5c6670;
+  --color-line: #d5cfc4;
+  --color-signal: #a63d3d;
 
-  /* Geriye dönük alias (form/admin) */
-  --color-ink: #17323a;
+  --color-ink: #243447;
   --color-paper: #ffffff;
-  --color-surface: #e5edf6;
+  --color-surface: #f7f5f1;
 
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --radius-chip: 20px;
-  --radius-btn: 26px;
-  --radius-panel: 20px;
-  --radius-card: 16px;
+  --radius-chip: 6px;
+  --radius-btn: 8px;
+  --radius-panel: 12px;
+  --radius-card: 12px;
 }
 
 html {
@@ -50,79 +51,70 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  line-height: 1.06;
-  letter-spacing: -0.02em;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
   font-weight: 600;
   color: var(--color-heading);
 }
 
-.hero-glow {
+.hero-law-pattern {
   position: absolute;
-  right: -8.75rem;
-  top: -10rem;
-  width: 47.5rem;
-  height: 47.5rem;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.45;
+  background:
+    linear-gradient(90deg, rgba(15, 36, 56, 0.03) 1px, transparent 1px) 0 0 / 4rem 100%,
+    linear-gradient(rgba(15, 36, 56, 0.025) 1px, transparent 1px) 0 0 / 100% 4rem;
+}
+
+.hero-law-glow {
+  position: absolute;
+  right: -6rem;
+  top: -8rem;
+  width: 36rem;
+  height: 36rem;
   pointer-events: none;
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(124, 196, 150, 0.22),
-    rgba(124, 196, 150, 0) 60%
+    rgba(184, 146, 74, 0.12),
+    rgba(184, 146, 74, 0) 62%
   );
 }
 
-.hero-botanic {
-  position: absolute;
-  right: 0;
-  bottom: -1.875rem;
-  width: 31.25rem;
-  max-width: 55vw;
-  opacity: 0.58;
-  pointer-events: none;
-}
-
-@media (max-width: 880px) {
-  .hero-botanic {
-    display: none;
-  }
-}
-
-.leaf-bg-soft {
-  position: absolute;
-  left: -4.375rem;
-  bottom: -4.375rem;
-  width: 21.875rem;
-  opacity: 0.44;
-  pointer-events: none;
-}
-
-.leaf-bg-footer {
-  position: absolute;
-  right: -2.5rem;
-  top: -1.875rem;
-  width: 15rem;
-  opacity: 0.12;
-  pointer-events: none;
-}
-
-.countdown-panel {
+.trust-panel {
   display: flex;
   align-items: center;
   gap: 1.625rem;
   border-radius: var(--radius-panel);
-  background: var(--color-panel);
+  background: linear-gradient(145deg, var(--color-panel) 0%, var(--color-panel-2) 100%);
   color: #fff;
-  padding: 2.25rem 2.125rem;
+  padding: 2rem 1.875rem;
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(212, 188, 130, 0.22);
 }
 
-.countdown-panel__info {
-  flex: 1;
+.trust-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-green), transparent);
 }
 
-.countdown-panel__art {
-  flex-shrink: 0;
-  opacity: 0.92;
+.trust-panel__seal {
+  position: absolute;
+  right: -1rem;
+  bottom: -1.5rem;
+  width: 9rem;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.law-card-accent {
+  border-top: 3px solid var(--color-green);
 }
 
 .ui-card {
@@ -131,25 +123,13 @@ h1, h2, h3, h4 {
 }
 
 .ui-card:hover {
-  border-color: var(--color-green);
-  box-shadow: 0 8px 28px rgba(23, 50, 58, 0.06);
+  border-color: rgba(15, 36, 56, 0.22);
+  box-shadow: 0 10px 32px rgba(15, 36, 56, 0.07);
 }
 
-@media (min-width: 1024px) {
-  .process-steps {
-    position: relative;
-  }
-
-  .process-steps::before {
-    content: "";
-    position: absolute;
-    top: 1.375rem;
-    left: 8%;
-    right: 8%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--color-wash), var(--color-leaf), var(--color-wash));
-    z-index: 0;
-  }
+.site-header-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-panel), var(--color-green), var(--color-panel));
 }
 
 :focus-visible {

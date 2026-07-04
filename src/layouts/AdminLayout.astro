@@ -1,5 +1,6 @@
 ---
 import "@/styles/global.css";
+import { BRAND_SHORT } from "@/lib/site";
 
 export interface Props {
   title?: string;
@@ -9,8 +10,9 @@ const { title = "Yönetim paneli" } = Astro.props;
 const current = Astro.url.pathname;
 const nav = [
   { href: "/admin", label: "Özet", match: (p: string) => p === "/admin" },
+  { href: "/admin/icerik", label: "İçerik", match: (p: string) => p.startsWith("/admin/icerik") },
   { href: "/admin/blog", label: "Blog", match: (p: string) => p.startsWith("/admin/blog") },
-  { href: "/admin/basvurular", label: "Başvurular", match: (p: string) => p === "/admin/basvurular" },
+  { href: "/admin/basvurular", label: "Mesajlar", match: (p: string) => p === "/admin/basvurular" },
 ];
 ---
 
@@ -20,7 +22,7 @@ const nav = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>{title} · mepackage</title>
+    <title>{title} · {BRAND_SHORT}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -34,7 +36,7 @@ const nav = [
       <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4">
         <div>
           <p class="font-display text-lg font-semibold">Yönetim paneli</p>
-          <p class="text-xs text-muted">mepackage</p>
+          <p class="text-xs text-muted">{BRAND_SHORT}</p>
         </div>
         <nav aria-label="Admin menü">
           <ul class="flex flex-wrap items-center gap-4 text-sm">

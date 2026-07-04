@@ -1,0 +1,46 @@
+---
+import AdminRichToolbar from "./AdminRichToolbar.astro";
+
+export interface Props {
+  path: string;
+  label: string;
+  items: { title: string; text: string }[];
+}
+
+const { path, label, items } = Astro.props;
+const inputClass =
+  "block w-full rounded-[var(--radius-sm)] border border-line bg-paper px-3 py-2 text-sm font-normal leading-relaxed";
+---
+
+<fieldset
+  class="rich-text-field rounded-[var(--radius)] border border-line p-4"
+  data-rich-text-root
+  data-list-path={path}
+>
+  <legend class="px-1 text-sm font-semibold">{label}</legend>
+  <AdminRichToolbar />
+  <div class="list-rows space-y-4">
+    {items.map((item, i) => (
+      <div class="list-row space-y-2 rounded-[var(--radius-sm)] border border-line/70 p-3">
+        <input
+          type="text"
+          data-field={`${path}.${i}.title`}
+          data-rich-input
+          value={item.title}
+          placeholder="Başlık"
+          class={inputClass}
+        />
+        <textarea
+          data-field={`${path}.${i}.text`}
+          data-rich-input
+          rows={2}
+          placeholder="Metin"
+          class={inputClass}>{item.text}</textarea>
+        <button type="button" class="list-remove text-sm text-red-700">Kaldır</button>
+      </div>
+    ))}
+  </div>
+  <button type="button" class="list-add mt-3 text-sm font-semibold text-green-deep" data-list-path={path} data-list-type="titleText">
+    Kart ekle
+  </button>
+</fieldset>

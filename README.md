@@ -1,44 +1,47 @@
-# mepackage
+# sagirhukuk
 
-Marine Emission Package — PPWR uyum danışmanlığı ve ambalaj analizi başvuru sitesi.
+Sağır Hukuk & Danışmanlık — Av. Eda Öykü Sağır kurumsal web sitesi ([sagirhukuk.net](https://www.sagirhukuk.net)).
 
-Astro 5 (SSR) · React island · Tailwind v4 · PostgreSQL · Render.
+## Geliştirme (yerel)
 
-## Yerel çalıştırma
 ```bash
 npm install
-cp .env.example .env        # DATABASE_URL doldur, DATABASE_SSL=false (yerel Postgres)
-npm run db:init             # şemayı uygula + analiz kataloğunu seed et
-npm run dev                 # http://localhost:4321
+cp .env.example .env
+# PostgreSQL çalışır durumda olmalı
+npm run db:setup
+npm run db:seed-blog
+ADMIN_EMAIL=... ADMIN_PASSWORD=... npm run admin:create
+npm run dev
 ```
 
-Yerel Postgres yoksa (Docker):
-```bash
-docker run --name mepkg-pg -e POSTGRES_PASSWORD=pass -e POSTGRES_DB=mepackage \
-  -p 5432:5432 -d postgres:16
-# .env → DATABASE_URL=postgresql://postgres:pass@localhost:5432/mepackage
-```
+Tarayıcı: `http://localhost:4321` · Admin: `/admin/login`
 
-## Prod build
-```bash
-npm run build
-npm run start               # dist/server/entry.mjs
-```
+## Deploy (GitHub + Render)
 
-## Render'a deploy
-1. Repoyu GitHub'a it.
-2. Render → **New → Blueprint** → bu repoyu seç (`render.yaml` otomatik okunur).
-   Web servisi + managed Postgres birlikte kurulur.
-3. İlk deploy sonrası şemayı uygula: Render Shell → `npm run db:init`
-   (veya lokalden `DATABASE_URL=<external-url> npm run db:init`).
-4. (Opsiyonel) SMTP_HOST / SMTP_USER / SMTP_PASS / NOTIFY_TO değerlerini
-   Render dashboard'dan gir → başvurular mail olarak da düşer.
-5. Domain: Render → Settings → Custom Domain → `www.me-package.com`
-   (GoDaddy'de CNAME). Apex `me-package.com` → www'ye yönlendir.
+Ayrıntılı adımlar: **[DEPLOY.md](./DEPLOY.md)**
 
-## Sağlık kontrolü
-`GET /api/health` → `{ ok: true, db: "up" }`
+Kısa özet:
 
-## Yol haritası
-Bkz. `ARCHITECTURE.md` (faz planı) ve `PROGRESS.md` (faz logları).
-Şu an: **Faz 0 tamam.** Sıradaki: Faz 1 (ana sayfa + SEO temeli).
+1. `git push origin main`
+2. Render → New → Blueprint → repo seç → `render.yaml`
+3. Shell: `npm run db:seed-blog` ve `npm run admin:create`
+4. Domain: `www.sagirhukuk.net` CNAME → Render
+
+## Komutlar
+
+| Komut | Açıklama |
+|---|---|
+| `npm run dev` | Geliştirme sunucusu |
+| `npm run build` | Production build |
+| `npm run db:setup` | Şema + CMS tablosu |
+| `npm run db:seed-blog` | Statik blog yazılarını DB'ye aktar |
+| `npm run admin:create` | Admin hesabı oluştur |
+| `npm run bug-test` | Yerel smoke test |
+
+## Public sayfalar
+
+- `/` ana sayfa (CMS)
+- `/blog` blog + admin CRUD
+- `/iletisim` form + harita
+- `/kvkk` aydınlatma metni (CMS)
+- `/admin` yönetim paneli (noindex)
