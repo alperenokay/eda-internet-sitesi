@@ -58,6 +58,11 @@ try {
     principlesSection: {
       ...defaults.principlesSection,
       ...principles,
+      eyebrow: principles.eyebrow || defaults.principlesSection.eyebrow,
+      title:
+        principles.title && principles.title !== principles.eyebrow
+          ? principles.title
+          : defaults.principlesSection.title,
       items: needsItems(principles.items, defaults.principlesSection.items)
         ? defaults.principlesSection.items
         : principles.items,
@@ -68,6 +73,13 @@ try {
       items: needsItems(practice.items, defaults.practiceSection.items)
         ? defaults.practiceSection.items
         : practice.items,
+    },
+    postsSection: {
+      ...defaults.postsSection,
+      ...(stored.postsSection && typeof stored.postsSection === "object" ? stored.postsSection : {}),
+      eyebrow: defaults.postsSection.eyebrow,
+      title: defaults.postsSection.title,
+      lead: defaults.postsSection.lead,
     },
   };
 
@@ -82,7 +94,8 @@ try {
   console.log("Ana sayfa listeleri geri yüklendi.");
   console.log("- Yaklaşım kartları:", merged.principlesSection.items.length);
   console.log("- Çalışma alanı kartları:", merged.practiceSection.items.length);
-  console.log("- Üst etiket:", merged.principlesSection.eyebrow);
+  console.log("- Üst etiket (yaklaşım):", merged.principlesSection.eyebrow);
+  console.log("- Son yazılar üst etiket:", merged.postsSection.eyebrow);
 } catch (err) {
   console.error("restore-home-lists hatası:", err);
   process.exit(1);

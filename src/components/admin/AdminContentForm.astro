@@ -69,15 +69,15 @@ const initialJson = JSON.stringify(data).replace(/</g, "\\u003c");
       <AdminTitleTextList path="principlesSection.items" label="Yaklaşım kartları" items={(data as ContentMap["home"]).principlesSection.items} />
       <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
         <legend class="px-1 text-sm font-semibold">Çalışma alanları</legend>
-        <AdminField label="Eyebrow" field="practiceSection.eyebrow" value={(data as ContentMap["home"]).practiceSection.eyebrow} />
-        <AdminField label="Başlık" field="practiceSection.title" value={(data as ContentMap["home"]).practiceSection.title} />
+        <AdminField label="Üst etiket" field="practiceSection.eyebrow" value={(data as ContentMap["home"]).practiceSection.eyebrow} hint='Örn. "Uzmanlık alanları"' />
+        <AdminField label="Bölüm başlığı" field="practiceSection.title" value={(data as ContentMap["home"]).practiceSection.title} />
         <AdminField label="Lead" field="practiceSection.lead" value={(data as ContentMap["home"]).practiceSection.lead} rows={2} />
       </fieldset>
       <AdminTitleTextList path="practiceSection.items" label="Çalışma alanı kartları" items={(data as ContentMap["home"]).practiceSection.items} />
       <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
         <legend class="px-1 text-sm font-semibold">Son yazılar bölümü</legend>
-        <AdminField label="Eyebrow" field="postsSection.eyebrow" value={(data as ContentMap["home"]).postsSection.eyebrow} />
-        <AdminField label="Başlık" field="postsSection.title" value={(data as ContentMap["home"]).postsSection.title} />
+        <AdminField label="Üst etiket" field="postsSection.eyebrow" value={(data as ContentMap["home"]).postsSection.eyebrow} hint='Örn. "Yayınlar". Yaklaşım bandı ile aynı metni yazmayın.' />
+        <AdminField label="Bölüm başlığı" field="postsSection.title" value={(data as ContentMap["home"]).postsSection.title} hint='Örn. "Son yazılar"' />
         <AdminField label="Lead" field="postsSection.lead" value={(data as ContentMap["home"]).postsSection.lead} rows={2} />
         <AdminField label="Buton metni" field="postsSection.buttonLabel" value={(data as ContentMap["home"]).postsSection.buttonLabel} />
       </fieldset>
