@@ -1,0 +1,33 @@
+---
+export interface Props {
+  id: string;
+  title: string;
+  /** Sitede hangi bölümde görünür */
+  location?: string;
+  hint?: string;
+  /** Liste alanları için form script yolu */
+  listPath?: string;
+}
+
+const { id, title, location, hint, listPath } = Astro.props;
+---
+
+<fieldset
+  id={id}
+  data-admin-section={title}
+  data-list-path={listPath}
+  class="admin-section scroll-mt-24 space-y-4 rounded-[var(--radius)] border border-line bg-paper p-4 shadow-sm"
+>
+  <div class="border-b border-line pb-3">
+    <legend class="float-none w-full px-0 text-base font-semibold text-heading">{title}</legend>
+    {location && (
+      <p class="mt-1 text-xs font-medium text-green-deep">
+        Sitede: {location}
+      </p>
+    )}
+    {hint && <p class="mt-1 text-xs text-muted">{hint}</p>}
+  </div>
+  <div class="space-y-4 pt-1">
+    <slot />
+  </div>
+</fieldset>

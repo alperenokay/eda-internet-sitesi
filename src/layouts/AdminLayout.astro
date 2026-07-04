@@ -9,10 +9,25 @@ export interface Props {
 const { title = "Yönetim paneli" } = Astro.props;
 const current = Astro.url.pathname;
 const nav = [
-  { href: "/admin", label: "Özet", match: (p: string) => p === "/admin" },
-  { href: "/admin/icerik", label: "İçerik", match: (p: string) => p.startsWith("/admin/icerik") },
-  { href: "/admin/blog", label: "Blog", match: (p: string) => p.startsWith("/admin/blog") },
-  { href: "/admin/basvurular", label: "Mesajlar", match: (p: string) => p === "/admin/basvurular" },
+  { href: "/admin", label: "Özet", hint: "Sayılar ve kısayollar", match: (p: string) => p === "/admin" },
+  {
+    href: "/admin/icerik",
+    label: "Sayfa metinleri",
+    hint: "Menü, ana sayfa, iletişim",
+    match: (p: string) => p.startsWith("/admin/icerik"),
+  },
+  {
+    href: "/admin/blog",
+    label: "Yayınlar",
+    hint: "Blog yazıları",
+    match: (p: string) => p.startsWith("/admin/blog"),
+  },
+  {
+    href: "/admin/basvurular",
+    label: "Mesajlar",
+    hint: "İletişim formu",
+    match: (p: string) => p === "/admin/basvurular",
+  },
 ];
 ---
 
@@ -36,17 +51,20 @@ const nav = [
       <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4">
         <div>
           <p class="font-display text-lg font-semibold">Yönetim paneli</p>
-          <p class="text-xs text-muted">{BRAND_SHORT}</p>
+          <p class="text-xs text-muted">{BRAND_SHORT} · Site içeriğini buradan güncellersiniz</p>
         </div>
         <nav aria-label="Admin menü">
-          <ul class="flex flex-wrap items-center gap-4 text-sm">
+          <ul class="flex flex-wrap items-center gap-1 sm:gap-2">
             {nav.map((item) => (
               <li>
                 <a
                   href={item.href}
+                  title={item.hint}
                   class:list={[
-                    "no-underline",
-                    item.match(current) ? "font-semibold text-green-deep" : "text-muted hover:text-heading",
+                    "block rounded-[var(--radius-sm)] px-3 py-2 text-sm no-underline",
+                    item.match(current)
+                      ? "bg-surface font-semibold text-green-deep"
+                      : "text-muted hover:bg-surface/70 hover:text-heading",
                   ]}
                 >
                   {item.label}
@@ -57,7 +75,7 @@ const nav = [
               <button
                 type="button"
                 id="admin-logout"
-                class="cursor-pointer border-none bg-transparent p-0 text-sm text-muted hover:text-ink"
+                class="cursor-pointer rounded-[var(--radius-sm)] border-none bg-transparent px-3 py-2 text-sm text-muted hover:bg-surface/70 hover:text-ink"
               >
                 Çıkış
               </button>

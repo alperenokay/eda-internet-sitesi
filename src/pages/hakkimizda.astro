@@ -1,0 +1,61 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHero from "@/components/ui/PageHero.astro";
+import Section from "@/components/ui/Section.astro";
+import CtaBand from "@/components/ui/CtaBand.astro";
+import FormattedText from "@/components/ui/FormattedText.astro";
+import { getContent, getSite } from "@/lib/content";
+
+const about = await getContent("about");
+const site = await getSite();
+---
+
+<BaseLayout
+  title={about.seo.title}
+  description={about.seo.description}
+  path="/hakkimizda"
+  keywords={about.seo.keywords}
+>
+  <PageHero
+    eyebrow={about.hero.eyebrow}
+    chip={about.hero.chip ?? site.attorney}
+    title={about.hero.title}
+    titleHighlight={about.hero.titleHighlight}
+    lead={about.hero.lead}
+    primaryHref={about.hero.primaryHref}
+    primaryLabel={about.hero.primaryLabel}
+    secondaryHref={about.hero.secondaryHref}
+    secondaryLabel={about.hero.secondaryLabel}
+    showTrustPanel={about.hero.showTrustPanel}
+  />
+
+  <Section
+    variant="soft"
+    eyebrow={about.introSection.eyebrow}
+    title={about.introSection.title}
+    lead={about.introSection.lead}
+  >
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {about.blocks.map((block) => (
+        <div class="rounded-[var(--radius-card)] border border-line bg-paper p-5">
+          <h3 class="font-display text-lg font-semibold text-heading">
+            <FormattedText text={block.title} as="span" />
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed text-muted">
+            <FormattedText text={block.text} as="span" />
+          </p>
+        </div>
+      ))}
+    </div>
+    <p class="mt-8 text-sm text-muted">
+      Bu sayfa bilgilendirme amaçlıdır; hukuki danışmanlık niteliğinde değerlendirilmelidir.
+    </p>
+  </Section>
+
+  <CtaBand
+    title={about.cta.title}
+    text={about.cta.text}
+    buttonHref={about.cta.buttonHref}
+    buttonLabel={about.cta.buttonLabel}
+  />
+</BaseLayout>

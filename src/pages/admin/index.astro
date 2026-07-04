@@ -9,28 +9,66 @@ try {
 } catch (err) {
   console.warn("[admin] özet verileri alınamadı:", err);
 }
+
+const shortcuts = [
+  {
+    href: "/admin/icerik",
+    title: "Sayfa metinleri",
+    text: "Ana sayfa, Hakkımızda, menü, iletişim formu metinleri ve KVKK.",
+    action: "Sayfaları düzenle",
+  },
+  {
+    href: "/admin/blog",
+    title: "Yayınlar",
+    text: "Blog yazılarını ekleyin, düzenleyin veya yayından kaldırın.",
+    action: "Yazıları yönet",
+  },
+  {
+    href: "/admin/basvurular",
+    title: "İletişim mesajları",
+    text: "Siteden gelen form başvurularını okuyun.",
+    action: "Mesajları gör",
+  },
+];
 ---
 
 <AdminLayout title="Özet">
   <h1 class="font-display text-2xl font-semibold">Özet</h1>
+  <p class="mt-2 max-w-2xl text-sm text-muted">
+    Kısa durum bilgisi ve sık kullanılan işlemler. Metin değişiklikleri için
+    <strong class="font-semibold text-heading">Sayfa metinleri</strong>, yazılar için
+    <strong class="font-semibold text-heading">Yayınlar</strong> menüsünü kullanın.
+  </p>
+
   <div class="mt-6 grid gap-4 sm:grid-cols-3">
-    <div class="rounded-[var(--radius)] border border-line bg-paper p-4">
-      <p class="text-sm text-muted">Yeni iletişim mesajı</p>
+    <div class="rounded-[var(--radius)] border border-line bg-paper p-4 shadow-sm">
+      <p class="text-sm text-muted">Okunmamış iletişim mesajı</p>
       <p class="mt-1 text-2xl font-semibold">{counts.newContact}</p>
     </div>
-    <div class="rounded-[var(--radius)] border border-line bg-paper p-4">
-      <p class="text-sm text-muted">Yayında blog yazısı</p>
+    <div class="rounded-[var(--radius)] border border-line bg-paper p-4 shadow-sm">
+      <p class="text-sm text-muted">Yayındaki yazı</p>
       <p class="mt-1 text-2xl font-semibold">{counts.publishedPosts}</p>
     </div>
-    <div class="rounded-[var(--radius)] border border-line bg-paper p-4">
+    <div class="rounded-[var(--radius)] border border-line bg-paper p-4 shadow-sm">
       <p class="text-sm text-muted">Taslak yazı</p>
       <p class="mt-1 text-2xl font-semibold">{counts.draftPosts}</p>
     </div>
   </div>
-  <ul class="mt-8 flex flex-wrap gap-4 text-sm">
-    <li><a href="/admin/icerik" class="font-semibold text-green-deep no-underline hover:text-green">Site içeriği</a></li>
-    <li><a href="/admin/blog/new" class="font-semibold text-green-deep no-underline hover:text-green">Yeni yazı</a></li>
-    <li><a href="/admin/basvurular" class="font-semibold text-green-deep no-underline hover:text-green">Mesajları gör</a></li>
-    <li><a href="/blog" class="text-muted no-underline hover:text-ink" target="_blank" rel="noopener">Public blog</a></li>
-  </ul>
+
+  <div class="mt-10 grid gap-4 lg:grid-cols-3">
+    {shortcuts.map((item) => (
+      <a
+        href={item.href}
+        class="group flex h-full flex-col rounded-[var(--radius)] border border-line bg-paper p-5 no-underline shadow-sm hover:border-green/40"
+      >
+        <p class="font-semibold text-heading group-hover:text-green-deep">{item.title}</p>
+        <p class="mt-2 flex-1 text-sm text-muted">{item.text}</p>
+        <span class="mt-4 text-sm font-semibold text-green-deep">{item.action} →</span>
+      </a>
+    ))}
+  </div>
+
+  <p class="mt-8 text-sm text-muted">
+    <a href="/" target="_blank" rel="noopener" class="text-green-deep no-underline hover:text-green">Canlı siteyi yeni sekmede aç</a>
+  </p>
 </AdminLayout>

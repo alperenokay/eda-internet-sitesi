@@ -1,6 +1,7 @@
 ---
 import AdminLayout from "@/layouts/AdminLayout.astro";
 import AdminContentForm from "@/components/admin/AdminContentForm.astro";
+import AdminContentSidebar from "@/components/admin/AdminContentSidebar.astro";
 import { getContent, parseContentKey } from "@/lib/content";
 import { CONTENT_REGISTRY } from "@/lib/content-defaults";
 
@@ -16,20 +17,26 @@ const meta = CONTENT_REGISTRY[key];
 <AdminLayout title={meta.label}>
   <div class="mb-6">
     <p class="text-sm text-muted">
-      <a href="/admin/icerik" class="text-green-deep no-underline hover:text-green">Site içeriği</a>
+      <a href="/admin" class="text-green-deep no-underline hover:text-green">Özet</a>
+      <span aria-hidden="true"> / </span>
+      <a href="/admin/icerik" class="text-green-deep no-underline hover:text-green">Sayfa metinleri</a>
       <span aria-hidden="true"> / </span>
       {meta.label}
     </p>
     <h1 class="mt-2 font-display text-2xl font-semibold">{meta.label}</h1>
-    <p class="mt-2 text-sm text-muted">{meta.description}</p>
-    {meta.publicPath && (
-      <p class="mt-2 text-sm">
-        <a href={meta.publicPath} target="_blank" rel="noopener" class="text-green-deep no-underline hover:text-green">
-          Sitede önizle
+    <p class="mt-2 max-w-2xl text-sm text-muted">{meta.description}</p>
+    <div class="mt-3 flex flex-wrap gap-3 text-sm">
+      {meta.publicPath && (
+        <a href={meta.publicPath} target="_blank" rel="noopener" class="font-semibold text-green-deep no-underline hover:text-green">
+          Canlı sitede aç ({meta.publicPath})
         </a>
-      </p>
-    )}
+      )}
+      <span class="text-muted">Sol menüden bölüme atlayabilirsiniz.</span>
+    </div>
   </div>
 
-  <AdminContentForm contentKey={key} data={data} />
+  <div class="grid gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
+    <AdminContentSidebar contentKey={key} />
+    <AdminContentForm contentKey={key} data={data} />
+  </div>
 </AdminLayout>

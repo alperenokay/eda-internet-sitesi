@@ -1,6 +1,12 @@
 ---
 import AdminLayout from "@/layouts/AdminLayout.astro";
 import { listContentForAdmin } from "@/lib/content";
+import {
+  CONTENT_GROUPS,
+  CONTENT_GROUP_BY_KEY,
+  CONTENT_LIST_ORDER,
+  type ContentGroup,
+} from "@/lib/admin-content-ui";
 
 let items = [];
 try {
@@ -9,50 +15,83 @@ try {
   console.warn("[admin/icerik] liste alınamadı:", err);
 }
 
+const sorted = CONTENT_LIST_ORDER.map((key) => items.find((item) => item.key === key)).filter(Boolean) as typeof items;
+
 function formatDate(value: Date | null) {
-  if (!value) return "Varsayılan (henüz kaydedilmedi)";
+  if (!value) return "Henüz kaydedilmedi (varsayılan metin kullanılıyor)";
   return new Intl.DateTimeFormat("tr-TR", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
 }
+
+const groups: ContentGroup[] = ["site", "pages", "legal", "system"];
 ---
 
-<AdminLayout title="Site içeriği">
+<AdminLayout title="Sayfa metinleri">
   <div class="flex flex-wrap items-start justify-between gap-4">
     <div>
-      <h1 class="font-display text-2xl font-semibold">Site içeriği</h1>
+      <h1 class="font-display text-2xl font-semibold">Sayfa metinleri</h1>
       <p class="mt-2 max-w-2xl text-sm text-muted">
-        Ana sayfa, iletişim, menü, KVKK ve diğer sabit metinler buradan düzenlenir. Blog yazıları
-        ayrı menüden yönetilir.
+        Sitedeki sabit metinleri sayfa sayfa düzenleyin. Blog yazılarının içeriği ayrı
+        <a href="/admin/blog" class="font-semibold text-green-deep no-underline hover:text-green">Yayınlar</a>
+        menüsünden yönetilir.
       </p>
     </div>
-    <a href="/" target="_blank" rel="noopener" class="text-sm text-muted no-underline hover:text-heading">
-      Siteyi aç
+    <a href="/" target="_blank" rel="noopener" class="text-sm font-semibold text-green-deep no-underline hover:text-green">
+      Canlı siteyi aç
     </a>
   </div>
 
-  <ul class="mt-8 space-y-3">
-    {items.map((item) => (
-      <li class="rounded-[var(--radius)] border border-line bg-paper p-4">
-        <div class="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <p class="font-semibold text-heading">{item.label}</p>
-            <p class="mt-1 text-sm text-muted">{item.description}</p>
-            <p class="mt-2 text-xs text-muted">Son kayıt: {formatDate(item.updatedAt)}</p>
+  <div class="mt-8 space-y-10">
+    {groups.map((group) => {
+      const groupItems = sorted.filter((item) => CONTENT_GROUP_BY_KEY[item.key] === group);
+      if (groupItems.length === 0) return null;
+      const meta = CONTENT_GROUPS[group];
+      return (
+        <section>
+          <div class="mb-4">
+            <h2 class="font-display text-lg font-semibold text-heading">{meta.label}</h2>
+            <p class="mt-1 text-sm text-muted">{meta.description}</p>
           </div>
-          <div class="flex flex-wrap gap-3 text-sm">
-            <a href={`/admin/icerik/${item.key}`} class="font-semibold text-green-deep no-underline hover:text-green">
-              Düzenle
-            </a>
-            {item.publicPath && (
-              <a href={item.publicPath} target="_blank" rel="noopener" class="text-muted no-underline hover:text-heading">
-                Sitede gör
-              </a>
-            )}
-          </div>
-        </div>
-      </li>
-    ))}
-  </ul>
+          <ul class="grid gap-3 lg:grid-cols-2">
+            {groupItems.map((item) => (
+              <li class="rounded-[var(--radius)] border border-line bg-paper p-4 shadow-sm">
+                <div class="flex h-full flex-col justify-between gap-4">
+                  <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                      <p class="font-semibold text-heading">{item.label}</p>
+                      {item.publicPath && (
+                        <span class="rounded-full bg-surface px-2 py-0.5 text-xs text-muted">{item.publicPath}</span>
+                      )}
+                    </div>
+                    <p class="mt-2 text-sm text-muted">{item.description}</p>
+                    <p class="mt-3 text-xs text-muted">Son kayıt: {formatDate(item.updatedAt)}</p>
+                  </div>
+                  <div class="flex flex-wrap gap-3 text-sm">
+                    <a
+                      href={`/admin/icerik/${item.key}`}
+                      class="inline-flex rounded-[var(--radius-btn)] bg-green px-4 py-2 font-semibold text-white no-underline hover:bg-green-deep"
+                    >
+                      Metinleri düzenle
+                    </a>
+                    {item.publicPath && (
+                      <a
+                        href={item.publicPath}
+                        target="_blank"
+                        rel="noopener"
+                        class="inline-flex items-center text-muted no-underline hover:text-heading"
+                      >
+                        Sitede gör
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      );
+    })}
+  </div>
 </AdminLayout>

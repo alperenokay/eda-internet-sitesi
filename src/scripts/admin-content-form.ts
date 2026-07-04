@@ -213,7 +213,7 @@ async function saveContentForm(form: HTMLFormElement) {
   } finally {
     if (submitBtn instanceof HTMLButtonElement) {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Kaydet";
+      submitBtn.textContent = "Değişiklikleri kaydet";
     }
   }
 }

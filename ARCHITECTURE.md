@@ -11,7 +11,7 @@ Asıl domain: **www.sagirhukuk.net**.
 - KVKK aydınlatma metni
 - SEO omurgası (sitemap, schema, robots)
 
-Sonraki fazlarda eklenebilir: Hakkımızda, Hizmetler (detay sayfaları).
+Sonraki fazlarda eklenebilir: Hizmetler (detay sayfaları). Hakkımızda: `/hakkimizda` (CMS anahtarı `about`).
 
 ## Teknoloji kararları
 | Katman | Seçim | Gerekçe |

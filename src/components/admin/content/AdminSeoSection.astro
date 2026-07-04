@@ -1,20 +1,42 @@
 ---
 import AdminField from "./AdminField.astro";
+import AdminSection from "../AdminSection.astro";
 
 export interface Props {
   prefix: string;
   seo: { title: string; description: string; keywords?: string };
   showKeywords?: boolean;
+  sectionId?: string;
 }
 
-const { prefix, seo, showKeywords = false } = Astro.props;
+const { prefix, seo, showKeywords = false, sectionId = "section-seo" } = Astro.props;
 ---
 
-<fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-  <legend class="px-1 text-sm font-semibold">SEO</legend>
-  <AdminField label="Sayfa başlığı (title)" field={`${prefix}.title`} value={seo.title} />
-  <AdminField label="Meta açıklama" field={`${prefix}.description`} value={seo.description} rows={2} />
+<AdminSection
+  id={sectionId}
+  title="Google ve tarayıcı ayarları"
+  location="Arama sonuçları ve tarayıcı sekmesinde görünen bilgiler"
+  hint="Ziyaretçi sayfayı açmadan önce bu metinleri görür."
+>
+  <AdminField
+    label="Sekme başlığı"
+    field={`${prefix}.title`}
+    value={seo.title}
+    hint="Tarayıcı sekmesinde ve Google sonuç başlığında görünür."
+  />
+  <AdminField
+    label="Kısa site özeti"
+    field={`${prefix}.description`}
+    value={seo.description}
+    rows={2}
+    hint="Google arama sonuçlarında başlığın altında görünen açıklama."
+  />
   {showKeywords && (
-    <AdminField label="Anahtar kelimeler" field={`${prefix}.keywords`} value={seo.keywords ?? ""} />
+    <AdminField
+      label="Anahtar kelimeler (opsiyonel)"
+      field={`${prefix}.keywords`}
+      value={seo.keywords ?? ""}
+      hint="Virgülle ayırın. Arama motorları için yardımcı; zorunlu değil."
+    />
   )}
-</fieldset>
+</AdminSection>

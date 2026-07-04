@@ -527,3 +527,54 @@ src/lib/{content,content-defaults}.ts, src/pages/admin/icerik/, src/pages/api/ad
 
 **Adımlar:** DEPLOY.md §2 (`CREATE DATABASE sagirhukuk` + URL sonu `/sagirhukuk`)
 
+---
+
+## Faz: Hakkımızda sayfası ve menü (Yayınlar)
+
+**Tarih:** 2026-07-05
+
+**Yapılanlar**
+- Header menüsü: "Yazılar" → "Yayınlar", yeni "Hakkımızda" (`/hakkimizda`)
+- `src/pages/hakkimizda.astro`, CMS anahtarı `about`, admin form bloğu
+- `content-defaults.ts`: about içeriği, blog/not_found SEO ve buton metinleri
+- `sitemap.xml.ts`: `/hakkimizda`
+- `scripts/patch-global-nav.mjs` + `npm run db:patch-nav` (canlı DB menüsü onarımı)
+
+**Canlıda menü güncellemesi:** Railway Shell'de bir kez `npm run db:patch-nav`
+
+**Doğrulama:** `npm run build` hatasız
+
+---
+
+## Faz: Admin paneli kullanılabilirlik
+
+**Tarih:** 2026-07-05
+
+**Yapılanlar**
+- Menü etiketleri: İçerik → Sayfa metinleri, Blog → Yayınlar
+- İçerik listesi gruplandı (tüm site / sayfalar / yasal / sistem)
+- Düzenleme sayfasında sol bölüm menüsü (sayfa içi atlama)
+- Her form bölümünde "Sitede: ..." konum açıklaması
+- Teknik etiketler sadeleştirildi (Hero, Eyebrow, SEO → Türkçe)
+- Özet sayfasında açıklamalı kısayol kartları
+- `src/lib/admin-content-ui.ts`, `AdminSection.astro`, `AdminContentSidebar.astro`
+
+**Doğrulama:** `npm run build` hatasız
+
+---
+
+## Faz: Admin paneli kullanılabilirlik
+
+**Tarih:** 2026-07-05
+
+**Yapılanlar**
+- Menü etiketleri: İçerik → Sayfa metinleri, Blog → Yayınlar
+- İçerik listesi gruplandı (tüm site / sayfalar / yasal / sistem)
+- Düzenleme sayfasında sol bölüm menüsü (sayfa içi atlama)
+- Her form bölümünde "Sitede: ..." konum açıklaması
+- Teknik etiketler sadeleştirildi (Hero, Eyebrow, SEO → Türkçe)
+- Özet sayfasında açıklamalı kısayol kartları
+- `src/lib/admin-content-ui.ts`, `AdminSection.astro`, `AdminContentSidebar.astro`
+
+**Doğrulama:** `npm run build` hatasız
+

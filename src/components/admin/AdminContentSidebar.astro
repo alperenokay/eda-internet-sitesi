@@ -1,0 +1,45 @@
+---
+import type { ContentKey } from "@/lib/content-defaults";
+import { CONTENT_REGISTRY } from "@/lib/content-defaults";
+import { CONTENT_SECTION_NAV } from "@/lib/admin-content-ui";
+
+export interface Props {
+  contentKey: ContentKey;
+}
+
+const { contentKey } = Astro.props;
+const meta = CONTENT_REGISTRY[contentKey];
+const sections = CONTENT_SECTION_NAV[contentKey];
+---
+
+<aside class="admin-content-sidebar lg:sticky lg:top-6 lg:self-start">
+  <nav aria-label="Bu sayfadaki bölümler" class="rounded-[var(--radius)] border border-line bg-paper p-4">
+    <p class="text-xs font-semibold uppercase tracking-wide text-muted">Düzenlediğiniz sayfa</p>
+    <p class="mt-1 font-semibold text-heading">{meta.label}</p>
+    {meta.publicPath && (
+      <p class="mt-0.5 text-xs text-muted">Adres: {meta.publicPath}</p>
+    )}
+    <ul class="mt-4 space-y-1 border-t border-line pt-3 text-sm">
+      {sections.map((section) => (
+        <li>
+          <a
+            href={`#${section.id}`}
+            class="block rounded-[var(--radius-sm)] px-2 py-1.5 text-muted no-underline hover:bg-surface hover:text-heading"
+          >
+            {section.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+    {meta.publicPath && (
+      <a
+        href={meta.publicPath}
+        target="_blank"
+        rel="noopener"
+        class="mt-4 inline-flex text-sm font-semibold text-green-deep no-underline hover:text-green"
+      >
+        Canlı sitede aç
+      </a>
+    )}
+  </nav>
+</aside>

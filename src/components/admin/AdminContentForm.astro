@@ -6,6 +6,7 @@ import AdminSeoSection from "./content/AdminSeoSection.astro";
 import AdminHeroSection from "./content/AdminHeroSection.astro";
 import AdminNavList from "./content/AdminNavList.astro";
 import AdminTitleTextList from "./content/AdminTitleTextList.astro";
+import AdminSection from "./AdminSection.astro";
 
 export interface Props {
   contentKey: ContentKey;
@@ -16,34 +17,79 @@ const { contentKey, data } = Astro.props;
 const initialJson = JSON.stringify(data).replace(/</g, "\\u003c");
 ---
 
-<form id="content-form" class="space-y-6" data-content-key={contentKey}>
+<form id="content-form" class="min-w-0 space-y-6" data-content-key={contentKey}>
   <script type="application/json" id="content-initial" set:html={initialJson} />
 
   {contentKey === "global" && (
     <>
-      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-        <legend class="px-1 text-sm font-semibold">Marka ve iletişim</legend>
+      <AdminSection
+        id="section-brand"
+        title="Marka ve iletişim bilgileri"
+        location="Footer, iletişim sayfası, Google bilgisi"
+        hint="Buradaki telefon ve adres tüm sitede aynı kaynaktan gelir."
+      >
         <AdminField label="Tam marka adı" field="brandFull" value={(data as ContentMap["global"]).brandFull} />
         <AdminField label="Avukat unvanı" field="attorney" value={(data as ContentMap["global"]).attorney} />
         <AdminField label="E-posta" field="email" value={(data as ContentMap["global"]).email} type="email" plain />
         <AdminField label="Telefon" field="phone" value={(data as ContentMap["global"]).phone} plain />
         <AdminField label="Adres" field="address" value={(data as ContentMap["global"]).address} rows={2} />
         <AdminField label="Çalışma saatleri" field="workingHours" value={(data as ContentMap["global"]).workingHours} />
-        <AdminField label="Schema açıklaması" field="orgDescription" value={(data as ContentMap["global"]).orgDescription} rows={2} />
-      </fieldset>
-      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-        <legend class="px-1 text-sm font-semibold">Harita</legend>
-        <AdminField label="Embed URL" field="mapEmbedUrl" value={(data as ContentMap["global"]).mapEmbedUrl} rows={2} plain />
-        <AdminField label="Yol tarifi URL" field="mapsDirectionsUrl" value={(data as ContentMap["global"]).mapsDirectionsUrl} rows={2} plain />
-      </fieldset>
-      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-        <legend class="px-1 text-sm font-semibold">Header / footer</legend>
-        <AdminField label="Header CTA linki" field="headerCtaHref" value={(data as ContentMap["global"]).headerCtaHref} plain />
-        <AdminField label="Header CTA metni" field="headerCtaLabel" value={(data as ContentMap["global"]).headerCtaLabel} />
-        <AdminField label="Footer kısa metin" field="footerBlurb" value={(data as ContentMap["global"]).footerBlurb} rows={3} />
-      </fieldset>
-      <AdminNavList path="headerNav" label="Header menüsü" items={(data as ContentMap["global"]).headerNav} />
-      <AdminNavList path="footerNav" label="Footer menüsü" items={(data as ContentMap["global"]).footerNav} />
+        <AdminField
+          label="Google / schema kısa açıklama"
+          field="orgDescription"
+          value={(data as ContentMap["global"]).orgDescription}
+          rows={2}
+          hint="Arama motorları için kurum özeti; ziyaretçi sayfada doğrudan görmez."
+        />
+      </AdminSection>
+      <AdminSection
+        id="section-map"
+        title="Harita bağlantıları"
+        location="İletişim sayfasındaki harita"
+        hint="Teknik adresler; genelde değiştirmeniz gerekmez."
+      >
+        <AdminField label="Harita gömme adresi (embed)" field="mapEmbedUrl" value={(data as ContentMap["global"]).mapEmbedUrl} rows={2} plain />
+        <AdminField label="Yol tarifi linki" field="mapsDirectionsUrl" value={(data as ContentMap["global"]).mapsDirectionsUrl} rows={2} plain />
+      </AdminSection>
+      <AdminSection
+        id="section-chrome"
+        title="Üst çubuk ve alt bilgi alanı"
+        location="Sitenin en üstü ve en altı"
+      >
+        <AdminField
+          label="Üst menüdeki buton linki"
+          field="headerCtaHref"
+          value={(data as ContentMap["global"]).headerCtaHref}
+          plain
+        />
+        <AdminField
+          label="Üst menüdeki buton metni"
+          field="headerCtaLabel"
+          value={(data as ContentMap["global"]).headerCtaLabel}
+          hint='Genelde "İletişim" gibi kısa bir eylem metni.'
+        />
+        <AdminField
+          label="Footer kısa tanıtım"
+          field="footerBlurb"
+          value={(data as ContentMap["global"]).footerBlurb}
+          rows={3}
+          hint="Sayfa altındaki marka açıklaması."
+        />
+      </AdminSection>
+      <AdminNavList
+        sectionId="section-header-nav"
+        path="headerNav"
+        label="Üst menü linkleri"
+        location="Sitenin üst çubuğundaki menü (Hakkımızda, Yayınlar, İletişim)"
+        items={(data as ContentMap["global"]).headerNav}
+      />
+      <AdminNavList
+        sectionId="section-footer-nav"
+        path="footerNav"
+        label="Alt menü linkleri"
+        location="Sayfa altındaki menü satırı"
+        items={(data as ContentMap["global"]).footerNav}
+      />
     </>
   )}
 
@@ -51,132 +97,212 @@ const initialJson = JSON.stringify(data).replace(/</g, "\\u003c");
     <>
       <AdminSeoSection prefix="seo" seo={(data as ContentMap["home"]).seo} showKeywords />
       <AdminHeroSection prefix="hero" hero={(data as ContentMap["home"]).hero} showChip showTrust />
-      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-        <legend class="px-1 text-sm font-semibold">Yaklaşım bandı</legend>
+      <AdminSection
+        id="section-principles"
+        title="Yaklaşım bandı başlıkları"
+        location="Ana sayfada hero altındaki bölüm"
+      >
         <AdminField
-          label="Üst etiket"
+          label="Küçük üst etiket"
           field="principlesSection.eyebrow"
           value={(data as ContentMap["home"]).principlesSection.eyebrow}
-          hint='Sitede bölümün üstündeki küçük yazı (ör. "Yaklaşımımız").'
+          hint='Örn. "Yaklaşımımız" veya "Misyon ve vizyonumuz".'
         />
         <AdminField
           label="Bölüm başlığı"
           field="principlesSection.title"
           value={(data as ContentMap["home"]).principlesSection.title}
-          hint='Sitede büyük başlık (ör. "Güvenilir ve ölçülü temsil").'
         />
-      </fieldset>
-      <AdminTitleTextList path="principlesSection.items" label="Yaklaşım kartları" items={(data as ContentMap["home"]).principlesSection.items} />
-      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-        <legend class="px-1 text-sm font-semibold">Çalışma alanları</legend>
-        <AdminField label="Üst etiket" field="practiceSection.eyebrow" value={(data as ContentMap["home"]).practiceSection.eyebrow} hint='Örn. "Uzmanlık alanları"' />
+      </AdminSection>
+      <AdminTitleTextList
+        sectionId="section-principles-cards"
+        path="principlesSection.items"
+        label="Yaklaşım kartları"
+        location="Yaklaşım bandındaki yan yana kartlar"
+        items={(data as ContentMap["home"]).principlesSection.items}
+      />
+      <AdminSection
+        id="section-practice"
+        title="Çalışma alanları başlıkları"
+        location="Ana sayfanın orta bölümü"
+      >
+        <AdminField
+          label="Küçük üst etiket"
+          field="practiceSection.eyebrow"
+          value={(data as ContentMap["home"]).practiceSection.eyebrow}
+          hint='Örn. "Uzmanlık alanları".'
+        />
         <AdminField label="Bölüm başlığı" field="practiceSection.title" value={(data as ContentMap["home"]).practiceSection.title} />
-        <AdminField label="Lead" field="practiceSection.lead" value={(data as ContentMap["home"]).practiceSection.lead} rows={2} />
-      </fieldset>
-      <AdminTitleTextList path="practiceSection.items" label="Çalışma alanı kartları" items={(data as ContentMap["home"]).practiceSection.items} />
-      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-        <legend class="px-1 text-sm font-semibold">Son yazılar bölümü</legend>
-        <AdminField label="Üst etiket" field="postsSection.eyebrow" value={(data as ContentMap["home"]).postsSection.eyebrow} hint='Örn. "Yayınlar". Yaklaşım bandı ile aynı metni yazmayın.' />
-        <AdminField label="Bölüm başlığı" field="postsSection.title" value={(data as ContentMap["home"]).postsSection.title} hint='Örn. "Son yazılar"' />
-        <AdminField label="Lead" field="postsSection.lead" value={(data as ContentMap["home"]).postsSection.lead} rows={2} />
-        <AdminField label="Buton metni" field="postsSection.buttonLabel" value={(data as ContentMap["home"]).postsSection.buttonLabel} />
-      </fieldset>
-      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-        <legend class="px-1 text-sm font-semibold">Alt CTA bandı</legend>
+        <AdminField label="Kısa açıklama" field="practiceSection.lead" value={(data as ContentMap["home"]).practiceSection.lead} rows={2} />
+      </AdminSection>
+      <AdminTitleTextList
+        sectionId="section-practice-cards"
+        path="practiceSection.items"
+        label="Uzmanlık kartları"
+        location="Çalışma alanları bölümündeki kartlar"
+        items={(data as ContentMap["home"]).practiceSection.items}
+      />
+      <AdminSection
+        id="section-posts"
+        title="Son yayınlar bölümü"
+        location="Ana sayfanın alt kısmı, blog yazılarından önce"
+        hint="Yazıların kendisi Blog menüsünden yönetilir; burada yalnızca bölüm başlıkları."
+      >
+        <AdminField label="Küçük üst etiket" field="postsSection.eyebrow" value={(data as ContentMap["home"]).postsSection.eyebrow} />
+        <AdminField label="Bölüm başlığı" field="postsSection.title" value={(data as ContentMap["home"]).postsSection.title} />
+        <AdminField label="Kısa açıklama" field="postsSection.lead" value={(data as ContentMap["home"]).postsSection.lead} rows={2} />
+        <AdminField label="Tümünü gör butonu" field="postsSection.buttonLabel" value={(data as ContentMap["home"]).postsSection.buttonLabel} />
+      </AdminSection>
+      <AdminSection
+        id="section-cta"
+        title="Alt iletişim bandı"
+        location="Ana sayfanın en altındaki koyu renkli çağrı alanı"
+      >
         <AdminField label="Başlık" field="cta.title" value={(data as ContentMap["home"]).cta.title} />
         <AdminField label="Metin" field="cta.text" value={(data as ContentMap["home"]).cta.text} rows={2} />
-        <AdminField label="Buton linki" field="cta.buttonHref" value={(data as ContentMap["home"]).cta.buttonHref} />
+        <AdminField label="Buton linki" field="cta.buttonHref" value={(data as ContentMap["home"]).cta.buttonHref} plain />
         <AdminField label="Buton metni" field="cta.buttonLabel" value={(data as ContentMap["home"]).cta.buttonLabel} />
-      </fieldset>
+      </AdminSection>
+    </>
+  )}
+
+  {contentKey === "about" && (
+    <>
+      <AdminSeoSection prefix="seo" seo={(data as ContentMap["about"]).seo} showKeywords />
+      <AdminHeroSection prefix="hero" hero={(data as ContentMap["about"]).hero} location="Hakkımızda sayfasının en üstü" />
+      <AdminSection id="section-intro" title="Giriş metni" location="Sayfa başının hemen altı">
+        <AdminField label="Küçük üst etiket" field="introSection.eyebrow" value={(data as ContentMap["about"]).introSection.eyebrow} />
+        <AdminField label="Başlık" field="introSection.title" value={(data as ContentMap["about"]).introSection.title} />
+        <AdminField label="Kısa açıklama" field="introSection.lead" value={(data as ContentMap["about"]).introSection.lead} rows={2} />
+      </AdminSection>
+      <AdminTitleTextList
+        sectionId="section-blocks"
+        path="blocks"
+        label="Bilgi kartları"
+        location="Giriş metninin altındaki kartlar"
+        items={(data as ContentMap["about"]).blocks}
+      />
+      <AdminSection id="section-cta" title="Alt iletişim bandı" location="Sayfanın en altı">
+        <AdminField label="Başlık" field="cta.title" value={(data as ContentMap["about"]).cta.title} />
+        <AdminField label="Metin" field="cta.text" value={(data as ContentMap["about"]).cta.text} rows={2} />
+        <AdminField label="Buton linki" field="cta.buttonHref" value={(data as ContentMap["about"]).cta.buttonHref} plain />
+        <AdminField label="Buton metni" field="cta.buttonLabel" value={(data as ContentMap["about"]).cta.buttonLabel} />
+      </AdminSection>
     </>
   )}
 
   {contentKey === "contact" && (
     <>
       <AdminSeoSection prefix="seo" seo={(data as ContentMap["contact"]).seo} />
-      <AdminHeroSection prefix="hero" hero={(data as ContentMap["contact"]).hero} showTrust />
-      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-        <legend class="px-1 text-sm font-semibold">Yan panel</legend>
+      <AdminHeroSection prefix="hero" hero={(data as ContentMap["contact"]).hero} showTrust location="İletişim sayfasının en üstü" />
+      <AdminSection
+        id="section-sidebar"
+        title="Yan bilgi paneli"
+        location="Formun solundaki iletişim özeti"
+        hint="Telefon ve adres Genel ayarlardan gelir; burada yalnızca etiket metinleri."
+      >
         <AdminField label="Panel başlığı" field="sidebar.title" value={(data as ContentMap["contact"]).sidebar.title} />
-        <AdminField label="Avukat etiketi" field="sidebar.labels.attorney" value={(data as ContentMap["contact"]).sidebar.labels.attorney} />
-        <AdminField label="E-posta etiketi" field="sidebar.labels.email" value={(data as ContentMap["contact"]).sidebar.labels.email} />
-        <AdminField label="Telefon etiketi" field="sidebar.labels.phone" value={(data as ContentMap["contact"]).sidebar.labels.phone} />
-        <AdminField label="Adres etiketi" field="sidebar.labels.address" value={(data as ContentMap["contact"]).sidebar.labels.address} />
-        <AdminField label="Saat etiketi" field="sidebar.labels.workingHours" value={(data as ContentMap["contact"]).sidebar.labels.workingHours} />
-      </fieldset>
-      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-        <legend class="px-1 text-sm font-semibold">Form</legend>
-        <AdminField label="Form bölüm başlığı" field="formSection.title" value={(data as ContentMap["contact"]).formSection.title} />
-        <AdminField label="Gönder butonu" field="form.submitLabel" value={(data as ContentMap["contact"]).form.submitLabel} />
-        <AdminField label="Başarı mesajı" field="form.successMessage" value={(data as ContentMap["contact"]).form.successMessage} rows={2} />
-        <AdminField label="KVKK onay öneki" field="form.consentPrefix" value={(data as ContentMap["contact"]).form.consentPrefix} />
+        <AdminField label="Avukat satır etiketi" field="sidebar.labels.attorney" value={(data as ContentMap["contact"]).sidebar.labels.attorney} />
+        <AdminField label="E-posta satır etiketi" field="sidebar.labels.email" value={(data as ContentMap["contact"]).sidebar.labels.email} />
+        <AdminField label="Telefon satır etiketi" field="sidebar.labels.phone" value={(data as ContentMap["contact"]).sidebar.labels.phone} />
+        <AdminField label="Adres satır etiketi" field="sidebar.labels.address" value={(data as ContentMap["contact"]).sidebar.labels.address} />
+        <AdminField label="Saat satır etiketi" field="sidebar.labels.workingHours" value={(data as ContentMap["contact"]).sidebar.labels.workingHours} />
+      </AdminSection>
+      <AdminSection id="section-form" title="İletişim formu" location="Sayfanın sağ tarafındaki form">
+        <AdminField label="Form başlığı" field="formSection.title" value={(data as ContentMap["contact"]).formSection.title} />
+        <AdminField label="Gönder butonu metni" field="form.submitLabel" value={(data as ContentMap["contact"]).form.submitLabel} />
+        <AdminField label="Başarılı gönderim mesajı" field="form.successMessage" value={(data as ContentMap["contact"]).form.successMessage} rows={2} />
+        <AdminField label="KVKK onay metni (baş)" field="form.consentPrefix" value={(data as ContentMap["contact"]).form.consentPrefix} />
         <AdminField label="KVKK link metni" field="form.consentLinkLabel" value={(data as ContentMap["contact"]).form.consentLinkLabel} />
-        <AdminField label="KVKK onay sonu" field="form.consentSuffix" value={(data as ContentMap["contact"]).form.consentSuffix} rows={2} />
-      </fieldset>
-      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-        <legend class="px-1 text-sm font-semibold">Harita bölümü</legend>
-        <AdminField label="Eyebrow" field="mapSection.eyebrow" value={(data as ContentMap["contact"]).mapSection.eyebrow} />
+        <AdminField label="KVKK onay metni (son)" field="form.consentSuffix" value={(data as ContentMap["contact"]).form.consentSuffix} rows={2} />
+      </AdminSection>
+      <AdminSection id="section-map" title="Harita bölümü" location="Formun altındaki harita alanı">
+        <AdminField label="Küçük üst etiket" field="mapSection.eyebrow" value={(data as ContentMap["contact"]).mapSection.eyebrow} />
         <AdminField label="Başlık" field="mapSection.title" value={(data as ContentMap["contact"]).mapSection.title} />
-        <AdminField label="Lead" field="mapSection.lead" value={(data as ContentMap["contact"]).mapSection.lead} />
+        <AdminField label="Kısa açıklama" field="mapSection.lead" value={(data as ContentMap["contact"]).mapSection.lead} />
         <AdminField label="Yol tarifi link metni" field="mapSection.directionsLinkLabel" value={(data as ContentMap["contact"]).mapSection.directionsLinkLabel} />
-      </fieldset>
+      </AdminSection>
     </>
   )}
 
   {contentKey === "blog_page" && (
     <>
       <AdminSeoSection prefix="seo" seo={(data as ContentMap["blog_page"]).seo} showKeywords />
-      <AdminHeroSection prefix="hero" hero={(data as ContentMap["blog_page"]).hero} />
-      <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-        <legend class="px-1 text-sm font-semibold">Liste bölümü</legend>
-        <AdminField label="Başlık" field="listSection.title" value={(data as ContentMap["blog_page"]).listSection.title} />
-        <AdminField label="Lead" field="listSection.lead" value={(data as ContentMap["blog_page"]).listSection.lead} rows={2} />
-        <AdminField label="Boş liste mesajı" field="listSection.emptyMessage" value={(data as ContentMap["blog_page"]).listSection.emptyMessage} rows={2} />
-      </fieldset>
+      <AdminHeroSection prefix="hero" hero={(data as ContentMap["blog_page"]).hero} location="Yayınlar sayfasının en üstü" />
+      <AdminSection
+        id="section-list"
+        title="Yazı listesi bölümü"
+        location="Yayınlar sayfasında yazı kartlarının üstü"
+        hint="Tek tek yazılar Blog menüsünden eklenir."
+      >
+        <AdminField label="Bölüm başlığı" field="listSection.title" value={(data as ContentMap["blog_page"]).listSection.title} />
+        <AdminField label="Kısa açıklama" field="listSection.lead" value={(data as ContentMap["blog_page"]).listSection.lead} rows={2} />
+        <AdminField label="Yazı yokken görünen mesaj" field="listSection.emptyMessage" value={(data as ContentMap["blog_page"]).listSection.emptyMessage} rows={2} />
+      </AdminSection>
     </>
   )}
 
   {contentKey === "kvkk" && (
     <>
       <AdminSeoSection prefix="seo" seo={(data as ContentMap["kvkk"]).seo} showKeywords />
-      <AdminField label="Sayfa H1" field="pageTitle" value={(data as ContentMap["kvkk"]).pageTitle} />
-      <AdminField label="Son güncelleme metni" field="lastUpdated" value={(data as ContentMap["kvkk"]).lastUpdated} />
-      <AdminRichTextarea
-        id="kvkk-body"
-        field="bodyMd"
-        label="Gövde (Markdown)"
-        value={(data as ContentMap["kvkk"]).bodyMd}
-        rows={24}
-        hint="Yer tutucular: {{brandFull}}, {{attorney}}, {{domain}}, {{contactEmail}}, {{retentionMonths}}. Font, punto ve renk araç çubuğu ile biçimlendirme yapılabilir."
-      />
-      <AdminField label="Alt not" field="disclaimer" value={(data as ContentMap["kvkk"]).disclaimer} rows={3} />
+      <AdminSection id="section-page" title="Sayfa başlığı" location="KVKK sayfasının en üstü">
+        <AdminField label="Ana başlık (H1)" field="pageTitle" value={(data as ContentMap["kvkk"]).pageTitle} />
+        <AdminField label="Son güncelleme satırı" field="lastUpdated" value={(data as ContentMap["kvkk"]).lastUpdated} />
+      </AdminSection>
+      <AdminSection
+        id="section-body"
+        title="Metin gövdesi"
+        location="KVKK sayfasının ana içeriği"
+        hint="Yer tutucular: {{brandFull}}, {{attorney}}, {{domain}}, {{contactEmail}}, {{retentionMonths}}."
+      >
+        <AdminRichTextarea
+          id="kvkk-body"
+          field="bodyMd"
+          label="Aydınlatma metni"
+          value={(data as ContentMap["kvkk"]).bodyMd}
+          rows={24}
+        />
+      </AdminSection>
+      <AdminSection id="section-disclaimer" title="Alt not" location="Metnin en altı">
+        <AdminField label="Uyarı / dipnot" field="disclaimer" value={(data as ContentMap["kvkk"]).disclaimer} rows={3} />
+      </AdminSection>
     </>
   )}
 
   {contentKey === "not_found" && (
     <>
       <AdminSeoSection prefix="seo" seo={(data as ContentMap["not_found"]).seo} />
-      <AdminField label="Kod (404)" field="code" value={(data as ContentMap["not_found"]).code} />
-      <AdminField label="Başlık" field="title" value={(data as ContentMap["not_found"]).title} />
-      <AdminField label="Lead" field="lead" value={(data as ContentMap["not_found"]).lead} rows={3} />
-      <AdminNavList path="buttons" label="Butonlar" items={(data as ContentMap["not_found"]).buttons} />
+      <AdminSection id="section-message" title="Hata metni" location="404 sayfasının ortası">
+        <AdminField label="Hata kodu" field="code" value={(data as ContentMap["not_found"]).code} />
+        <AdminField label="Başlık" field="title" value={(data as ContentMap["not_found"]).title} />
+        <AdminField label="Açıklama metni" field="lead" value={(data as ContentMap["not_found"]).lead} rows={3} />
+      </AdminSection>
+      <AdminNavList
+        sectionId="section-buttons"
+        path="buttons"
+        label="Yönlendirme butonları"
+        location="404 sayfasındaki ana sayfa / iletişim linkleri"
+        hint="Her satır bir buton: soldaki adres, sağdaki buton metni."
+        items={(data as ContentMap["not_found"]).buttons}
+      />
     </>
   )}
 
-  <p id="content-form-error" class="hidden text-sm text-red-600" role="alert"></p>
-  <p id="content-form-success" class="hidden text-sm text-green-deep" role="status"></p>
-
-  <div class="flex flex-wrap gap-3">
-    <button
-      type="submit"
-      id="content-form-submit"
-      class="rounded-[var(--radius-btn)] bg-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-deep"
-    >
-      Kaydet
-    </button>
-    <a href="/admin/icerik" class="inline-flex items-center text-sm text-muted no-underline hover:text-heading">
-      Listeye dön
-    </a>
+  <div class="sticky bottom-4 z-10 rounded-[var(--radius)] border border-line bg-paper/95 p-4 shadow-md backdrop-blur-sm">
+    <p id="content-form-error" class="hidden text-sm text-red-600" role="alert"></p>
+    <p id="content-form-success" class="hidden text-sm text-green-deep" role="status"></p>
+    <div class="flex flex-wrap items-center gap-3">
+      <button
+        type="submit"
+        id="content-form-submit"
+        class="rounded-[var(--radius-btn)] bg-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-deep"
+      >
+        Değişiklikleri kaydet
+      </button>
+      <a href="/admin/icerik" class="inline-flex items-center text-sm text-muted no-underline hover:text-heading">
+        Sayfa listesine dön
+      </a>
+    </div>
   </div>
 </form>
 

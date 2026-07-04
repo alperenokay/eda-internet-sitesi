@@ -1,5 +1,6 @@
 ---
 import AdminField from "./AdminField.astro";
+import AdminSection from "../AdminSection.astro";
 
 export interface Props {
   prefix: string;
@@ -17,22 +18,51 @@ export interface Props {
   };
   showChip?: boolean;
   showTrust?: boolean;
+  sectionId?: string;
+  location?: string;
 }
 
-const { prefix, hero, showChip = false, showTrust = false } = Astro.props;
+const {
+  prefix,
+  hero,
+  showChip = false,
+  showTrust = false,
+  sectionId = "section-hero",
+  location = "Sayfanın en üstü, büyük başlık ve butonlar",
+} = Astro.props;
 ---
 
-<fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
-  <legend class="px-1 text-sm font-semibold">Hero</legend>
-  <AdminField label="Eyebrow" field={`${prefix}.eyebrow`} value={hero.eyebrow} />
+<AdminSection id={sectionId} title="Sayfa başı (üst bölüm)" location={location}>
+  <AdminField
+    label="Küçük üst etiket"
+    field={`${prefix}.eyebrow`}
+    value={hero.eyebrow}
+    hint='Başlığın üstündeki ince satır (ör. "Sağır Hukuk & Danışmanlık").'
+  />
   {showChip && (
-    <AdminField label="Chip (opsiyonel)" field={`${prefix}.chip`} value={hero.chip ?? ""} />
+    <AdminField
+      label="İsim rozeti"
+      field={`${prefix}.chip`}
+      value={hero.chip ?? ""}
+      hint="Başlık yakınında görünen kısa unvan veya etiket."
+    />
   )}
-  <AdminField label="Başlık" field={`${prefix}.title`} value={hero.title} />
-  <AdminField label="Vurgulu kelime" field={`${prefix}.titleHighlight`} value={hero.titleHighlight} />
-  <AdminField label="Lead metni" field={`${prefix}.lead`} value={hero.lead} rows={3} />
+  <AdminField label="Ana başlık" field={`${prefix}.title`} value={hero.title} />
+  <AdminField
+    label="Vurgulu kelime"
+    field={`${prefix}.titleHighlight`}
+    value={hero.titleHighlight}
+    hint="Başlıkta yeşil/altın renkle vurgulanan kelime."
+  />
+  <AdminField
+    label="Kısa açıklama"
+    field={`${prefix}.lead`}
+    value={hero.lead}
+    rows={3}
+    hint="Başlığın altındaki bir veya iki cümlelik tanıtım metni."
+  />
   <div class="grid gap-4 sm:grid-cols-2">
-  <AdminField label="Birincil buton linki" field={`${prefix}.primaryHref`} value={hero.primaryHref} plain />
+    <AdminField label="Birincil buton linki" field={`${prefix}.primaryHref`} value={hero.primaryHref} plain />
     <AdminField label="Birincil buton metni" field={`${prefix}.primaryLabel`} value={hero.primaryLabel} />
     <AdminField label="İkincil buton linki" field={`${prefix}.secondaryHref`} value={hero.secondaryHref} plain />
     <AdminField label="İkincil buton metni" field={`${prefix}.secondaryLabel`} value={hero.secondaryLabel} />
@@ -40,7 +70,7 @@ const { prefix, hero, showChip = false, showTrust = false } = Astro.props;
   {showTrust && (
     <label class="flex items-center gap-2 text-sm">
       <input type="checkbox" data-field={`${prefix}.showTrustPanel`} checked={hero.showTrustPanel} />
-      Güven panelini göster
+      Sağdaki güven panelini göster (çalışma saatleri ve iletişim özeti)
     </label>
   )}
-</fieldset>
+</AdminSection>

@@ -115,6 +115,23 @@ export interface BlogPageContent {
   };
 }
 
+export interface AboutContent {
+  seo: SeoFields;
+  hero: HeroFields;
+  introSection: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+  };
+  blocks: TitleTextItem[];
+  cta: {
+    title: string;
+    text: string;
+    buttonHref: string;
+    buttonLabel: string;
+  };
+}
+
 export interface KvkkContent {
   seo: SeoFields;
   pageTitle: string;
@@ -134,6 +151,7 @@ export interface NotFoundContent {
 export type ContentKey =
   | "global"
   | "home"
+  | "about"
   | "contact"
   | "blog_page"
   | "kvkk"
@@ -142,6 +160,7 @@ export type ContentKey =
 export type ContentMap = {
   global: GlobalContent;
   home: HomeContent;
+  about: AboutContent;
   contact: ContactContent;
   blog_page: BlogPageContent;
   kvkk: KvkkContent;
@@ -154,12 +173,17 @@ export const CONTENT_REGISTRY: Record<
 > = {
   global: {
     label: "Genel ayarlar",
-    description: "Marka, iletişim, menü, footer ve harita bağlantıları.",
+    description: "Telefon, adres, üst/alt menü ve footer. Tüm sitede ortak bilgiler.",
   },
   home: {
     label: "Ana sayfa",
-    description: "Hero, yaklaşım, çalışma alanları, CTA metinleri.",
+    description: "Ana sayfadaki başlıklar, kartlar ve alt iletişim bandı.",
     publicPath: "/",
+  },
+  about: {
+    label: "Hakkımızda",
+    description: "Hakkımızda sayfası hero, giriş metni ve bilgi kartları.",
+    publicPath: "/hakkimizda",
   },
   contact: {
     label: "İletişim",
@@ -167,8 +191,8 @@ export const CONTENT_REGISTRY: Record<
     publicPath: "/iletisim",
   },
   blog_page: {
-    label: "Blog liste sayfası",
-    description: "Blog ana sayfası SEO ve bölüm metinleri.",
+    label: "Yayınlar sayfası",
+    description: "Yayınlar listesinin üst metinleri ve arama ayarları (/blog). Tek tek yazılar ayrı menüden eklenir.",
     publicPath: "/blog",
   },
   kvkk: {
@@ -249,11 +273,13 @@ export const CONTENT_DEFAULTS: ContentMap = {
     orgDescription:
       "İzmir merkezli avukatlık ve danışmanlık hizmetleri. Ceza, ticaret, medeni ve idare hukuku.",
     headerNav: [
-      { href: "/blog", label: "Yazılar" },
+      { href: "/hakkimizda", label: "Hakkımızda" },
+      { href: "/blog", label: "Yayınlar" },
       { href: "/iletisim", label: "İletişim" },
     ],
     footerNav: [
-      { href: "/blog", label: "Yazılar" },
+      { href: "/hakkimizda", label: "Hakkımızda" },
+      { href: "/blog", label: "Yayınlar" },
       { href: "/iletisim", label: "İletişim" },
       { href: "/kvkk", label: "KVKK" },
     ],
@@ -279,7 +305,7 @@ export const CONTENT_DEFAULTS: ContentMap = {
       primaryHref: "/iletisim#mesaj",
       primaryLabel: "Randevu talebi",
       secondaryHref: "/blog",
-      secondaryLabel: "Hukuk yazıları",
+      secondaryLabel: "Yayınlar",
       showTrustPanel: true,
     },
     principlesSection: {
@@ -318,11 +344,55 @@ export const CONTENT_DEFAULTS: ContentMap = {
       eyebrow: "Yayınlar",
       title: "Son yazılar",
       lead: "Bilgilendirme niteliğinde hukuk metinleri.",
-      buttonLabel: "Tüm yazılar",
+      buttonLabel: "Tüm yayınlar",
     },
     cta: {
       title: "Hukuki destek için bize ulaşın",
       text: "Randevu veya ön görüşme talebinizi iletişim formu üzerinden iletebilirsiniz.",
+      buttonHref: "/iletisim#mesaj",
+      buttonLabel: "İletişim formu",
+    },
+  },
+  about: {
+    seo: {
+      title: "Hakkımızda | Sağır Hukuk & Danışmanlık",
+      description:
+        "Av. Eda Öykü Sağır ve Sağır Hukuk & Danışmanlık bürosu. İzmir Konak merkezli avukatlık ve danışmanlık.",
+      keywords: "Sağır Hukuk, Eda Öykü Sağır, İzmir avukat, hakkımızda",
+    },
+    hero: {
+      eyebrow: "Büromuz",
+      title: "Sağır Hukuk & Danışmanlık",
+      titleHighlight: "Danışmanlık",
+      lead: "İzmir Konak'ta bireysel ve kurumsal müvekkillere ceza, ticaret, medeni ve idare hukuku alanlarında danışmanlık ve dava takibi sunuyoruz.",
+      primaryHref: "/iletisim#mesaj",
+      primaryLabel: "Randevu talebi",
+      secondaryHref: "/blog",
+      secondaryLabel: "Yayınlar",
+      showTrustPanel: false,
+    },
+    introSection: {
+      eyebrow: "Kimiz",
+      title: "Av. Eda Öykü Sağır",
+      lead: "İzmir'de avukatlık ve danışmanlık hizmeti veren büromuz, dosyaya özel strateji ve şeffaf iletişim ilkesiyle çalışır.",
+    },
+    blocks: [
+      {
+        title: "Çalışma alanları",
+        text: "Ceza, ticaret ve şirketler, medeni hukuk ile vergi ve idare hukuku başlıca uzmanlık alanlarımızdır.",
+      },
+      {
+        title: "Yaklaşım",
+        text: "Müvekkile net bilgilendirme, güncel mevzuat takibi ve disiplinli dosya yönetimi önceliğimizdir.",
+      },
+      {
+        title: "Konum",
+        text: "Hasan Bozkurt İş Hanı, Gazi Bulvarı No:83, Konak/İzmir adresinde hizmet veriyoruz.",
+      },
+    ],
+    cta: {
+      title: "Randevu veya ön görüşme",
+      text: "Hukuki konunuzu iletişim formu üzerinden iletebilirsiniz.",
       buttonHref: "/iletisim#mesaj",
       buttonLabel: "İletişim formu",
     },
@@ -374,7 +444,7 @@ export const CONTENT_DEFAULTS: ContentMap = {
   },
   blog_page: {
     seo: {
-      title: "Hukuk Yazıları ve Yayınlar",
+      title: "Yayınlar | Sağır Hukuk & Danışmanlık",
       description:
         "Ceza, medeni, ticaret ve idare hukuku alanlarında bilgilendirme yazıları. Sağır Hukuk & Danışmanlık.",
       keywords:
@@ -420,7 +490,8 @@ export const CONTENT_DEFAULTS: ContentMap = {
     lead: "Aradığınız sayfa taşınmış veya kaldırılmış olabilir. Ana sayfadan devam edebilir veya iletişim sayfasına gidebilirsiniz.",
     buttons: [
       { href: "/", label: "Ana sayfa" },
-      { href: "/blog", label: "Yazılar" },
+      { href: "/hakkimizda", label: "Hakkımızda" },
+      { href: "/blog", label: "Yayınlar" },
       { href: "/iletisim", label: "İletişim" },
     ],
   },
