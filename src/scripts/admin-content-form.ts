@@ -50,7 +50,7 @@ function collectFormData(form: HTMLFormElement): Record<string, unknown> {
 }
 
 function reindexListFields(form: HTMLFormElement, data: Record<string, unknown>) {
-  form.querySelectorAll("[data-list-path]").forEach((fieldset) => {
+  form.querySelectorAll("fieldset[data-list-path]").forEach((fieldset) => {
     const path = fieldset.getAttribute("data-list-path");
     if (!path) return;
     const rows = fieldset.querySelectorAll(".list-row");
@@ -129,7 +129,7 @@ function applyDataToForm(form: HTMLFormElement, data: Record<string, unknown>) {
 }
 
 function bindListControls() {
-  document.querySelectorAll("[data-list-path]").forEach((fieldset) => {
+  document.querySelectorAll("fieldset[data-list-path]").forEach((fieldset) => {
     if (fieldset.hasAttribute("data-list-bound")) return;
     fieldset.setAttribute("data-list-bound", "true");
 
