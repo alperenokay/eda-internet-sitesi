@@ -16,7 +16,7 @@ const { contentKey, data } = Astro.props;
 const initialJson = JSON.stringify(data);
 ---
 
-<form id="content-form" class="space-y-6">
+<form id="content-form" class="space-y-6" method="dialog" action="javascript:void(0)">
   <script type="application/json" id="content-initial">{initialJson}</script>
 
   {contentKey === "global" && (
@@ -53,8 +53,18 @@ const initialJson = JSON.stringify(data);
       <AdminHeroSection prefix="hero" hero={(data as ContentMap["home"]).hero} showChip showTrust />
       <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
         <legend class="px-1 text-sm font-semibold">Yaklaşım bandı</legend>
-        <AdminField label="Eyebrow" field="principlesSection.eyebrow" value={(data as ContentMap["home"]).principlesSection.eyebrow} />
-        <AdminField label="Başlık" field="principlesSection.title" value={(data as ContentMap["home"]).principlesSection.title} />
+        <AdminField
+          label="Üst etiket"
+          field="principlesSection.eyebrow"
+          value={(data as ContentMap["home"]).principlesSection.eyebrow}
+          hint='Sitede bölümün üstündeki küçük yazı (ör. "Yaklaşımımız").'
+        />
+        <AdminField
+          label="Bölüm başlığı"
+          field="principlesSection.title"
+          value={(data as ContentMap["home"]).principlesSection.title}
+          hint='Sitede büyük başlık (ör. "Güvenilir ve ölçülü temsil").'
+        />
       </fieldset>
       <AdminTitleTextList path="principlesSection.items" label="Yaklaşım kartları" items={(data as ContentMap["home"]).principlesSection.items} />
       <fieldset class="space-y-4 rounded-[var(--radius)] border border-line p-4">
@@ -158,7 +168,7 @@ const initialJson = JSON.stringify(data);
 
   <div class="flex flex-wrap gap-3">
     <button
-      type="submit"
+      type="button"
       id="content-form-submit"
       class="rounded-[var(--radius-btn)] bg-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-deep"
     >
@@ -303,11 +313,31 @@ const initialJson = JSON.stringify(data);
   const successEl = document.getElementById("content-form-success");
   const submitBtn = document.getElementById("content-form-submit");
 
-  form?.addEventListener("submit", async (event) => {
-    event.preventDefault();
+  function getDeepValue(obj, path) {
+    return path.split(".").reduce((cur, key) => {
+      if (cur == null) return undefined;
+      if (/^\d+$/.test(key)) return cur[Number(key)];
+      return cur[key];
+    }, obj);
+  }
+
+  function applyDataToForm(form, data) {
+    form.querySelectorAll("[data-field]").forEach((el) => {
+      const path = el.getAttribute("data-field");
+      if (!path) return;
+      const value = getDeepValue(data, path);
+      if (el instanceof HTMLInputElement && el.type === "checkbox") {
+        el.checked = Boolean(value);
+      } else if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+        el.value = value == null ? "" : String(value);
+      }
+    });
+  }
+
+  async function saveContentForm() {
+    if (!(form instanceof HTMLFormElement) || !(submitBtn instanceof HTMLButtonElement)) return;
     errorEl?.classList.add("hidden");
     successEl?.classList.add("hidden");
-    if (!(form instanceof HTMLFormElement) || !(submitBtn instanceof HTMLButtonElement)) return;
 
     submitBtn.disabled = true;
     submitBtn.textContent = "Kaydediliyor...";
@@ -321,7 +351,7 @@ const initialJson = JSON.stringify(data);
         body: JSON.stringify({ key: contentKey, data: payload }),
       });
       const raw = await res.text();
-      let result: { ok?: boolean; error?: string; data?: unknown };
+      let result;
       try {
         result = JSON.parse(raw);
       } catch {
@@ -335,6 +365,7 @@ const initialJson = JSON.stringify(data);
         const initialEl = document.getElementById("content-initial");
         if (initialEl && result.data) {
           initialEl.textContent = JSON.stringify(result.data);
+          applyDataToForm(form, result.data);
         }
       } else {
         errorEl.textContent = result.error || "Kayıt sırasında bir sorun oluştu.";
@@ -347,6 +378,15 @@ const initialJson = JSON.stringify(data);
       submitBtn.disabled = false;
       submitBtn.textContent = "Kaydet";
     }
+  }
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    saveContentForm();
+  });
+
+  submitBtn?.addEventListener("click", () => {
+    saveContentForm();
   });
 </script>
 
