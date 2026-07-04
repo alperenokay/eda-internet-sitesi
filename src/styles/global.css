@@ -132,7 +132,7 @@ h1, h2, h3, h4 {
   background: linear-gradient(90deg, var(--color-panel), var(--color-green), var(--color-panel));
 }
 
-/* Yan gutter dekor: tek opaklık katmanı, içerik üstünde değil */
+/* Yan ve kenar dekor: içerik kolonunun dışında, sayfa boyunca dağıtılmış */
 .law-decor-shell {
   position: relative;
   isolation: isolate;
@@ -145,34 +145,70 @@ h1, h2, h3, h4 {
 
 .law-decor-layer {
   display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
 }
 
 .law-decor-item {
-  position: fixed;
-  z-index: 1;
+  position: absolute;
   pointer-events: none;
-  color: rgba(15, 36, 56, 0.2);
-  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.65));
+  color: rgba(15, 36, 56, 0.34);
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.75));
 }
 
-.law-decor-item--left {
-  left: max(0.75rem, calc((100vw - 1360px) / 2 - 5.25rem));
+.law-decor-item--brand {
+  color: rgba(143, 112, 56, 0.28);
 }
 
-.law-decor-item--right {
-  right: max(0.75rem, calc((100vw - 1360px) / 2 - 5.25rem));
+.law-decor-item--left.law-decor-item--edge {
+  left: clamp(1rem, 2.5vw, 2.75rem);
+}
+
+.law-decor-item--right.law-decor-item--edge {
+  right: clamp(1rem, 2.5vw, 2.75rem);
+}
+
+.law-decor-item--left.law-decor-item--gutter {
+  left: max(1rem, calc((100% - 1360px) / 2 - 6.5rem));
+}
+
+.law-decor-item--right.law-decor-item--gutter {
+  right: max(1rem, calc((100% - 1360px) / 2 - 6.5rem));
 }
 
 .law-decor-item--lg {
-  height: 9.5rem;
+  height: 10.5rem;
 }
 
 .law-decor-item--md {
-  height: 6.75rem;
+  height: 7.25rem;
 }
 
 .law-decor-item--sm {
-  height: 4.75rem;
+  height: 5.25rem;
+}
+
+.law-decor-item--seal-lg {
+  width: 7.5rem;
+  height: 7.5rem;
+}
+
+.law-decor-item--seal-md {
+  width: 5.75rem;
+  height: 5.75rem;
+}
+
+.law-decor-item--seal-sm {
+  width: 4.25rem;
+  height: 4.25rem;
+}
+
+.law-decor-item--brand svg {
+  width: 100%;
+  height: 100%;
 }
 
 .law-decor-svg {
@@ -181,13 +217,13 @@ h1, h2, h3, h4 {
   width: auto;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1536px) {
   .law-decor-layer {
     display: block;
   }
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 1535px) {
   .law-decor-item {
     display: none;
   }
@@ -196,6 +232,7 @@ h1, h2, h3, h4 {
 @media (prefers-reduced-motion: reduce) {
   .law-decor-item {
     filter: none;
+    transform: none !important;
   }
 }
 

@@ -3,6 +3,7 @@ import LawColumn from "./law/LawColumn.astro";
 import LawScales from "./law/LawScales.astro";
 import LawGavel from "./law/LawGavel.astro";
 import LawPen from "./law/LawPen.astro";
+import LawSeal from "./law/LawSeal.astro";
 import { LAW_DECOR_PLACEMENTS, type LawDecorIcon } from "@/lib/law-decor-layout";
 
 const iconMap: Record<LawDecorIcon, typeof LawColumn> = {
@@ -10,23 +11,27 @@ const iconMap: Record<LawDecorIcon, typeof LawColumn> = {
   scales: LawScales,
   gavel: LawGavel,
   pen: LawPen,
+  seal: LawSeal,
 };
 ---
 
 <div class="law-decor-layer" aria-hidden="true">
   {LAW_DECOR_PLACEMENTS.map((item) => {
     const Icon = iconMap[item.icon];
+    const rotate = item.rotate ? `rotate(${item.rotate}deg)` : undefined;
     return (
       <div
         class:list={[
           "law-decor-item",
           `law-decor-item--${item.side}`,
+          `law-decor-item--${item.offset}`,
           `law-decor-item--${item.size}`,
+          item.icon === "seal" && "law-decor-item--brand",
         ]}
-        style={`top: ${item.top}vh`}
+        style={{ top: `${item.top}%`, transform: rotate }}
         data-decor-id={item.id}
       >
-        <Icon />
+        {item.icon === "seal" ? <LawSeal variant="watermark" /> : <Icon />}
       </div>
     );
   })}
