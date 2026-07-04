@@ -316,10 +316,19 @@ const initialJson = JSON.stringify(data);
       const payload = collectFormData(form);
       const res = await fetch("/api/admin/content", {
         method: "PUT",
+        credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: contentKey, data: payload }),
       });
-      const result = await res.json();
+      const raw = await res.text();
+      let result: { ok?: boolean; error?: string; data?: unknown };
+      try {
+        result = JSON.parse(raw);
+      } catch {
+        errorEl.textContent = `Sunucu yanıtı okunamadı (HTTP ${res.status}).`;
+        errorEl?.classList.remove("hidden");
+        return;
+      }
       if (result.ok) {
         successEl.textContent = "İçerik kaydedildi.";
         successEl?.classList.remove("hidden");

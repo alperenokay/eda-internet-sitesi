@@ -114,6 +114,8 @@ export function assertSameOrigin(request: Request): boolean {
       return false;
     }
   }
+  const fetchSite = request.headers.get("sec-fetch-site");
+  if (fetchSite === "same-origin" || fetchSite === "same-site") return true;
   return false;
 }
 
