@@ -35,11 +35,7 @@ const eyebrowClass =
 ---
 
 <section
-  class:list={[
-    variants[variant],
-    "relative z-[20]",
-    tight ? "py-14 sm:py-16" : "py-[4.125rem] sm:py-[4.125rem]",
-  ]}
+  class:list={[variants[variant], tight ? "py-14 sm:py-16" : "py-[4.125rem] sm:py-[4.125rem]"]}
   id={id}
 >
   <slot name="backdrop" />
