@@ -137,7 +137,97 @@ h1, h2, h3, h4 {
   outline-offset: 2px;
 }
 
+/* Sol sabit arama ve WhatsApp */
+.floating-contact {
+  position: fixed;
+  left: 1rem;
+  top: 50%;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.floating-contact__btn {
+  position: relative;
+  display: flex;
+  height: 3.25rem;
+  width: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: #fff;
+  text-decoration: none;
+  pointer-events: auto;
+  box-shadow: 0 8px 24px rgba(15, 36, 56, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.floating-contact__btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 10px 28px rgba(15, 36, 56, 0.22);
+}
+
+.floating-contact__btn:focus-visible {
+  outline: 2px solid var(--color-heading);
+  outline-offset: 3px;
+}
+
+.floating-contact__btn--call {
+  background: #d4a017;
+}
+
+.floating-contact__btn--call .floating-contact__halo {
+  background: rgba(212, 160, 23, 0.35);
+}
+
+.floating-contact__btn--whatsapp {
+  background: #25d366;
+}
+
+.floating-contact__btn--whatsapp .floating-contact__halo {
+  background: rgba(37, 211, 102, 0.35);
+}
+
+.floating-contact__halo {
+  position: absolute;
+  inset: -0.45rem;
+  border-radius: 9999px;
+  z-index: -1;
+  filter: blur(6px);
+  opacity: 0.85;
+}
+
+.floating-contact__icon {
+  height: 1.45rem;
+  width: 1.45rem;
+}
+
+@media (max-width: 640px) {
+  .floating-contact {
+    left: 0.65rem;
+    top: auto;
+    bottom: 1.25rem;
+    transform: none;
+  }
+
+  .floating-contact__btn {
+    height: 3rem;
+    width: 3rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+
+  .floating-contact__btn {
+    transition: none;
+  }
+
+  .floating-contact__btn:hover {
+    transform: none;
+  }
 }
